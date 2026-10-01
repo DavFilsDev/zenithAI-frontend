@@ -1,261 +1,189 @@
-# Frontend Repository README
+# Zenith AI — Frontend
 
-## zenithAI Platform - Frontend (React + TypeScript)
+React frontend for Zenith AI: a free, open-to-everyone AI chat application with no credits, no premium tier, and no payment.
 
-### 🎉 Live Demo
+Target infrastructure cost: **0 €**. Only free technologies and free services are used.
 
-Not availible from now
+- Backend repository: `zenithAI_django-backend`, served on `http://localhost:8000` in development
+- Frontend: `http://localhost:5173` in development
+- Shared API contract: [`docs/API_CONTRACT.md`](docs/API_CONTRACT.md)
 
-### 🚀 Quick Start
+## Status
+
+The application is functional but mid-refactor. It is honest about the gap between what it does and what the contract describes, and the gap is tracked rather than hidden.
+
+**Implemented today:**
+
+- Public landing page, login and registration
+- JWT sign-in, session restore on reload, sign-out
+- Conversation list, one chat per conversation, conversation deletion
+- Markdown rendering of assistant answers
+- Dark and light theme, persisted
+- Responsive layout with a collapsible sidebar
+
+**Not yet implemented, and documented as such:**
+
+- **Streaming.** Answers arrive in one complete response. There is no token-by-token rendering, and there is no WebSocket code: the contract defines SSE only.
+- **Profile editing.** The profile modal opens and the fields are editable, but the save handlers are stubs and nothing is sent. Until P1.1 lands, do not rely on it.
+- **Conversations cannot be renamed**, and there is no explicit conversation creation: a new chat is currently a client-side draft.
+- **No tests and no continuous integration.** Zero test files exist today.
+- **No deployed instance yet.** See the roadmap below.
+- **Not accessible.** The conversation list cannot be reached by keyboard, and the profile modal has no dialog semantics. Fixing this is phase P4, not a detail.
+
+## Stack
+
+| | |
+|---|---|
+| Framework | React 19, with React Router 7 |
+| Language | TypeScript 5.9 |
+| Build tool | Vite 7 |
+| Styling | Tailwind CSS 4, configured in CSS |
+| Server state | Hand-rolled today; TanStack Query is phase P2 |
+| UI state | Zustand, with two React contexts for theme and session |
+| HTTP client | Axios |
+| Forms | React Hook Form |
+| Markdown | react-markdown |
+| Notifications | react-hot-toast |
+| Icons | react-icons and lucide-react, both in use |
+
+Not installed, and therefore not used: React Query, Prism or any syntax highlighter, CSS Modules, any WebSocket library, any test runner.
+
+## Requirements
+
+- Node.js 20.19 or newer
+- npm
+- The backend running on `http://localhost:8000`
+
+## Local setup
 
 ```bash
-# Clone the repository
 git clone https://github.com/DavFilsDev/zenithAI_react-typescript-frontend.git
 cd zenithAI_react-typescript-frontend
 
-# Install dependencies
 npm install
-# or
-yarn install
-# or
-pnpm install
 
-# Set up environment variables
 cp .env.example .env.local
-# Edit .env.local with your backend URL
+```
 
-# Start development server
+Edit `.env.local` if your backend is not on the default port, then start the dev server:
+
+```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
 ```
 
-### 📋 Prerequisites
+The frontend is on <http://localhost:5173>, the backend on <http://localhost:8000>. The backend must allow this origin, which in development is `CORS_ALLOWED_ORIGINS=http://localhost:5173`.
 
-- Node.js 18+ or 20+
-- npm, yarn, or pnpm
-- Backend API running (see backend repository)
+## Environment variables
 
-### 🏗️ Project Structure
+`.env.example` lists every variable the project declares.
 
-```
-zenithAI_react-typescript-frontend/
-├── public/              # Static files
-├── src/
-│   ├── components/      # Reusable components
-│   │   ├── ui/         # UI components (Button, Input, etc.)
-│   │   ├── chat/       # Chat-specific components
-│   │   └── layout/     # Layout components
-│   ├── contexts/       # React contexts (Auth, Theme, etc.)
-│   ├── hooks/          # Custom React hooks
-│   ├── services/       # API services
-│   ├── types/          # TypeScript types
-│   ├── utils/          # Utility functions
-│   ├── pages/          # Page components
-│   ├── styles/         # Global styles
-│   └── App.tsx         # Main App component
-├── .env.example        # Environment variables template
-├── package.json        # Dependencies and scripts
-├── tsconfig.json       # TypeScript configuration
-└── vite.config.ts      # Vite configuration
-```
+| Variable | Value | Read by |
+|---|---|---|
+| `VITE_API_URL` | `http://localhost:8000/api/v1` | The Axios instance and the token refresh call |
+| `VITE_APP_NAME` | `Zenith AI` | The document title |
+| `VITE_DEFAULT_THEME` | `dark` | The theme applied before first paint |
 
-### 🔧 Configuration
+Only `VITE_API_URL` affects where requests go. `VITE_APP_NAME` and `VITE_DEFAULT_THEME` are read at startup; until the phases in the roadmap land, the title and the initial theme are still hardcoded in `index.html` and `src/main.tsx`.
 
-1. **Environment Variables** (`/.env.local`):
-```env
-VITE_API_URL=http://localhost:8000/api
-VITE_WS_URL=ws://localhost:8000/ws
-VITE_APP_NAME=ChatGPT Clone
-VITE_DEFAULT_THEME=dark
-```
+There is no `VITE_WS_URL`. Streaming is Server-Sent Events, not WebSocket.
 
-### 📦 Installation
+On the free static hosts, `VITE_*` values are inlined at build time, so a different `VITE_API_URL` means a different build.
+
+## Scripts
+
+These five exist today. Anything else you may have read elsewhere does not.
 
 ```bash
-# Using npm
-npm install
-
-# Using yarn
-yarn install
-
-# Using pnpm
-pnpm install
+npm run dev         # dev server on port 5173, opens a browser
+npm run build       # production build into dist/
+npm run preview     # serve the production build locally
+npm run lint        # ESLint
+npm run type-check  # TypeScript
 ```
 
-### 🛠️ Available Scripts
+Two caveats, both fixed in phase P3:
 
-- `npm run dev` - Start development server
-- `npm run build` - Build for production
-- `npm run preview` - Preview production build
-- `npm run lint` - Run ESLint
-- `npm run type-check` - Check TypeScript types
-- `npm run format` - Format code with Prettier
+- `type-check` and the type step of `build` currently check nothing, because the root `tsconfig.json` compiles zero files. Do not treat a green build as proof that the types are correct.
+- `lint` may fail on configuration warnings rather than on code.
 
-### 🎨 Features
+There is no `test`, no `test:coverage`, no `test:e2e`, no `format` and no `deploy` script. Nothing runs tests, because nothing has been written yet.
 
-- **Modern UI/UX**: Clean, responsive interface
-- **Real-time Chat**: WebSocket support
-- **Dark/Light Mode**: Theme switching
-- **JWT Authentication**: Secure login system
-- **Markdown Support**: Render code and formatted text
-- **Conversation History**: Save and load previous chats
-- **Responsive Design**: Mobile-first approach
-- **Type Safety**: Full TypeScript support
+## Project structure
 
-### 📚 Tech Stack
+```
+src/
+├── App.tsx          routes, providers
+├── main.tsx         entry point
+├── index.css        the only stylesheet
+├── assets/
+├── components/
+│   ├── chat/        ChatInput, MessageBubble, MessageList
+│   ├── layout/      ChatWindow, Sidebar
+│   └── ui/          Button, Input, Modal, toasts, toggles
+├── config/          toastConfig
+├── contexts/        AuthContext, ThemeContext
+├── hooks/           useToast, useChat (unused)
+├── pages/           Home, Login, Register, Chat
+├── services/        api, auth, chat, tokenManager, refreshTokenService
+├── store/           chatStore
+└── types/           auth, chat, user
+```
 
-- **Framework**: React 18
-- **Language**: TypeScript
-- **Build Tool**: Vite
-- **Styling**: Tailwind CSS + CSS Modules
-- **State Management**: React Context + Zustand
-- **HTTP Client**: Axios
-- **Routing**: React Router DOM
-- **Forms**: React Hook Form
-- **Notifications**: React Hot Toast
-- **Icons**: React Icons
-- **Markdown**: React Markdown
-- **Code Highlighting**: Prism.js
-- **WebSocket**: Native WebSocket API
+There is no `public/` directory, no `src/utils/`, no `src/styles/`, and no test directory. The target structure, organised by feature, is in [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
 
-### 📱 Pages
+## Known issues
 
-1. **Login/Register** - Authentication pages
-2. **Chat Dashboard** - Main chat interface
-3. **Conversation List** - History sidebar
-4. **Settings** - User preferences
-5. **Profile** - User profile management
+Each of these is a defect found during the audit, tracked in [`docs/IMPROVEMENT_PLAN.md`](docs/IMPROVEMENT_PLAN.md).
 
+- The frontend currently calls `/chat/conversations/` and `/chat/chat/{id}/`, on an `/api` base. The contract defines `/conversations/` and `/conversations/{uuid}/messages/` on `/api/v1`. Migration is P0.2.
+- A new chat sends the literal id `'draft'` to the backend, which rejects it. Fixed by P0.3.
+- Conversations, including message text, are cached in `localStorage` under `chat-storage` and are not cleared on sign-out. Fixed by P2.3.
+- A failed profile request on load deletes the session, so a backend error looks like a logout. Fixed by P0.9.
+- The token refresh is not single-flight, so several simultaneous failures trigger several refreshes. Fixed by P1.2.
+- Signing out never calls the backend, so a refresh token stays valid until it expires. Fixed by P1.4.
+- Assistant answers render without GFM support, without syntax highlighting, and with an inactive `prose` class, so a markdown table appears as raw text. Fixed by P4.2.
+- `/privacy` and `/terms` on the landing page lead nowhere, and their labels are swapped. Fixed by P4.9.
+- There is no route for an unknown path, so a bad URL renders nothing.
 
-### 🧪 Testing
+## Status & Roadmap
+
+Phases, with effort, acceptance criteria and dependencies, are in [`docs/IMPROVEMENT_PLAN.md`](docs/IMPROVEMENT_PLAN.md).
+
+| Phase | Scope |
+|---|---|
+| P0 | Consistency with the contract: base URL, conversation paths, environment validation, dead code removal |
+| P1 | The API layer: profile editing, single-flight refresh, real logout, generated types, rate-limit UX |
+| P2 | Streaming over SSE, TanStack Query for server state, the feature-based structure |
+| P3 | Quality: a type-check that works, stricter linting, Prettier, husky, Vitest, Playwright |
+| P4 | Security and accessibility: sanitization, token storage, keyboard access, dialogs, Lighthouse |
+| P5 | Continuous integration, free deployment, and a showcase |
+
+- [`docs/IMPROVEMENT_PLAN.md`](docs/IMPROVEMENT_PLAN.md) — audit findings, roadmap, token storage, free hosting, zero-cost rules
+- [`docs/API_CONTRACT.md`](docs/API_CONTRACT.md) — the API contract shared with the backend repository
+- [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) — the target architecture
+- [`docs/CONVENTIONS.md`](docs/CONVENTIONS.md) — workflow rules and code conventions
+
+## Contributing
+
+One branch per subject, and only the maintainer commits. Full rules in [`docs/CONVENTIONS.md`](docs/CONVENTIONS.md).
 
 ```bash
-# Run unit tests
-npm run test
-
-# Run tests with coverage
-npm run test:coverage
-
-# Run E2E tests
-npm run test:e2e
+git switch -c docs/short-description
+git switch -c feat/short-description
+git switch -c fix/short-description
+git switch -c chore/short-description
 ```
 
-### 🚀 Deployment
+Commits follow [Conventional Commits](https://www.conventionalcommits.org/).
 
-#### Free Hosting Options:
+## Security
 
-1. **Vercel** (Recommended)
-   ```bash
-   # Install Vercel CLI
-   npm i -g vercel
-   
-   # Deploy
-   vercel
-   ```
+Report a vulnerability privately by email to <miharisoadavidfils@gmail.com>. Do not open a public issue for it, and do not disclose it in a pull request or a discussion.
 
-2. **Netlify**
-   ```bash
-   # Install Netlify CLI
-   npm i -g netlify-cli
-   
-   # Deploy
-   netlify deploy --prod
-   ```
+## License
 
-3. **GitHub Pages**
-   ```bash
-   # Build and deploy
-   npm run build
-   npm run deploy
-   ```
+MIT, see [`LICENSE`](LICENSE).
 
-#### Environment Variables for Production:
-```env
-VITE_API_URL=https://your-backend.railway.app/api
-VITE_WS_URL=wss://your-backend.railway.app/ws
-```
+## Author
 
-### 📦 Build for Production
-
-```bash
-# Create production build
-npm run build
-
-# The build output will be in /dist folder
-# You can serve it with:
-npx serve dist
-```
-
-### 🔧 Development Guidelines
-
-1. **Code Style**:
-   - Use TypeScript strict mode
-   - Follow ESLint rules
-   - Use Prettier formatting
-
-2. **Component Structure**:
-   - One component per file
-   - Use functional components with hooks
-   - Prop types with TypeScript interfaces
-
-3. **State Management**:
-   - Local state: `useState`, `useReducer`
-   - Global state: Context API
-   - Server state: React Query
-
-### 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch: `git checkout -b feature/amazing-feature`
-3. Commit changes: `git commit -m 'Add amazing feature'`
-4. Push to branch: `git push origin feature/amazing-feature`
-5. Open a Pull Request
-
-### 🐛 Common Issues
-
-1. **CORS Errors**: Ensure backend CORS settings allow your frontend URL
-2. **WebSocket Issues**: Check WebSocket URL and backend WebSocket server
-3. **Build Errors**: Clear node_modules and reinstall: `rm -rf node_modules && npm install`
-
-### 📄 License
-
-MIT License - see LICENSE file for details
-
-### 🆘 Support
-
-- Issues: [GitHub Issues](https://github.com/DavFilsDev/zenithAI_react-typescript-frontend/issues)
-- Documentation: Check the Wiki
-- Email: miharisoadavidfils.com
-
-### 🙏 Acknowledgments
-
-- OpenAI for inspiration
-- React and TypeScript communities
-- Vite team for excellent tooling
-- All contributors and users
-
----
-
-**Author:** Fanampinirina Miharisoa David Fils RATIANDRAIBE 
-
----
-
-## 🔗 Connecting Frontend & Backend
-
-### Development Setup:
-1. Start backend: `cd zenithAI_django-backend && docker-compose up`
-2. Start frontend: `cd zenithAI_react-typescript-frontend && npm run dev`
-3. Access frontend: http://localhost:5173
-4. API running at: http://localhost:8000/api
-
-### Environment Variables Example:
-```env
-# Backend (.env)
-CORS_ALLOWED_ORIGINS=http://localhost:5173,http://localhost:3000
-
-# Frontend (.env.local)
-VITE_API_URL=http://localhost:8000/api
-```
+Fanampinirina Miharisoa David Fils RATIANDRAIBE — <miharisoadavidfils@gmail.com> — <https://github.com/DavFilsDev>
