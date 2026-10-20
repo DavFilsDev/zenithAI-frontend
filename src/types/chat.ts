@@ -1,22 +1,25 @@
 export interface Message {
-  id: string;
-  conversation: string;
+  uuid: string;
   role: 'user' | 'assistant' | 'system';
   content: string;
-  tokens?: number;
   created_at: string;
 }
 
-export interface Conversation {
-  id: string;
-  user: string;
+export interface ConversationSummary {
+  uuid: string;
   title: string;
-  messages: Message[];
   created_at: string;
   updated_at: string;
+  message_count: number;
 }
 
-export interface ChatRequest {
-  message: string;
-  conversation_id?: string;
+export interface ConversationDetail extends ConversationSummary {
+  messages: Message[];
+}
+
+export interface Paginated<T> {
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: T[];
 }

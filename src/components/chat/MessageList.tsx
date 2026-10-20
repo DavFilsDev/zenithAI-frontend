@@ -34,7 +34,7 @@ export const MessageList: React.FC<MessageListProps> = ({
     <div className="flex-1 overflow-y-auto p-4 space-y-4">
       {/* Render all messages */}
       {messages.map((message) => (
-        <MessageBubble key={message.id} message={message} />
+        <MessageBubble key={message.uuid} message={message} />
       ))}
       
       {/* Show typing indicator when sending */}
