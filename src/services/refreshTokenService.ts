@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { tokenManager } from './tokenManager';
+import { env } from '../config/env';
 
 export const refreshTokenService = {
   async refresh(): Promise<string> {
@@ -9,10 +10,8 @@ export const refreshTokenService = {
       throw new Error('No refresh token available');
     }
 
-    const apiUrl = import.meta.env.VITE_API_URL;
-    
     const response = await axios.post<{ access: string; refresh?: string }>(
-      `${apiUrl}/auth/token/refresh/`,
+      `${env.apiUrl}/auth/token/refresh/`,
       { refresh: refreshToken }
     );
 
