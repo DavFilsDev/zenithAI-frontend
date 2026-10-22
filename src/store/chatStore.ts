@@ -11,9 +11,6 @@ interface ChatState {
     isSending: boolean;
     isDraft: boolean;
 
-    setConversations: (conversations: ConversationSummary[]) => void;
-    setCurrentConversation: (conversation: ConversationDetail | null) => void;
-    addMessage: (message: Message) => void;
     loadConversations: () => Promise<void>;
     loadConversation: (uuid: string) => Promise<void>;
     sendMessage: (content: string, conversationUuid?: string) => Promise<void>;
@@ -33,22 +30,6 @@ export const useChatStore = create<ChatState>()(
             isLoading: false,
             isSending: false,
             isDraft: false,
-
-            setConversations: (conversations) => set({ conversations }),
-
-            setCurrentConversation: (conversation) => set({ currentConversation: conversation }),
-
-            addMessage: (message) => {
-                const { currentConversation } = get();
-                if (currentConversation) {
-                    set({
-                        currentConversation: {
-                            ...currentConversation,
-                            messages: [...currentConversation.messages, message],
-                        },
-                    });
-                }
-            },
 
             clearCurrentConversation: () => set({
                 currentConversation: null,
