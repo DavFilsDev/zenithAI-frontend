@@ -4,6 +4,11 @@ export interface User {
   username: string;
 }
 
+export interface UpdateProfilePayload {
+  email?: string;
+  username?: string;
+}
+
 export interface LoginResponse {
   access: string;
   refresh: string;
