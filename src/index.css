@@ -35,92 +35,6 @@ body {
   color: rgb(var(--color-text));
 }
 
-.btn-primary {
-  @apply bg-[rgb(var(--color-primary))] text-white;
-}
-
-.glass {
-  @apply backdrop-blur-md bg-white/10 border border-white/20;
-}
-
-.gradient-primary {
-  background: linear-gradient(
-    135deg,
-    rgb(var(--color-primary-light)),
-    rgb(var(--color-primary-dark))
-  );
-}
-
-/* Custom toast animations */
-@keyframes toast-slide-in {
-  from {
-    transform: translateX(100%);
-    opacity: 0;
-  }
-  to {
-    transform: translateX(0);
-    opacity: 1;
-  }
-}
-
-@keyframes toast-slide-out {
-  from {
-    transform: translateX(0);
-    opacity: 1;
-  }
-  to {
-    transform: translateX(100%);
-    opacity: 0;
-  }
-}
-
-.go-toast {
-  animation: toast-slide-in 0.2s ease-out !important;
-}
-
-.go-toast-exit {
-  animation: toast-slide-out 0.2s ease-in !important;
-}
-
-.go-toast .go-toast-body {
-  white-space: nowrap !important;
-  overflow: hidden !important;
-  text-overflow: ellipsis !important;
-}
-
-/* Responsive: Allow wrapping on very small screens */
-@media (max-width: 640px) {
-  .go-toast .go-toast-body {
-    white-space: normal !important;
-    max-width: 250px;
-  }
-}
-
-/* Sidebar transition animations */
-.sidebar-transition {
-  transition: width 0.3s ease-in-out;
-}
-
-/* Optional: Add hover effect on collapsed sidebar */
-.sidebar-collapsed:hover {
-  width: 64px;
-}
-
-/* Smooth fade for content when sidebar toggles */
-.sidebar-content {
-  animation: fadeIn 0.2s ease-in-out;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-/* Modal animations */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -141,15 +55,6 @@ body {
   }
 }
 
-.animate-fade-in {
-  animation: fadeIn 0.2s ease-out;
-}
-
-.animate-scale-up {
-  animation: scaleUp 0.2s ease-out;
-}
-
-/* Slide right animation for horizontal dropdown */
 @keyframes slideRight {
   from {
     opacity: 0;
@@ -159,6 +64,14 @@ body {
     opacity: 1;
     transform: translateX(0);
   }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.2s ease-out;
+}
+
+.animate-scale-up {
+  animation: scaleUp 0.2s ease-out;
 }
 
 .animate-slide-right {
