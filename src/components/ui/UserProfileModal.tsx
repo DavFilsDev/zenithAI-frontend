@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { FiX, FiMail, FiUser, FiLock } from 'react-icons/fi';
+import { FiX, FiMail, FiUser } from 'react-icons/fi';
+import { ApiError } from '../../services/apiError';
 
 interface UserProfileModalProps {
   isOpen: boolean;
@@ -10,7 +11,6 @@ interface UserProfileModalProps {
   };
   onUpdateEmail: (email: string) => Promise<void>;
   onUpdateUsername: (username: string) => Promise<void>;
-  onUpdatePassword: (oldPassword: string, newPassword: string) => Promise<void>;
 }
 
 export const UserProfileModal: React.FC<UserProfileModalProps> = ({
@@ -19,25 +19,42 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
   user,
   onUpdateEmail,
   onUpdateUsername,
-  onUpdatePassword,
 }) => {
-  const [editingField, setEditingField] = useState<string | null>(null);
-  const [email, setEmail] = useState(user.email);
-  const [username, setUsername] = useState(user.username);
-  const [oldPassword, setOldPassword] = useState('');
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [editingField, setEditingField] = useState<'email' | 'username' | null>(null);
+  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
   if (!isOpen) return null;
 
+  const startEditing = (field: 'email' | 'username') => {
+    setEmail(user.email);
+    setUsername(user.username);
+    setErrorMessage(null);
+    setEditingField(field);
+  };
+
+  const cancelEditing = () => {
+    setEditingField(null);
+    setErrorMessage(null);
+  };
+
+  const messageFor = (error: unknown, field: string, fallback: string): string => {
+    if (error instanceof ApiError) {
+      return error.getFieldErrors()[field]?.[0] ?? error.message;
+    }
+    return fallback;
+  };
+
   const handleUpdateEmail = async () => {
     setIsLoading(true);
+    setErrorMessage(null);
     try {
       await onUpdateEmail(email);
       setEditingField(null);
     } catch (error) {
-      console.error('Failed to update email:', error);
+      setErrorMessage(messageFor(error, 'email', 'Failed to update email.'));
     } finally {
       setIsLoading(false);
     }
@@ -45,30 +62,12 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
 
   const handleUpdateUsername = async () => {
     setIsLoading(true);
+    setErrorMessage(null);
     try {
       await onUpdateUsername(username);
       setEditingField(null);
     } catch (error) {
-      console.error('Failed to update username:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleUpdatePassword = async () => {
-    if (newPassword !== confirmPassword) {
-      alert('Passwords do not match');
-      return;
-    }
-    setIsLoading(true);
-    try {
-      await onUpdatePassword(oldPassword, newPassword);
-      setOldPassword('');
-      setNewPassword('');
-      setConfirmPassword('');
-      setEditingField(null);
-    } catch (error) {
-      console.error('Failed to update password:', error);
+      setErrorMessage(messageFor(error, 'username', 'Failed to update username.'));
     } finally {
       setIsLoading(false);
     }
@@ -105,7 +104,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
               </label>
               {editingField !== 'email' && (
                 <button
-                  onClick={() => setEditingField('email')}
+                  onClick={() => startEditing('email')}
                   className="text-xs text-[rgb(var(--color-primary))] hover:underline"
                 >
                   Update
@@ -120,6 +119,9 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                   onChange={(e) => setEmail(e.target.value)}
                   className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-[rgb(var(--color-primary))] transition-colors"
                 />
+                {errorMessage && (
+                  <p className="text-xs text-red-500">{errorMessage}</p>
+                )}
                 <div className="flex gap-2">
                   <button
                     onClick={handleUpdateEmail}
@@ -129,7 +131,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                     {isLoading ? 'Saving...' : 'Save'}
                   </button>
                   <button
-                    onClick={() => setEditingField(null)}
+                    onClick={cancelEditing}
                     className="px-3 py-1 bg-white/10 rounded-lg hover:bg-white/20 transition"
                   >
                     Cancel
@@ -151,7 +153,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
               </label>
               {editingField !== 'username' && (
                 <button
-                  onClick={() => setEditingField('username')}
+                  onClick={() => startEditing('username')}
                   className="text-xs text-[rgb(var(--color-primary))] hover:underline"
                 >
                   Update
@@ -166,6 +168,9 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                   onChange={(e) => setUsername(e.target.value)}
                   className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-[rgb(var(--color-primary))] transition-colors"
                 />
+                {errorMessage && (
+                  <p className="text-xs text-red-500">{errorMessage}</p>
+                )}
                 <div className="flex gap-2">
                   <button
                     onClick={handleUpdateUsername}
@@ -175,7 +180,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                     {isLoading ? 'Saving...' : 'Save'}
                   </button>
                   <button
-                    onClick={() => setEditingField(null)}
+                    onClick={cancelEditing}
                     className="px-3 py-1 bg-white/10 rounded-lg hover:bg-white/20 transition"
                   >
                     Cancel
@@ -185,67 +190,6 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
             ) : (
               <div className="px-3 py-2 bg-white/5 border border-white/10 rounded-lg">
                 {user.username}
-              </div>
-            )}
-          </div>
-
-          {/* Password Field */}
-          <div className="space-y-2">
-            <div className="flex items-center justify-between">
-              <label className="text-sm font-medium text-gray-400 flex items-center gap-2">
-                <FiLock size={14} /> Password
-              </label>
-              {editingField !== 'password' && (
-                <button
-                  onClick={() => setEditingField('password')}
-                  className="text-xs text-[rgb(var(--color-primary))] hover:underline"
-                >
-                  Update
-                </button>
-              )}
-            </div>
-            {editingField === 'password' ? (
-              <div className="space-y-2">
-                <input
-                  type="password"
-                  placeholder="Current password"
-                  value={oldPassword}
-                  onChange={(e) => setOldPassword(e.target.value)}
-                  className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-[rgb(var(--color-primary))] transition-colors"
-                />
-                <input
-                  type="password"
-                  placeholder="New password"
-                  value={newPassword}
-                  onChange={(e) => setNewPassword(e.target.value)}
-                  className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-[rgb(var(--color-primary))] transition-colors"
-                />
-                <input
-                  type="password"
-                  placeholder="Confirm new password"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-[rgb(var(--color-primary))] transition-colors"
-                />
-                <div className="flex gap-2">
-                  <button
-                    onClick={handleUpdatePassword}
-                    disabled={isLoading}
-                    className="flex-1 px-3 py-1 bg-[rgb(var(--color-primary))] text-white rounded-lg hover:opacity-90 transition disabled:opacity-50"
-                  >
-                    {isLoading ? 'Updating...' : 'Update Password'}
-                  </button>
-                  <button
-                    onClick={() => setEditingField(null)}
-                    className="px-3 py-1 bg-white/10 rounded-lg hover:bg-white/20 transition"
-                  >
-                    Cancel
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <div className="px-3 py-2 bg-white/5 border border-white/10 rounded-lg">
-                ••••••••
               </div>
             )}
           </div>
