@@ -85,8 +85,6 @@ The frontend is on <http://localhost:5173>, the backend on <http://localhost:800
 
 Only `VITE_API_URL` affects where requests go. All three are validated at startup with `zod`: a missing or malformed value stops the app with a message naming the variable. `VITE_APP_NAME` sets the document title and `VITE_DEFAULT_THEME` sets the theme applied before the first paint; a theme saved in `localStorage` still wins over the default.
 
-There is no `VITE_WS_URL`. Streaming is Server-Sent Events, not WebSocket.
-
 On the free static hosts, `VITE_*` values are inlined at build time, so a different `VITE_API_URL` means a different build.
 
 ## Scripts
