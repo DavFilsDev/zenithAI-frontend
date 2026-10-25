@@ -1,5 +1,6 @@
 import api from './api';
 import { tokenManager } from './tokenManager';
+import { userCache } from './userCache';
 import { ApiError } from './apiError';
 import type {
   LoginCredentials,
@@ -21,10 +22,13 @@ export const authService = {
 
       tokenManager.setTokens(access, refresh);
 
+      const user = { id: user_id, email, username };
+      userCache.write(user);
+
       return {
         access,
         refresh,
-        user: { id: user_id, email, username },
+        user,
       };
     } catch (error) {
       if (error instanceof ApiError) {
@@ -60,5 +64,6 @@ export const authService = {
 
   logout(): void {
     tokenManager.clearTokens();
+    userCache.clear();
   },
 };
