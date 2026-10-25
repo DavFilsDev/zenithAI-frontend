@@ -216,6 +216,8 @@ Every page component is behind `React.lazy` with a shared `Suspense` fallback, s
 | App name | `VITE_APP_NAME`, injected into the document title |
 | Default theme | `VITE_DEFAULT_THEME`, applied before first paint |
 | Design tokens | `@theme` in CSS, no `tailwind.config.js` |
+| Dark mode | class-based `@custom-variant dark`, toggled by `ThemeContext` |
+| Markdown | `@plugin "@tailwindcss/typography"` in `index.css` |
 | Type safety | `strict` plus `noUncheckedIndexedAccess`, enforced by a real `tsc -b` |
 
 An unset or malformed variable is a startup error with a readable message, never an `undefined` that surfaces later as a 404 on an unknown host.
