@@ -12,21 +12,21 @@ import { Loader } from './components/ui/Loader';
 import { Outlet } from "react-router-dom";
 
 const PrivateRoute = () => {
-  const { user, isLoading } = useAuth();
+  const { hasSession, isLoading } = useAuth();
   if (isLoading) return <Loader />;
-  if (!user) return <Navigate to="/login" replace />;
+  if (!hasSession) return <Navigate to="/login" replace />;
   return <Outlet />;
 };
 
 function AppContent() {
-  const { user } = useAuth();
+  const { hasSession } = useAuth();
   const { loadConversations } = useChatStore();
 
   useEffect(() => {
-    if (user) {
+    if (hasSession) {
       loadConversations();
     }
-  }, [user, loadConversations]);
+  }, [hasSession, loadConversations]);
 
   return (
     <>
