@@ -16,6 +16,7 @@ interface ApiErrorOptions {
   code?: string;
   details?: ApiErrorDetails | null;
   data?: unknown;
+  retryAfter?: number | null;
 }
 
 const fallbackCodes: Record<number, string> = {
@@ -81,6 +82,7 @@ export class ApiError extends Error {
   readonly code: string;
   readonly details: ApiErrorDetails | null;
   readonly data: unknown;
+  readonly retryAfter: number | null;
 
   constructor(message: string, status: number, options: ApiErrorOptions = {}) {
     super(message);
@@ -89,6 +91,7 @@ export class ApiError extends Error {
     this.code = options.code ?? codeFor(status);
     this.details = options.details ?? null;
     this.data = options.data;
+    this.retryAfter = options.retryAfter ?? null;
   }
 
   static fromAxiosError(error: unknown): ApiError {
@@ -105,11 +108,17 @@ export class ApiError extends Error {
     const body = error.response?.data;
     const envelope = envelopeFrom(body);
     const details = envelope && isRecord(envelope.details) ? envelope.details : null;
+    const retryAfterHeader = error.response?.headers?.['retry-after'];
+    const retryAfter =
+      typeof retryAfterHeader === 'string' && /^\d+$/.test(retryAfterHeader)
+        ? Number(retryAfterHeader)
+        : null;
 
     return new ApiError(envelope?.message ?? messageFrom(status, body, error.message), status, {
       code: envelope?.code ?? codeFor(status),
       details,
       data: body,
+      retryAfter,
     });
   }
 
