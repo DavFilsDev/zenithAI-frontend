@@ -108,7 +108,7 @@ Three kinds, never mixed in one component:
 - One Axios instance for the whole app, in `shared/api/`. No component, hook or page calls `axios` directly.
 - The base URL comes from `import.meta.env.VITE_API_URL` and from nowhere else. No path prefix is hardcoded in a call.
 - The `Authorization` header is attached by the request interceptor, never by a caller.
-- Token refresh is single-flight: one refresh in flight, every waiting request replays after it.
+- Token refresh is single-flight: one refresh in flight, every waiting request replays after it. The shared promise is cleared when it settles, so a later `401` starts a fresh refresh.
 - Every error is normalised to one error type carrying `status`, `code`, `message` and `details`, and every caller branches on `code`, never on a raw status number.
 - `PATCH` is used for partial updates, and only for the fields the contract allows.
 
