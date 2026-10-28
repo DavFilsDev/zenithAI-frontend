@@ -13,6 +13,19 @@ const api = axios.create({
   timeout: 30000,
 });
 
+let isRedirecting = false;
+
+const endSession = (): void => {
+  tokenManager.clearTokens();
+
+  if (isRedirecting) {
+    return;
+  }
+
+  isRedirecting = true;
+  window.location.href = '/login';
+};
+
 api.interceptors.request.use(
   (config) => {
     const token = tokenManager.getAccessToken();
@@ -38,8 +51,7 @@ api.interceptors.response.use(
     }
     
     if (originalRequest?._retry) {
-      tokenManager.clearTokens();
-      window.location.href = '/login';
+      endSession();
       return Promise.reject(ApiError.fromAxiosError(error));
     }
     
@@ -50,8 +62,7 @@ api.interceptors.response.use(
         await refreshTokenService.refresh();
         return api(originalRequest);
       } catch (refreshError) {
-        tokenManager.clearTokens();
-        window.location.href = '/login';
+        endSession();
         return Promise.reject(ApiError.fromAxiosError(refreshError));
       }
     }
