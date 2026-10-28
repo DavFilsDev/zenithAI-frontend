@@ -133,13 +133,9 @@ There is no `public/` directory, no `src/utils/`, no `src/styles/`, and no test 
 
 Each of these is a defect found during the audit, tracked in [`docs/IMPROVEMENT_PLAN.md`](docs/IMPROVEMENT_PLAN.md).
 
-- The frontend currently calls `/chat/conversations/` and `/chat/chat/{id}/`, on an `/api` base. The contract defines `/conversations/` and `/conversations/{uuid}/messages/` on `/api/v1`. Migration is P0.2.
-- A new chat sends the literal id `'draft'` to the backend, which rejects it. Fixed by P0.3.
 - Conversations, including message text, are cached in `localStorage` under `chat-storage` and are not cleared on sign-out. Fixed by P2.3.
-- A failed profile request on load deletes the session, so a backend error looks like a logout. Fixed by P0.9.
-- The token refresh is not single-flight, so several simultaneous failures trigger several refreshes. Fixed by P1.2.
 - Signing out never calls the backend, so a refresh token stays valid until it expires. Fixed by P1.4.
-- Assistant answers render without GFM support, without syntax highlighting, and with an inactive `prose` class, so a markdown table appears as raw text. Fixed by P4.2.
+- Assistant answers render without GFM support and without syntax highlighting, so a markdown table appears as raw text. Fixed by P4.2.
 - `/privacy` and `/terms` on the landing page lead nowhere, and their labels are swapped. Fixed by P4.9.
 - There is no route for an unknown path, so a bad URL renders nothing.
 
