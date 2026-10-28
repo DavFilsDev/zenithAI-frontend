@@ -3,6 +3,7 @@ import { tokenManager } from './tokenManager';
 import { refreshTokenService } from './refreshTokenService';
 import { shouldSkipRefresh } from '../types/auth';
 import { ApiError } from './apiError';
+import { logApiError } from '../lib/logger';
 import { env } from '../config/env';
 
 const api = axios.create({
@@ -26,6 +27,12 @@ const endSession = (): void => {
   window.location.href = '/login';
 };
 
+const reject = (error: unknown): Promise<never> => {
+  const apiError = ApiError.fromAxiosError(error);
+  logApiError(apiError);
+  return Promise.reject(apiError);
+};
+
 api.interceptors.request.use(
   (config) => {
     const token = tokenManager.getAccessToken();
@@ -37,7 +44,7 @@ api.interceptors.request.use(
     return config;
   },
   (error) => {
-    return Promise.reject(ApiError.fromAxiosError(error));
+    return reject(error);
   }
 );
 
@@ -47,14 +54,14 @@ api.interceptors.response.use(
     const originalRequest = error.config;
     
     if (shouldSkipRefresh(originalRequest?.url)) {
-      return Promise.reject(ApiError.fromAxiosError(error));
+      return reject(error);
     }
     
     if (originalRequest?._retry) {
       if (error.response?.status === 401) {
         endSession();
       }
-      return Promise.reject(ApiError.fromAxiosError(error));
+      return reject(error);
     }
     
     if (error.response?.status === 401 && tokenManager.hasValidTokens()) {
@@ -68,11 +75,12 @@ api.interceptors.response.use(
         if (apiError.status === 401) {
           endSession();
         }
+        logApiError(apiError);
         return Promise.reject(apiError);
       }
     }
     
-    return Promise.reject(ApiError.fromAxiosError(error));
+    return reject(error);
   }
 );
 

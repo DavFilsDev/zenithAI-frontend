@@ -2,6 +2,7 @@ import api from './api';
 import { tokenManager } from './tokenManager';
 import { userCache } from './userCache';
 import { ApiError } from './apiError';
+import { logError } from '../lib/logger';
 import type {
   LoginCredentials,
   RegisterCredentials,
@@ -75,8 +76,19 @@ export const authService = {
     }
   },
 
-  logout(): void {
+  async logout(): Promise<void> {
+    const refresh = tokenManager.getRefreshToken();
     tokenManager.clearTokens();
     userCache.clear();
+
+    if (!refresh) {
+      return;
+    }
+
+    try {
+      await api.post('/auth/logout/', { refresh });
+    } catch (error) {
+      logError('logout', error);
+    }
   },
 };
