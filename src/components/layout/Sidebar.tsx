@@ -5,7 +5,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { useTheme } from '../../contexts/ThemeContext';
 import { FiPlus, FiTrash2, FiMessageSquare, FiSidebar } from 'react-icons/fi';
 import { formatDistanceToNow } from 'date-fns';
-import { useToast } from '../../hooks/useToast';
+import { notify } from '../../lib/notify';
 import { SidebarHeader } from '../ui/SidebarHeader';
 import { SettingsDropdown } from '../ui/SettingsDropdown';
 import { UserButton } from '../ui/UserButton';
@@ -21,7 +21,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
   const { user, logout, updateProfile } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
-  const { showSuccess } = useToast();
   const [showTooltip, setShowTooltip] = useState(false);
 
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
@@ -47,17 +46,17 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
   const handleLogout = () => {
     const username = user?.username || user?.email || 'User';
     logout();
-    showSuccess(`You are logged out successfully! See you soon ${username}!`);
+    notify.success(`You are logged out successfully! See you soon ${username}!`);
   };
 
   const handleUpdateEmail = async (email: string) => {
     await updateProfile({ email });
-    showSuccess('Email updated successfully!');
+    notify.success('Email updated successfully!');
   };
 
   const handleUpdateUsername = async (username: string) => {
     await updateProfile({ username });
-    showSuccess('Username updated successfully!');
+    notify.success('Username updated successfully!');
   };
 
   useEffect(() => {
