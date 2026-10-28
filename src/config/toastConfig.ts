@@ -1,6 +1,8 @@
 import type { ToastOptions } from 'react-hot-toast';
 
-export const toastConfig: Record<string, ToastOptions> = {
+export type ToastSeverity = 'success' | 'error' | 'loading' | 'rateLimit';
+
+export const toastConfig: Record<ToastSeverity, ToastOptions> = {
   success: {
     duration: 3000,
     style: {
@@ -49,23 +51,11 @@ export const toastConfig: Record<string, ToastOptions> = {
       whiteSpace: 'nowrap',
     },
   },
-  custom: {
-    duration: 4000,
-    style: {
-      background: 'rgba(255, 255, 255, 0.1)',
-      color: 'white',
-      border: '1px solid rgba(255, 255, 255, 0.2)',
-      backdropFilter: 'blur(12px)',
-      borderRadius: '12px',
-      padding: '12px 16px',
-      whiteSpace: 'nowrap',
-      minWidth: '300px',
-      maxWidth: '500px',
-    },
+  rateLimit: {
+    duration: 8000,
   },
 };
 
-// Helper function to truncate long messages
 export const formatToastMessage = (message: string, maxLength: number = 80): string => {
   if (message.length <= maxLength) return message;
   return message.substring(0, maxLength) + '...';
