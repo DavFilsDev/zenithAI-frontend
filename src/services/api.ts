@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { tokenManager } from './tokenManager';
 import { refreshTokenService } from './refreshTokenService';
-import { isAuthEndpoint } from '../types/auth';
+import { shouldSkipRefresh } from '../types/auth';
 import { ApiError } from './apiError';
 import { env } from '../config/env';
 
@@ -46,12 +46,14 @@ api.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
     
-    if (isAuthEndpoint(originalRequest?.url)) {
+    if (shouldSkipRefresh(originalRequest?.url)) {
       return Promise.reject(ApiError.fromAxiosError(error));
     }
     
     if (originalRequest?._retry) {
-      endSession();
+      if (error.response?.status === 401) {
+        endSession();
+      }
       return Promise.reject(ApiError.fromAxiosError(error));
     }
     
@@ -62,8 +64,11 @@ api.interceptors.response.use(
         await refreshTokenService.refresh();
         return api(originalRequest);
       } catch (refreshError) {
-        endSession();
-        return Promise.reject(ApiError.fromAxiosError(refreshError));
+        const apiError = ApiError.fromAxiosError(refreshError);
+        if (apiError.status === 401) {
+          endSession();
+        }
+        return Promise.reject(apiError);
       }
     }
     
