@@ -62,18 +62,19 @@ These are the real call sites in `src/`, all of them on the `/api/v1` base:
 
 | Contract endpoint | Called from | Path actually requested |
 |---|---|---|
-| `POST /auth/register/` | `src/services/auth.ts:44` | `/auth/register/` |
-| `POST /auth/token/` | `src/services/auth.ts:17` | `/auth/token/` |
+| `POST /auth/register/` | `src/services/auth.ts:45` | `/auth/register/` |
+| `POST /auth/token/` | `src/services/auth.ts:18` | `/auth/token/` |
 | `POST /auth/token/refresh/` | `src/services/refreshTokenService.ts:14` | `/auth/token/refresh/` |
-| `GET /auth/profile/` | `src/services/auth.ts:56` | `/auth/profile/` |
-| `PATCH /auth/profile/` | `src/services/auth.ts:68` | `/auth/profile/` |
+| `GET /auth/profile/` | `src/services/auth.ts:57` | `/auth/profile/` |
+| `PATCH /auth/profile/` | `src/services/auth.ts:69` | `/auth/profile/` |
+| `POST /auth/logout/` | `src/services/auth.ts:89` | `/auth/logout/` |
 | `GET /conversations/` | `src/services/chat.ts:11` | `/chat/conversations/` |
 | `POST /conversations/` | `src/services/chat.ts:21` | `/chat/conversations/` |
 | `GET /conversations/{uuid}/` | `src/services/chat.ts:16` | `/chat/conversations/{uuid}/` |
-| `POST /conversations/{uuid}/messages/` | `src/services/chat.ts:27` | `/chat/conversations/{uuid}/messages/` |
+| `POST /conversations/{uuid}/messages/` | `src/services/chat.ts:26` | `/chat/conversations/{uuid}/messages/` |
 | `DELETE /conversations/{uuid}/` | `src/services/chat.ts:34` | `/chat/conversations/{uuid}/` |
 
-The five rows marked `No` have no call site: logout clears tokens locally, conversation rename (`PATCH`) is never issued, messages are read from the conversation payload, and there is no streaming or health call.
+The endpoints with no call site are conversation rename (`PATCH /conversations/{uuid}/`), message history (`GET /conversations/{uuid}/messages/`), streaming, and the health checks. Messages are read from the conversation payload, and there is no streaming or health call yet.
 
 ## 4. Public identifiers
 
@@ -102,6 +103,8 @@ The frontend reads `results`, and uses `count`, `next` and `previous` for naviga
 - Refresh token lifetime: **7 days**, with rotation, and the rotated token is blacklisted.
 - Header: `Authorization: Bearer <token>`.
 - Logout blacklists the refresh token presented in the body.
+
+On sign-out the frontend clears both tokens and the cached profile locally and calls this endpoint best effort with the captured refresh token. A failed blacklist does not keep the user signed in.
 
 | Endpoint | Request | Response |
 |---|---|---|
@@ -139,7 +142,8 @@ Every error response, without exception, uses this envelope:
 ```
 
 `src/services/apiError.ts` parses this envelope into a single `ApiError` that
-carries `status`, `code`, `message` and `details`. Validation field messages are
+carries `status`, `code`, `message`, `details` and `retryAfter`, the last parsed
+from the `Retry-After` header when present. Validation field messages are
 available through `getFieldErrors()` and are mapped onto the registration form.
 A response that is not this envelope — for example the HTML 404 returned for an
 unknown route — falls back to a message chosen from the HTTP status.
@@ -162,6 +166,7 @@ A resource that exists but belongs to someone else returns `404 not_found`, neve
 - Throttling per IP and per user.
 - A global daily cap shared by all users.
 - Exceeding a limit returns `429` with a `Retry-After` header and the code `rate_limited` or `quota_exhausted`.
+- The frontend reads that header into `ApiError.retryAfter`. A `rate_limited` failure shows "Too many requests" with the wait; a `quota_exhausted` failure shows "Daily limit reached" with the wait. Both offer a retry action, and neither mentions a purchase.
 - There are no credits and no billing state on the user.
 
 ## 10. LLM
@@ -190,3 +195,13 @@ Frontend:
 | Variable | Value |
 |---|---|
 | `VITE_API_URL` | `http://localhost:8000/api/v1` |
+
+## 12. Generated types
+
+`src/types/api.generated.ts` is generated from the backend OpenAPI schema. Regenerate it with:
+
+```sh
+npm run generate:api-types
+```
+
+The script reads `API_SCHEMA_URL` and defaults to `http://localhost:8000/api/v1/schema/`. The generated file is committed; do not edit it by hand.
