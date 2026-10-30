@@ -112,19 +112,26 @@ apiClient receives 401
 
 One refresh at a time. Without this, five concurrent requests produce five refresh calls, and rotation makes the last writer win while earlier replays carry a superseded token. The in-flight promise is shared, not a counter, and it is cleared when it settles so a later `401` starts a fresh refresh.
 
-The refresh request itself bypasses the interceptor, otherwise it recurses. `/auth/token/`, `/auth/register/` and `/auth/profile/` never trigger a refresh: the first two are unauthenticated, and the profile call is the session bootstrap. A retried request or a failed refresh ends the session only on a `401`; a `500` or network error is returned to the caller with the session intact.
+The refresh request itself bypasses the interceptor, otherwise it recurses. `/auth/token/`, `/auth/register/`, `/auth/profile/` and `/auth/logout/` never trigger a refresh: the first two are unauthenticated, the profile call is the session bootstrap, and logout must not refresh a session that is ending. A retried request or a failed refresh ends the session only on a `401`; a `500` or network error is returned to the caller with the session intact.
+
+### Rate limits
+
+`ApiError` carries `retryAfter`, parsed from the `Retry-After` header. A `rate_limited` or `quota_exhausted` failure is shown through `notify.rateLimit`, which renders the wait and a retry action that repeats the failed operation. `quota_exhausted` says the daily limit was reached; neither message mentions a purchase.
+
+### Development logging
+
+In development, every failed request is logged with its HTTP status and contract code, and `main.tsx` logs unhandled promise rejections and window errors. Production stays quiet.
 
 ### Sign out
 
 ```
 logout()
-  └─ authApi.logout({ refresh })  → POST /auth/logout/, best effort
-  └─ tokenStore.clear()
-  └─ queryClient.clear()          every cached conversation goes with the user
-  └─ navigate('/login')
+  └─ authService.logout()  captures the refresh token, clears tokens and cached profile
+  └─ resetChatStore()      clears chat-storage and in-memory conversations
+  └─ the route guard sends the user to /login
 ```
 
-The server call is best effort: a failed blacklist must not trap the user in a session they asked to leave. The local clear happens whatever the server answers.
+The server call is best effort: a failed blacklist must not trap the user in a session they asked to leave. The local clear happens whatever the server answers. TanStack Query is not installed yet; until P2.2, `resetChatStore()` is the local cache clear, and the same sign-out path will clear the query cache when it arrives.
 
 ### Bootstrap
 
