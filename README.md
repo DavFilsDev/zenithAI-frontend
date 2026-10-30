@@ -89,14 +89,15 @@ On the free static hosts, `VITE_*` values are inlined at build time, so a differ
 
 ## Scripts
 
-These five exist today. Anything else you may have read elsewhere does not.
+These six exist today. Anything else you may have read elsewhere does not.
 
 ```bash
-npm run dev         # dev server on port 5173, opens a browser
-npm run build       # production build into dist/
-npm run preview     # serve the production build locally
-npm run lint        # ESLint
-npm run type-check  # TypeScript
+npm run dev                # dev server on port 5173, opens a browser
+npm run build              # production build into dist/
+npm run preview            # serve the production build locally
+npm run lint               # ESLint
+npm run type-check         # TypeScript
+npm run generate:api-types # regenerate src/types/api.generated.ts from the backend schema
 ```
 
 Two caveats, both fixed in phase P3:
@@ -120,11 +121,11 @@ src/
 │   └── ui/          Button, Input, Modal, toasts, toggles
 ├── config/          toastConfig
 ├── contexts/        AuthContext, ThemeContext
-├── hooks/           useToast, useChat (unused)
+├── lib/             notify, logger
 ├── pages/           Home, Login, Register, Chat
 ├── services/        api, auth, chat, tokenManager, refreshTokenService
 ├── store/           chatStore
-└── types/           auth, chat, user
+└── types/           auth, chat, user, api.generated
 ```
 
 There is no `public/` directory, no `src/utils/`, no `src/styles/`, and no test directory. The target structure, organised by feature, is in [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
@@ -133,8 +134,6 @@ There is no `public/` directory, no `src/utils/`, no `src/styles/`, and no test 
 
 Each of these is a defect found during the audit, tracked in [`docs/IMPROVEMENT_PLAN.md`](docs/IMPROVEMENT_PLAN.md).
 
-- Conversations, including message text, are cached in `localStorage` under `chat-storage` and are not cleared on sign-out. Fixed by P2.3.
-- Signing out never calls the backend, so a refresh token stays valid until it expires. Fixed by P1.4.
 - Assistant answers render without GFM support and without syntax highlighting, so a markdown table appears as raw text. Fixed by P4.2.
 - `/privacy` and `/terms` on the landing page lead nowhere, and their labels are swapped. Fixed by P4.9.
 - There is no route for an unknown path, so a bad URL renders nothing.
