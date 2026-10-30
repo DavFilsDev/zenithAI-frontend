@@ -1,25 +1,7 @@
-export interface Message {
-  uuid: string;
-  role: 'user' | 'assistant' | 'system';
-  content: string;
-  created_at: string;
-}
+import type { components } from './api.generated';
 
-export interface ConversationSummary {
-  uuid: string;
-  title: string;
-  created_at: string;
-  updated_at: string;
-  message_count: number;
-}
-
-export interface ConversationDetail extends ConversationSummary {
-  messages: Message[];
-}
-
-export interface Paginated<T> {
-  count: number;
-  next: string | null;
-  previous: string | null;
-  results: T[];
-}
+export type Message = components['schemas']['Message'];
+export type ConversationSummary = components['schemas']['ConversationList'];
+export type ConversationDetail = components['schemas']['Conversation'];
+export type ConversationListPage = components['schemas']['PaginatedConversationListList'];
+export type MessageListPage = components['schemas']['PaginatedMessageList'];

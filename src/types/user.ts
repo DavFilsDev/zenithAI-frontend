@@ -1,13 +1,9 @@
-export interface User {
-  id: number;
-  email: string;
-  username: string;
-}
+import type { components } from './api.generated';
 
-export interface UpdateProfilePayload {
-  email?: string;
-  username?: string;
-}
+export type User = components['schemas']['User'];
+export type UpdateProfilePayload = components['schemas']['PatchedUserRequest'];
+export type LoginCredentials = components['schemas']['TokenObtainPairRequest'];
+export type RegisterCredentials = components['schemas']['RegisterRequest'];
 
 export interface LoginResponse {
   access: string;
@@ -21,14 +17,4 @@ export interface AuthResponse {
   access: string;
   refresh: string;
   user: User;
-}
-
-export interface LoginCredentials {
-  email: string;
-  password: string;
-}
-
-export interface RegisterCredentials extends LoginCredentials {
-  username: string;
-  password2: string;
 }

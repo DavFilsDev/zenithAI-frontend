@@ -2,13 +2,13 @@ import api from './api';
 import type {
   ConversationDetail,
   ConversationSummary,
+  ConversationListPage,
   Message,
-  Paginated,
 } from '../types/chat';
 
 export const chatService = {
   async getConversations(): Promise<ConversationSummary[]> {
-    const response = await api.get<Paginated<ConversationSummary>>('/chat/conversations/');
+    const response = await api.get<ConversationListPage>('/chat/conversations/');
     return response.data.results;
   },
 
