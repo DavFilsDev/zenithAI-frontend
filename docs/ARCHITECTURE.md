@@ -250,6 +250,6 @@ P4.8 adds `app/ErrorBoundary.tsx` to catch a render crash, show a recoverable sc
 | Design tokens | `@theme` in CSS, no `tailwind.config.js` |
 | Dark mode | class-based `@custom-variant dark`, toggled by `ThemeProvider` |
 | Markdown | `@plugin "@tailwindcss/typography"` in `index.css` |
-| Type safety | `strict` today; P3.1 makes `tsc -b` the gate and P3.2 adds `noUncheckedIndexedAccess` |
+| Type safety | `strict`, `noUncheckedIndexedAccess` and `exactOptionalPropertyTypes`, enforced by `tsc -b` |
 
 An unset or malformed variable is a startup error with a readable message, never an `undefined` that surfaces later as a 404 on an unknown host.
