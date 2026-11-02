@@ -10,7 +10,7 @@ import { notify } from '../../../shared/ui/notify';
 import type { ConversationDetail, Message } from '../api/types';
 
 interface SendMessageVariables {
-  conversationUuid?: string;
+  conversationUuid?: string | undefined;
   content: string;
 }
 
