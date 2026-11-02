@@ -5,7 +5,7 @@ import type { ConversationSummary } from '../api/types';
 
 interface ConversationListProps {
   conversations: ConversationSummary[];
-  activeUuid?: string;
+  activeUuid?: string | undefined;
   isLoading: boolean;
   page: number;
   hasNext: boolean;

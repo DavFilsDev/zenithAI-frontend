@@ -1,7 +1,7 @@
 import { FiUser } from 'react-icons/fi';
 
 interface UserButtonProps {
-  username?: string;
+  username?: string | undefined;
   onClick: () => void;
   variant?: 'full' | 'icon';
 }
