@@ -100,10 +100,21 @@ npm run type-check         # TypeScript
 npm run generate:api-types # regenerate src/shared/api/api.generated.ts from the backend schema
 ```
 
-Two caveats, both fixed in phase P3:
+One caveat, fixed in phase P3:
 
-- `type-check` and the type step of `build` currently check nothing, because the root `tsconfig.json` compiles zero files. Do not treat a green build as proof that the types are correct.
-- `lint` may fail on configuration warnings rather than on code.
+- `lint` may fail on configuration warnings rather than on code. The type-check and the type step of `build` run `tsc -b` with `strict`, `noUncheckedIndexedAccess` and `exactOptionalPropertyTypes`, so a type error fails both.
+
+## Quality gates
+
+Run these before committing:
+
+```bash
+npm run type-check
+npm run lint
+npm run build
+```
+
+`type-check` and `build` share the same `tsc -b` gate. `lint` runs the flat ESLint config with `--max-warnings 0`. All three pass on the current tree; `build` still reports the pre-existing >500 kB chunk warning.
 
 There is no `test`, no `test:coverage`, no `test:e2e`, no `format` and no `deploy` script. Nothing runs tests, because nothing has been written yet.
 
