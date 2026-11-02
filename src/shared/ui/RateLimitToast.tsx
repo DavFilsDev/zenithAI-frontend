@@ -1,6 +1,6 @@
 interface RateLimitToastProps {
   message: string;
-  onRetry?: () => void;
+  onRetry?: (() => void) | undefined;
   onDismiss: () => void;
 }
 
