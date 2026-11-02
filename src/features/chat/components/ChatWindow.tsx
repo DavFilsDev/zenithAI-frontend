@@ -15,9 +15,9 @@ export const ChatWindow = ({
   title,
   messages,
   onSendMessage,
-  isLoading,
-  isSending,
-  disabled,
+  isLoading = false,
+  isSending = false,
+  disabled = false,
 }: ChatWindowProps) => {
   return (
     <div className="flex-1 flex flex-col h-full bg-[rgb(var(--color-bg))]">
