@@ -38,15 +38,15 @@ The application is functional but mid-refactor. It is honest about the gap betwe
 | Language | TypeScript 5.9 |
 | Build tool | Vite 7 |
 | Styling | Tailwind CSS 4, configured in CSS |
-| Server state | Hand-rolled today; TanStack Query is phase P2 |
-| UI state | Zustand, with two React contexts for theme and session |
-| HTTP client | Axios |
+| Server state | TanStack Query |
+| UI state | Zustand for the session and chat UI, a React context for the theme |
+| HTTP client | Axios for JSON, `fetch` for the SSE stream |
 | Forms | React Hook Form |
 | Markdown | react-markdown |
 | Notifications | react-hot-toast |
 | Icons | react-icons and lucide-react, both in use |
 
-Not installed, and therefore not used: React Query, Prism or any syntax highlighter, CSS Modules, any WebSocket library, any test runner.
+Not installed, and therefore not used: Prism or any syntax highlighter, CSS Modules, any WebSocket library, any test runner.
 
 ## Requirements
 
@@ -97,7 +97,7 @@ npm run build              # production build into dist/
 npm run preview            # serve the production build locally
 npm run lint               # ESLint
 npm run type-check         # TypeScript
-npm run generate:api-types # regenerate src/types/api.generated.ts from the backend schema
+npm run generate:api-types # regenerate src/shared/api/api.generated.ts from the backend schema
 ```
 
 Two caveats, both fixed in phase P3:
@@ -111,32 +111,30 @@ There is no `test`, no `test:coverage`, no `test:e2e`, no `format` and no `deplo
 
 ```
 src/
-├── App.tsx          routes, providers
 ├── main.tsx         entry point
 ├── index.css        the only stylesheet
 ├── assets/
-├── components/
-│   ├── chat/        ChatInput, MessageBubble, MessageList
-│   ├── layout/      ChatWindow, Sidebar
-│   └── ui/          Button, Input, Modal, toasts, toggles
-├── config/          toastConfig
-├── contexts/        AuthContext, ThemeContext
-├── lib/             notify, logger
-├── pages/           Home, Login, Register, Chat
-├── services/        api, auth, chat, tokenManager, refreshTokenService
-├── store/           chatStore
-└── types/           auth, chat, user, api.generated
+├── app/             providers, router, ChatShell, ProfileBootstrap
+├── features/
+│   ├── auth/        api, model, pages, components
+│   ├── chat/        api, model, pages, components
+│   └── home/        pages, components
+└── shared/
+    ├── api/         client, interceptor, errors, env, tokens, generated types
+    ├── auth/        session store and useSession
+    ├── ui/          Button, Input, theme, toasts, Spinner
+    ├── hooks/       useOnClickOutside
+    └── lib/         logger, parseRetryAfter
 ```
 
-There is no `public/` directory, no `src/utils/`, no `src/styles/`, and no test directory. The target structure, organised by feature, is in [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
+There is no `public/` directory, no `src/utils/`, no `src/styles/`, and no test directory. The full tree and the layer rules are in [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
 
 ## Known issues
 
 Each of these is a defect found during the audit, tracked in [`docs/IMPROVEMENT_PLAN.md`](docs/IMPROVEMENT_PLAN.md).
 
 - Assistant answers render without GFM support and without syntax highlighting, so a markdown table appears as raw text. Fixed by P4.2.
-- `/privacy` and `/terms` on the landing page lead nowhere, and their labels are swapped. Fixed by P4.9.
-- There is no route for an unknown path, so a bad URL renders nothing.
+- `/privacy` and `/terms` on the landing page have no pages; the catch-all route redirects them to `/`. Fixed by P4.9.
 
 ## Status & Roadmap
 

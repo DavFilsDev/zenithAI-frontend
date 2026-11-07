@@ -33,18 +33,19 @@ Usage legend: **Used by frontend** = the current frontend code exercises this en
 | POST | `/auth/register/` | No | Implemented | `POST /api/v1/auth/register/` | Yes |
 | POST | `/auth/token/` | No | Implemented | `POST /api/v1/auth/token/` | Yes |
 | POST | `/auth/token/refresh/` | No | Implemented | `POST /api/v1/auth/token/refresh/` | Yes |
-| POST | `/auth/logout/` | Yes | Implemented | `POST /api/v1/auth/logout/` | No |
+| POST | `/auth/logout/` | No | Implemented | `POST /api/v1/auth/logout/` | Yes |
 | GET | `/auth/profile/` | Yes | Implemented | `GET /api/v1/auth/profile/` | Yes |
 | PATCH | `/auth/profile/` | Yes | Implemented | `PATCH /api/v1/auth/profile/` | Yes |
 | GET | `/conversations/` | Yes | Implemented | `GET /api/v1/chat/conversations/` (paginated) | Yes |
 | POST | `/conversations/` | Yes | Implemented | `POST /api/v1/chat/conversations/` | Yes |
 | GET | `/conversations/{uuid}/` | Yes | Implemented | `GET /api/v1/chat/conversations/{uuid}/` | Yes |
-| PATCH | `/conversations/{uuid}/` | Yes | Implemented | `PATCH /api/v1/chat/conversations/{uuid}/` | No |
+| PATCH | `/conversations/{uuid}/` | Yes | Implemented | `PATCH /api/v1/chat/conversations/{uuid}/` | Yes |
 | DELETE | `/conversations/{uuid}/` | Yes | Implemented | `DELETE /api/v1/chat/conversations/{uuid}/` | Yes |
-| GET | `/conversations/{uuid}/messages/` | Yes | Implemented | `GET /api/v1/chat/conversations/{uuid}/messages/` | No |
-| POST | `/conversations/{uuid}/messages/` | Yes | Implemented | `POST /api/v1/chat/conversations/{uuid}/messages/` | Yes |
-| POST | `/conversations/{uuid}/messages/stream/` | Yes | Implemented | `POST /api/v1/chat/conversations/{uuid}/messages/stream/` | No |
+| GET | `/conversations/{uuid}/messages/` | Yes | Implemented | `GET /api/v1/chat/conversations/{uuid}/messages/` | Yes |
+| POST | `/conversations/{uuid}/messages/` | Yes | Implemented | `POST /api/v1/chat/conversations/{uuid}/messages/` | No |
+| POST | `/conversations/{uuid}/messages/stream/` | Yes | Implemented | `POST /api/v1/chat/conversations/{uuid}/messages/stream/` | Yes |
 | GET | `/health/` | No | Implemented | `GET /api/v1/health/` | No |
+| GET | `/health/live/` | No | Implemented | `GET /api/v1/health/live/` | No |
 
 ### 3.1 Method set
 
@@ -62,19 +63,21 @@ These are the real call sites in `src/`, all of them on the `/api/v1` base:
 
 | Contract endpoint | Called from | Path actually requested |
 |---|---|---|
-| `POST /auth/register/` | `src/services/auth.ts:45` | `/auth/register/` |
-| `POST /auth/token/` | `src/services/auth.ts:18` | `/auth/token/` |
-| `POST /auth/token/refresh/` | `src/services/refreshTokenService.ts:14` | `/auth/token/refresh/` |
-| `GET /auth/profile/` | `src/services/auth.ts:57` | `/auth/profile/` |
-| `PATCH /auth/profile/` | `src/services/auth.ts:69` | `/auth/profile/` |
-| `POST /auth/logout/` | `src/services/auth.ts:89` | `/auth/logout/` |
-| `GET /conversations/` | `src/services/chat.ts:11` | `/chat/conversations/` |
-| `POST /conversations/` | `src/services/chat.ts:21` | `/chat/conversations/` |
-| `GET /conversations/{uuid}/` | `src/services/chat.ts:16` | `/chat/conversations/{uuid}/` |
-| `POST /conversations/{uuid}/messages/` | `src/services/chat.ts:26` | `/chat/conversations/{uuid}/messages/` |
-| `DELETE /conversations/{uuid}/` | `src/services/chat.ts:34` | `/chat/conversations/{uuid}/` |
+| `POST /auth/register/` | `src/features/auth/api/authApi.ts` | `/auth/register/` |
+| `POST /auth/token/` | `src/features/auth/api/authApi.ts` | `/auth/token/` |
+| `POST /auth/token/refresh/` | `src/shared/api/authInterceptor.ts` | `/auth/token/refresh/` |
+| `GET /auth/profile/` | `src/features/auth/api/authApi.ts` | `/auth/profile/` |
+| `PATCH /auth/profile/` | `src/features/auth/api/authApi.ts` | `/auth/profile/` |
+| `POST /auth/logout/` | `src/features/auth/api/authApi.ts` | `/auth/logout/` |
+| `GET /conversations/` | `src/features/chat/api/conversationsApi.ts` | `/chat/conversations/` |
+| `POST /conversations/` | `src/features/chat/api/conversationsApi.ts` | `/chat/conversations/` |
+| `GET /conversations/{uuid}/` | `src/features/chat/api/conversationsApi.ts` | `/chat/conversations/{uuid}/` |
+| `PATCH /conversations/{uuid}/` | `src/features/chat/api/conversationsApi.ts` | `/chat/conversations/{uuid}/` |
+| `DELETE /conversations/{uuid}/` | `src/features/chat/api/conversationsApi.ts` | `/chat/conversations/{uuid}/` |
+| `GET /conversations/{uuid}/messages/` | `src/features/chat/api/messagesApi.ts` | `/chat/conversations/{uuid}/messages/` |
+| `POST /conversations/{uuid}/messages/stream/` | `src/features/chat/api/streamMessage.ts` | `/chat/conversations/{uuid}/messages/stream/` |
 
-The endpoints with no call site are conversation rename (`PATCH /conversations/{uuid}/`), message history (`GET /conversations/{uuid}/messages/`), streaming, and the health checks. Messages are read from the conversation payload, and there is no streaming or health call yet.
+Only the health checks have no frontend call site. Message history comes from `GET /conversations/{uuid}/messages/`, not from the conversation payload, and every send uses the streaming endpoint. The non-streaming `POST /conversations/{uuid}/messages/` remains in the contract but the frontend does not call it.
 
 ## 4. Public identifiers
 
@@ -141,7 +144,7 @@ Every error response, without exception, uses this envelope:
 }
 ```
 
-`src/services/apiError.ts` parses this envelope into a single `ApiError` that
+`src/shared/api/apiError.ts` parses this envelope into a single `ApiError` that
 carries `status`, `code`, `message`, `details` and `retryAfter`, the last parsed
 from the `Retry-After` header when present. Validation field messages are
 available through `getFieldErrors()` and are mapped onto the registration form.
@@ -198,7 +201,7 @@ Frontend:
 
 ## 12. Generated types
 
-`src/types/api.generated.ts` is generated from the backend OpenAPI schema. Regenerate it with:
+`src/shared/api/api.generated.ts` is generated from the backend OpenAPI schema. Regenerate it with:
 
 ```sh
 npm run generate:api-types
