@@ -113,18 +113,6 @@ export class ApiError extends Error {
     });
   }
 
-  isUnauthorized(): boolean {
-    return this.status === 401;
-  }
-
-  isNotFound(): boolean {
-    return this.status === 404;
-  }
-
-  isBadRequest(): boolean {
-    return this.status === 400;
-  }
-
   getFieldErrors(): Record<string, string[]> {
     if (!this.details) {
       return {};

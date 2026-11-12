@@ -24,16 +24,4 @@ export const refreshTokenService = {
     
     return newAccessToken;
   },
-
-  async refreshWithRetry(originalRequest: any, api: any): Promise<any> {
-    try {
-      const newAccessToken = await this.refresh();
-      originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
-      return api(originalRequest);
-    } catch (error) {
-      tokenManager.clearTokens();
-      window.location.href = '/login';
-      throw error;
-    }
-  },
 };
