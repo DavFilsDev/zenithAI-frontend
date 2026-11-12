@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
+import { env } from '../config/env';
 
 type Theme = 'light' | 'dark';
 
@@ -17,7 +18,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       return saved;
     }
     
-    return 'dark';
+    return env.defaultTheme;
   });
 
   useEffect(() => {

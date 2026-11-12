@@ -3,9 +3,10 @@ import { tokenManager } from './tokenManager';
 import { refreshTokenService } from './refreshTokenService';
 import { isAuthEndpoint } from '../types/auth';
 import { ApiError } from './apiError';
+import { env } from '../config/env';
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL,
+  baseURL: env.apiUrl,
   headers: {
     'Content-Type': 'application/json',
   },

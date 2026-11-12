@@ -83,7 +83,7 @@ The frontend is on <http://localhost:5173>, the backend on <http://localhost:800
 | `VITE_APP_NAME` | `Zenith AI` | The document title |
 | `VITE_DEFAULT_THEME` | `dark` | The theme applied before first paint |
 
-Only `VITE_API_URL` affects where requests go. `VITE_APP_NAME` and `VITE_DEFAULT_THEME` are read at startup; until the phases in the roadmap land, the title and the initial theme are still hardcoded in `index.html` and `src/main.tsx`.
+Only `VITE_API_URL` affects where requests go. All three are validated at startup with `zod`: a missing or malformed value stops the app with a message naming the variable. `VITE_APP_NAME` sets the document title and `VITE_DEFAULT_THEME` sets the theme applied before the first paint; a theme saved in `localStorage` still wins over the default.
 
 There is no `VITE_WS_URL`. Streaming is Server-Sent Events, not WebSocket.
 
