@@ -2,7 +2,8 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { ConversationDetail, ConversationSummary, Message } from '../types/chat';
 import { chatService } from '../services/chat';
-import toast from 'react-hot-toast';
+import { ApiError } from '../services/apiError';
+import { notify } from '../lib/notify';
 
 interface ChatState {
     conversations: ConversationSummary[];
@@ -17,10 +18,15 @@ interface ChatState {
     deleteConversation: (uuid: string) => Promise<void>;
     clearCurrentConversation: () => void;
     startNewChat: () => void;
+    reset: () => void;
 }
 
 const titleFromMessage = (content: string): string =>
     content.trim().slice(0, 80) || 'New conversation';
+
+const isRateLimited = (error: unknown): error is ApiError =>
+    error instanceof ApiError &&
+    (error.code === 'rate_limited' || error.code === 'quota_exhausted');
 
 export const useChatStore = create<ChatState>()(
     persist(
@@ -36,14 +42,32 @@ export const useChatStore = create<ChatState>()(
                 isDraft: false,
             }),
 
+            startNewChat: () => {
+                set({
+                    currentConversation: null,
+                    isDraft: true,
+                });
+            },
+
+            reset: () => set({
+                conversations: [],
+                currentConversation: null,
+                isLoading: false,
+                isSending: false,
+                isDraft: false,
+            }),
+
             loadConversations: async () => {
                 set({ isLoading: true });
                 try {
                     const data = await chatService.getConversations();
                     set({ conversations: data });
                 } catch (error) {
-                    console.error('Failed to load conversations:', error);
-                    toast.error('Failed to load conversations');
+                    if (isRateLimited(error)) {
+                        notify.rateLimit(error, () => get().loadConversations());
+                    } else {
+                        notify.error('Failed to load conversations');
+                    }
                 } finally {
                     set({ isLoading: false });
                 }
@@ -55,8 +79,11 @@ export const useChatStore = create<ChatState>()(
                     const data = await chatService.getConversation(uuid);
                     set({ currentConversation: data });
                 } catch (error) {
-                    console.error('Failed to load conversation:', error);
-                    toast.error('Failed to load conversation');
+                    if (isRateLimited(error)) {
+                        notify.rateLimit(error, () => get().loadConversation(uuid));
+                    } else {
+                        notify.error('Failed to load conversation');
+                    }
                 } finally {
                     set({ isLoading: false });
                 }
@@ -67,6 +94,7 @@ export const useChatStore = create<ChatState>()(
 
                 set({ isSending: true });
 
+                const tempUuid = crypto.randomUUID();
                 let targetUuid = conversationUuid ?? get().currentConversation?.uuid;
 
                 try {
@@ -80,7 +108,7 @@ export const useChatStore = create<ChatState>()(
                     }
 
                     const tempMessage: Message = {
-                        uuid: crypto.randomUUID(),
+                        uuid: tempUuid,
                         role: 'user',
                         content,
                         created_at: new Date().toISOString(),
@@ -107,13 +135,26 @@ export const useChatStore = create<ChatState>()(
                     }));
 
                     await get().loadConversations();
-                    toast.success('Message sent!');
+                    notify.success('Message sent!');
                 } catch (error) {
-                    console.error('Failed to send message:', error);
-                    toast.error('Failed to send message');
+                    if (isRateLimited(error)) {
+                        set((state) => ({
+                            currentConversation: state.currentConversation
+                                ? {
+                                    ...state.currentConversation,
+                                    messages: state.currentConversation.messages.filter(
+                                        (message) => message.uuid !== tempUuid
+                                    ),
+                                }
+                                : state.currentConversation,
+                        }));
+                        notify.rateLimit(error, () => get().sendMessage(content, targetUuid));
+                    } else {
+                        notify.error('Failed to send message');
 
-                    if (targetUuid) {
-                        get().loadConversation(targetUuid);
+                        if (targetUuid) {
+                            get().loadConversation(targetUuid);
+                        }
                     }
                 } finally {
                     set({ isSending: false });
@@ -132,18 +173,14 @@ export const useChatStore = create<ChatState>()(
                                 : state.currentConversation,
                     }));
 
-                    toast.success('Conversation deleted');
+                    notify.success('Conversation deleted');
                 } catch (error) {
-                    console.error('Failed to delete conversation:', error);
-                    toast.error('Failed to delete conversation');
+                    if (isRateLimited(error)) {
+                        notify.rateLimit(error, () => get().deleteConversation(uuid));
+                    } else {
+                        notify.error('Failed to delete conversation');
+                    }
                 }
-            },
-
-            startNewChat: () => {
-                set({
-                    currentConversation: null,
-                    isDraft: true,
-                });
             },
         }),
         {
@@ -154,3 +191,8 @@ export const useChatStore = create<ChatState>()(
         }
     )
 );
+
+export const resetChatStore = (): void => {
+    useChatStore.getState().reset();
+    void useChatStore.persist.clearStorage();
+};

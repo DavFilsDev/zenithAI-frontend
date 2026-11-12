@@ -1,7 +1,7 @@
 import { useForm } from 'react-hook-form';
 import { useAuth } from '../contexts/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
-import toast from 'react-hot-toast';
+import { notify } from '../lib/notify';
 import { Input } from '../components/ui/Input';
 import { Button } from '../components/ui/Button';
 import { useState } from 'react';
@@ -38,7 +38,7 @@ export const Register = () => {
         password: data.password,
         password2: data.password2,
       });
-      toast.success('Account created. Please sign in.');
+      notify.success('Account created. Please sign in.');
       navigate('/login', { replace: true });
     } catch (error) {
       const apiError = error instanceof ApiError ? error : ApiError.fromAxiosError(error);
@@ -60,9 +60,9 @@ export const Register = () => {
 
       const [firstUnmapped] = unmapped;
       if (firstUnmapped) {
-        toast.error(firstUnmapped);
+        notify.error(firstUnmapped);
       } else if (!mapped) {
-        toast.error(apiError.message);
+        notify.error(apiError.message);
       }
     } finally {
       setLoading(false);

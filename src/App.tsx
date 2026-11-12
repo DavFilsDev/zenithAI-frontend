@@ -50,55 +50,7 @@ function App() {
       <ThemeProvider>
         <AuthProvider>
           <AppContent/>
-          <Toaster
-            position="top-right"
-            toastOptions={{
-              duration: 5000,
-              style: {
-                background: 'rgba(2, 6, 23, 0.8)',
-                color: 'white',
-                border: '1px solid rgba(255, 255, 255, 0.15)',
-                backdropFilter: 'blur(16px)',
-                borderRadius: '12px',
-                padding: '12px 20px',
-                whiteSpace: 'nowrap',
-                minWidth: '280px',
-                maxWidth: '480px',
-                fontFamily: 'inherit',
-                fontSize: '0.875rem',
-                fontWeight: '500',
-                boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 8px 10px -6px rgba(0, 0, 0, 0.1)',
-              },
-              success: {
-                duration: 5000,
-                style: {
-                  background: 'rgba(34, 197, 94, 0.12)',
-                  border: '1px solid rgba(34, 197, 94, 0.35)',
-                },
-                iconTheme: {
-                  primary: '#22c55e',
-                  secondary: '#ffffff',
-                },
-              },
-              error: {
-                duration: 4000,
-                style: {
-                  background: 'rgba(239, 68, 68, 0.12)',
-                  border: '1px solid rgba(239, 68, 68, 0.35)',
-                },
-                iconTheme: {
-                  primary: '#ef4444',
-                  secondary: '#ffffff',
-                },
-              },
-              loading: {
-                style: {
-                  background: 'rgba(59, 130, 246, 0.12)',
-                  border: '1px solid rgba(59, 130, 246, 0.35)',
-                },
-              },
-            }}
-          />
+          <Toaster position="top-right" />
         </AuthProvider>
       </ThemeProvider>
     </BrowserRouter>

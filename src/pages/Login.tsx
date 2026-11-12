@@ -6,7 +6,8 @@ import { Button } from '../components/ui/Button';
 import { useState } from 'react';
 import { CardHeader } from '../components/ui/CardHeader';
 import { ApiError } from '../services/apiError';
-import { useToast } from '../hooks/useToast';
+import { notify } from '../lib/notify';
+import { logError } from '../lib/logger';
 
 interface LoginForm {
   email: string;
@@ -18,8 +19,6 @@ export const Login = () => {
   const navigate = useNavigate();
 
   const [loading, setLoading] = useState(false);
-
-  const { showSuccess, showError } = useToast();
   
   const { 
     register, 
@@ -33,24 +32,24 @@ export const Login = () => {
       const user = await login(data);
 
       if (user) {
-        showSuccess(`Welcome back, ${user.username || user.email}!`);
+        notify.success(`Welcome back, ${user.username || user.email}!`);
         navigate('/chat', { replace: true });
       }
     } catch (error: unknown) {
-      console.error('Login error:', error);
+      logError('login', error);
       
       if (error instanceof ApiError) {
         if (error.code === 'unauthorized') {
-          showError('Invalid email or password. Please try again.');
+          notify.error('Invalid email or password. Please try again.');
         } else if (error.code === 'validation_error') {
-          showError('Invalid request format. Please check your input.');
+          notify.error('Invalid request format. Please check your input.');
         } else {
-          showError(error.message || 'Login failed. Please try again.');
+          notify.error(error.message || 'Login failed. Please try again.');
         }
       } else if (error instanceof Error) {
-        showError(error.message);
+        notify.error(error.message);
       } else {
-        showError('Login failed. Please try again.');
+        notify.error('Login failed. Please try again.');
       }
     } finally {
       setLoading(false);

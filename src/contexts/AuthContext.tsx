@@ -4,6 +4,8 @@ import { authService } from '../services/auth';
 import { tokenManager } from '../services/tokenManager';
 import { userCache } from '../services/userCache';
 import { ApiError } from '../services/apiError';
+import { resetChatStore } from '../store/chatStore';
+import { logError } from '../lib/logger';
 
 interface AuthContextType {
   user: User | null;
@@ -29,6 +31,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   useEffect(() => {
     if (!tokenManager.hasValidTokens()) {
       userCache.clear();
+      resetChatStore();
       return;
     }
 
@@ -39,9 +42,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       })
       .catch((error: unknown) => {
         if (error instanceof ApiError && (error.status === 401 || error.status === 403)) {
-          authService.logout();
+          void authService.logout();
+          resetChatStore();
           setUser(null);
           setHasSession(false);
+        } else {
+          logError('profile bootstrap', error);
         }
       })
       .finally(() => {
@@ -68,7 +74,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const logout = () => {
-    authService.logout();
+    void authService.logout();
+    resetChatStore();
     setUser(null);
     setHasSession(false);
   };
