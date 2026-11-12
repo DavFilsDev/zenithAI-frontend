@@ -3,7 +3,7 @@
 > **This contract is shared with the backend repository and describes the TARGET state. Both repositories must keep an identical copy. Any change must be made in both.**
 
 Contract version: `v1`
-Status: target state, not yet implemented. The currently deployed API is documented in `docs/api/api-documentation.md` in the backend repository.
+Status: implemented. Every endpoint in §3 is live, including SSE streaming, and the usage limits in §9 (per-IP and per-user throttling, and the global daily cap) are enforced. Repeated provider failures are absorbed by a circuit breaker, which keeps the API returning `503 llm_unavailable` and recovers automatically after a cool-down. The deployed API is documented in `docs/api/api-documentation.md` in the backend repository.
 
 ## 1. Product
 
@@ -26,25 +26,25 @@ Status: target state, not yet implemented. The currently deployed API is documen
 ## 3. Endpoints
 
 Status legend: **Implemented** = available today, **Planned** = described by this contract, not built yet.
-Usage legend: **Used by frontend** = the current frontend code exercises this endpoint, at its contract path or at the legacy path it serves today.
+Usage legend: **Used by frontend** = the current frontend code exercises this endpoint.
 
 | Method | Path | Auth | Status | Currently served at | Used by frontend |
 |---|---|---|---|---|---|
-| POST | `/auth/register/` | No | Implemented | `POST /api/auth/register/` | Yes |
-| POST | `/auth/token/` | No | Implemented | `POST /api/auth/token/` | Yes |
-| POST | `/auth/token/refresh/` | No | Implemented | `POST /api/auth/token/refresh/` | Yes |
-| POST | `/auth/logout/` | Yes | Planned | — | No |
-| GET | `/auth/profile/` | Yes | Implemented | `GET /api/auth/profile/` | Yes |
-| PATCH | `/auth/profile/` | Yes | Implemented | `PATCH /api/auth/profile/` | No |
-| GET | `/conversations/` | Yes | Implemented | `GET /api/chat/conversations/` (unpaginated) | Yes |
-| POST | `/conversations/` | Yes | Implemented | `POST /api/chat/conversations/` | No |
-| GET | `/conversations/{uuid}/` | Yes | Implemented | `GET /api/chat/conversations/{id}/` (integer id) | Yes |
-| PATCH | `/conversations/{uuid}/` | Yes | Implemented | `PATCH /api/chat/conversations/{id}/` | No |
-| DELETE | `/conversations/{uuid}/` | Yes | Implemented | `DELETE /api/chat/conversations/{id}/` | Yes |
-| GET | `/conversations/{uuid}/messages/` | Yes | Planned | — (only inside the conversation payload today) | No |
-| POST | `/conversations/{uuid}/messages/` | Yes | Planned | `POST /api/chat/chat/{id}/` | Yes |
-| POST | `/conversations/{uuid}/messages/stream/` | Yes | Planned | — | No |
-| GET | `/health/` | No | Planned | — | No |
+| POST | `/auth/register/` | No | Implemented | `POST /api/v1/auth/register/` | Yes |
+| POST | `/auth/token/` | No | Implemented | `POST /api/v1/auth/token/` | Yes |
+| POST | `/auth/token/refresh/` | No | Implemented | `POST /api/v1/auth/token/refresh/` | Yes |
+| POST | `/auth/logout/` | Yes | Implemented | `POST /api/v1/auth/logout/` | No |
+| GET | `/auth/profile/` | Yes | Implemented | `GET /api/v1/auth/profile/` | Yes |
+| PATCH | `/auth/profile/` | Yes | Implemented | `PATCH /api/v1/auth/profile/` | No |
+| GET | `/conversations/` | Yes | Implemented | `GET /api/v1/chat/conversations/` (paginated) | Yes |
+| POST | `/conversations/` | Yes | Implemented | `POST /api/v1/chat/conversations/` | Yes |
+| GET | `/conversations/{uuid}/` | Yes | Implemented | `GET /api/v1/chat/conversations/{uuid}/` | Yes |
+| PATCH | `/conversations/{uuid}/` | Yes | Implemented | `PATCH /api/v1/chat/conversations/{uuid}/` | No |
+| DELETE | `/conversations/{uuid}/` | Yes | Implemented | `DELETE /api/v1/chat/conversations/{uuid}/` | Yes |
+| GET | `/conversations/{uuid}/messages/` | Yes | Implemented | `GET /api/v1/chat/conversations/{uuid}/messages/` | No |
+| POST | `/conversations/{uuid}/messages/` | Yes | Implemented | `POST /api/v1/chat/conversations/{uuid}/messages/` | Yes |
+| POST | `/conversations/{uuid}/messages/stream/` | Yes | Implemented | `POST /api/v1/chat/conversations/{uuid}/messages/stream/` | No |
+| GET | `/health/` | No | Implemented | `GET /api/v1/health/` | No |
 
 ### 3.1 Method set
 
@@ -58,20 +58,21 @@ Creating a conversation explicitly is supported. Sending a message to a conversa
 
 ### 3.3 Where the frontend calls each endpoint today
 
-A `Yes` above does not mean the contract path is already used. These are the real call sites in `src/`, all of them on the legacy `/api` base and none of them on `/api/v1`:
+These are the real call sites in `src/`, all of them on the `/api/v1` base:
 
 | Contract endpoint | Called from | Path actually requested |
 |---|---|---|
-| `POST /auth/register/` | `src/services/auth.ts:42` | `/auth/register/` |
-| `POST /auth/token/` | `src/services/auth.ts:9` | `/auth/token/` |
-| `POST /auth/token/refresh/` | `src/services/refreshTokenService.ts:15` | `/auth/token/refresh/` |
-| `GET /auth/profile/` | `src/services/auth.ts:18`, `src/services/auth.ts:47`, `src/services/auth.ts:70` | `/auth/profile/` |
-| `GET /conversations/` | `src/services/chat.ts:6` | `/chat/conversations/` |
-| `GET /conversations/{uuid}/` | `src/services/chat.ts:11` | `/chat/conversations/{id}/`, integer id |
-| `POST /conversations/{uuid}/messages/` | `src/services/chat.ts:17` | `/chat/chat/{conversation_id}/` |
-| `DELETE /conversations/{uuid}/` | `src/services/chat.ts:25` | `/chat/conversations/{id}/` |
+| `POST /auth/register/` | `src/services/auth.ts:39` | `/auth/register/` |
+| `POST /auth/token/` | `src/services/auth.ts:15` | `/auth/token/` |
+| `POST /auth/token/refresh/` | `src/services/refreshTokenService.ts:14` | `/auth/token/refresh/` |
+| `GET /auth/profile/` | `src/services/auth.ts:51` | `/auth/profile/` |
+| `GET /conversations/` | `src/services/chat.ts:11` | `/chat/conversations/` |
+| `POST /conversations/` | `src/services/chat.ts:21` | `/chat/conversations/` |
+| `GET /conversations/{uuid}/` | `src/services/chat.ts:16` | `/chat/conversations/{uuid}/` |
+| `POST /conversations/{uuid}/messages/` | `src/services/chat.ts:27` | `/chat/conversations/{uuid}/messages/` |
+| `DELETE /conversations/{uuid}/` | `src/services/chat.ts:34` | `/chat/conversations/{uuid}/` |
 
-The five rows marked `No` have no call site at all: logout clears tokens locally, profile updates are `console.log` stubs, conversation creation is never called explicitly, `PATCH` is never issued, and there is no streaming or health call.
+The six rows marked `No` have no call site: logout clears tokens locally, profile updates are `console.log` stubs, conversation rename (`PATCH`) is never issued, messages are read from the conversation payload, and there is no streaming or health call.
 
 ## 4. Public identifiers
 
@@ -85,7 +86,7 @@ All list endpoints are paginated with the standard DRF envelope and a page size 
 ```json
 {
   "count": 42,
-  "next": "http://localhost:8000/api/v1/conversations/?page=2",
+  "next": "http://localhost:8000/api/v1/chat/conversations/?page=2",
   "previous": null,
   "results": []
 }
@@ -188,5 +189,3 @@ Frontend:
 | Variable | Value |
 |---|---|
 | `VITE_API_URL` | `http://localhost:8000/api/v1` |
-
-`VITE_WS_URL` does not exist: streaming is SSE, not WebSocket.

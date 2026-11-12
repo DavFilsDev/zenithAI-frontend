@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+@plugin "@tailwindcss/typography";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
   /* Primary (modern blue system) */
   --color-primary: 37 99 235;        /* blue-600 */
