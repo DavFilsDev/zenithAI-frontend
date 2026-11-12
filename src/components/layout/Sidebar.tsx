@@ -18,7 +18,7 @@ interface SidebarProps {
 
 export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
   const { conversations, loadConversation, deleteConversation, startNewChat } = useChatStore();
-  const { user, logout } = useAuth();
+  const { user, logout, updateProfile } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
   const { showSuccess } = useToast();
@@ -51,18 +51,13 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
   };
 
   const handleUpdateEmail = async (email: string) => {
-    // Implement API call to update email
-    console.log('Update email:', email);
+    await updateProfile({ email });
+    showSuccess('Email updated successfully!');
   };
 
   const handleUpdateUsername = async (username: string) => {
-    // Implement API call to update username
-    console.log('Update username:', username);
-  };
-
-  const handleUpdatePassword = async () => {
-    // Implement API call to update password with proper error handling and success feedback
-    console.log('Update password');
+    await updateProfile({ username });
+    showSuccess('Username updated successfully!');
   };
 
   useEffect(() => {
@@ -149,6 +144,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
           </div>
 
           <UserProfileModal
+            key={isProfileModalOpen ? 'open' : 'closed'}
             isOpen={isProfileModalOpen}
             onClose={() => setIsProfileModalOpen(false)}
             user={{
@@ -157,7 +153,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
             }}
             onUpdateEmail={handleUpdateEmail}
             onUpdateUsername={handleUpdateUsername}
-            onUpdatePassword={handleUpdatePassword}
           />
 
         </div>
@@ -252,6 +247,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
           </div>
 
           <UserProfileModal
+            key={isProfileModalOpen ? 'open' : 'closed'}
             isOpen={isProfileModalOpen}
             onClose={() => setIsProfileModalOpen(false)}
             user={{
@@ -260,7 +256,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
             }}
             onUpdateEmail={handleUpdateEmail}
             onUpdateUsername={handleUpdateUsername}
-            onUpdatePassword={handleUpdatePassword}
           />
 
         </div>

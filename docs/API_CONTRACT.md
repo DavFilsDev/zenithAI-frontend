@@ -35,7 +35,7 @@ Usage legend: **Used by frontend** = the current frontend code exercises this en
 | POST | `/auth/token/refresh/` | No | Implemented | `POST /api/v1/auth/token/refresh/` | Yes |
 | POST | `/auth/logout/` | Yes | Implemented | `POST /api/v1/auth/logout/` | No |
 | GET | `/auth/profile/` | Yes | Implemented | `GET /api/v1/auth/profile/` | Yes |
-| PATCH | `/auth/profile/` | Yes | Implemented | `PATCH /api/v1/auth/profile/` | No |
+| PATCH | `/auth/profile/` | Yes | Implemented | `PATCH /api/v1/auth/profile/` | Yes |
 | GET | `/conversations/` | Yes | Implemented | `GET /api/v1/chat/conversations/` (paginated) | Yes |
 | POST | `/conversations/` | Yes | Implemented | `POST /api/v1/chat/conversations/` | Yes |
 | GET | `/conversations/{uuid}/` | Yes | Implemented | `GET /api/v1/chat/conversations/{uuid}/` | Yes |
@@ -62,17 +62,18 @@ These are the real call sites in `src/`, all of them on the `/api/v1` base:
 
 | Contract endpoint | Called from | Path actually requested |
 |---|---|---|
-| `POST /auth/register/` | `src/services/auth.ts:39` | `/auth/register/` |
-| `POST /auth/token/` | `src/services/auth.ts:15` | `/auth/token/` |
+| `POST /auth/register/` | `src/services/auth.ts:44` | `/auth/register/` |
+| `POST /auth/token/` | `src/services/auth.ts:17` | `/auth/token/` |
 | `POST /auth/token/refresh/` | `src/services/refreshTokenService.ts:14` | `/auth/token/refresh/` |
-| `GET /auth/profile/` | `src/services/auth.ts:51` | `/auth/profile/` |
+| `GET /auth/profile/` | `src/services/auth.ts:56` | `/auth/profile/` |
+| `PATCH /auth/profile/` | `src/services/auth.ts:68` | `/auth/profile/` |
 | `GET /conversations/` | `src/services/chat.ts:11` | `/chat/conversations/` |
 | `POST /conversations/` | `src/services/chat.ts:21` | `/chat/conversations/` |
 | `GET /conversations/{uuid}/` | `src/services/chat.ts:16` | `/chat/conversations/{uuid}/` |
 | `POST /conversations/{uuid}/messages/` | `src/services/chat.ts:27` | `/chat/conversations/{uuid}/messages/` |
 | `DELETE /conversations/{uuid}/` | `src/services/chat.ts:34` | `/chat/conversations/{uuid}/` |
 
-The six rows marked `No` have no call site: logout clears tokens locally, profile updates are `console.log` stubs, conversation rename (`PATCH`) is never issued, messages are read from the conversation payload, and there is no streaming or health call.
+The five rows marked `No` have no call site: logout clears tokens locally, conversation rename (`PATCH`) is never issued, messages are read from the conversation payload, and there is no streaming or health call.
 
 ## 4. Public identifiers
 

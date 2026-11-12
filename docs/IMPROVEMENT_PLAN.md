@@ -199,7 +199,7 @@ Make the code match the contract's shape before adding anything. Nothing here ch
 
 One client, one refresh, one error shape. This is the foundation the streaming work in P2 sits on.
 
-- [ ] **P1.1** Add `GET /auth/profile/` and `PATCH /auth/profile/` for real, replacing the three `console.log` stubs, and make the modal show a real success or failure. — *M* — editing the email persists through a reload, and a rejected save keeps the field open with a message. — Depends on: P0.6.
+- [x] **P1.1** Add `GET /auth/profile/` and `PATCH /auth/profile/` for real, replacing the two update stubs, and make the modal show a real success or failure. The password form is removed because the contract has no password-change endpoint. — *M* — editing the email persists through a reload, and a rejected save keeps the field open with a message. — Depends on: P0.6.
 - [ ] **P1.2** Make the refresh single-flight: one in-flight promise shared by every waiting request, the refresh call itself bypassing the interceptor. — *M* — six concurrent `401`s produce exactly one `POST /auth/token/refresh/`, and all six requests replay successfully. — Depends on: P0.2.
 - [ ] **P1.3** Add `/auth/profile/` to the no-refresh list, and stop hard-redirecting on a retried non-`401` failure. — *S* — a `500` on a retried request does not sign the user out. — Depends on: P1.2.
 - [ ] **P1.4** Call `POST /auth/logout/` on sign-out, best effort, then clear the query cache so no conversation survives the session. — *M* — signing out removes the `chat-storage` entry, and a `401` at `/logout/` still signs the user out locally. — Depends on: P1.2.

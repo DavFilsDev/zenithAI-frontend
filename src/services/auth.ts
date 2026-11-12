@@ -7,6 +7,7 @@ import type {
   RegisterCredentials,
   AuthResponse,
   LoginResponse,
+  UpdateProfilePayload,
   User,
 } from '../types/user';
 
@@ -53,6 +54,18 @@ export const authService = {
   async getProfile(): Promise<User> {
     try {
       const response = await api.get<User>('/auth/profile/');
+      return response.data;
+    } catch (error) {
+      if (error instanceof ApiError) {
+        throw error;
+      }
+      throw ApiError.fromAxiosError(error);
+    }
+  },
+
+  async updateProfile(payload: UpdateProfilePayload): Promise<User> {
+    try {
+      const response = await api.patch<User>('/auth/profile/', payload);
       return response.data;
     } catch (error) {
       if (error instanceof ApiError) {
