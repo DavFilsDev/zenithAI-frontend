@@ -94,7 +94,7 @@ Three kinds, never mixed in one component:
 | Local state | `useState` | input value, field being edited |
 
 - Zustand stores are sliced by feature, one `useXxxStore` per slice, and selected field by field. A component never subscribes to the whole store.
-- Nothing is persisted to `localStorage` unless it survives a reload by design, and the list of persisted keys is short and explicit. Conversation content is not persisted.
+- Nothing is persisted to `localStorage` unless it survives a reload by design, and the list of persisted keys is short and explicit. The session keys (`accessToken`, `refreshToken`, `authUser`) are owned by `tokenManager` and `userCache`; no component reads them directly. Conversation content is not persisted.
 - Context is used for what a subtree needs but a hook cannot reach: theme, session bootstrap. Not a state manager.
 
 ### Forms

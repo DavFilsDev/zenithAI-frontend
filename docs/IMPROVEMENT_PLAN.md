@@ -193,7 +193,7 @@ Make the code match the contract's shape before adding anything. Nothing here ch
 - [x] **P0.6** Parse the contract error envelope in `ApiError`, expose `code` and `details`, and map `validation_error` onto form fields. — *M* — a bad password shows the server's message, and no caller reads `data.detail`. — Depends on: —
 - [x] **P0.7** Delete the dead code found in 1.12: `src/hooks/useChat.ts`, `src/components/ui/CustomToast.tsx`, `refreshWithRetry`, `interface AuthError`, the unused store actions, the dead CSS rules, and the duplicate `@keyframes fadeIn`. — *S* — the files are gone, the build passes, and the dead CSS no longer ships. — Depends on: —
 - [x] **P0.8** Remove `tailwind.config.js`, confirm no `any` tokens remain in `src/`, and activate `@tailwindcss/typography`. — *S* — no `tailwind.config.js` exists, `@plugin "@tailwindcss/typography"` and the class-based `dark` variant are in `index.css`, and `grep -rn "\bany\b" src/` returns nothing. — Depends on: —
-- [ ] **P0.9** Replace the duplicated token keys in `AuthContext` with `tokenManager` calls, and stop deleting the session when a profile call fails for a transient reason. — *S* — a `500` on boot leaves the user signed in, and the string `'accessToken'` appears in one file only. — Depends on: —
+- [x] **P0.9** Replace the duplicated token keys in `AuthContext` with `tokenManager` calls, and stop deleting the session when a profile call fails for a transient reason. — *S* — a `500` on boot leaves the user signed in, and the string `'accessToken'` appears in one file only. — Depends on: —
 
 ### P1 — The API layer
 

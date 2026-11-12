@@ -126,7 +126,7 @@ The server call is best effort: a failed blacklist must not trap the user in a s
 
 ### Bootstrap
 
-On boot, if a refresh token exists, the app calls `GET /auth/profile/` once, inside a pending state, and builds the session from the answer. A network failure keeps the user signed out but shows a message; it never silently deletes tokens, because a transient 500 must not look like a logout.
+On boot, if tokens exist, the app restores the cached profile and calls `GET /auth/profile/` once, inside a pending state, then refreshes the session from the answer. A transient `500` or network failure keeps the cached session and the tokens; only a `401` or `403` clears them, because a transient failure must not look like a logout.
 
 ## 5. Streaming flow
 
