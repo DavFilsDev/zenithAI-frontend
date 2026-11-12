@@ -100,18 +100,19 @@ On a `401`, and only on a `401`:
 
 ```
 apiClient receives 401
-  └─ is this a retry of the same request? → give up, sign out
+  └─ is this an auth or profile endpoint? → reject, no refresh
+  └─ is this a retry of the same request? → sign out only on a 401
   └─ otherwise → refreshTokenService.refresh()
        └─ an in-flight promise exists? → await the same promise
        └─ otherwise                    → start one refresh
             └─ POST /auth/token/refresh/  { refresh } → { access, refresh }
                  ├─ success → store the new pair, replay the original request
-                 └─ failure → clear both tokens, redirect to /login once
+                 └─ failure → sign out only on a 401
 ```
 
 One refresh at a time. Without this, five concurrent requests produce five refresh calls, and rotation makes the last writer win while earlier replays carry a superseded token. The in-flight promise is shared, not a counter, and it is cleared when it settles so a later `401` starts a fresh refresh.
 
-The refresh request itself bypasses the interceptor, otherwise it recurses.
+The refresh request itself bypasses the interceptor, otherwise it recurses. `/auth/token/`, `/auth/register/` and `/auth/profile/` never trigger a refresh: the first two are unauthenticated, and the profile call is the session bootstrap. A retried request or a failed refresh ends the session only on a `401`; a `500` or network error is returned to the caller with the session intact.
 
 ### Sign out
 
