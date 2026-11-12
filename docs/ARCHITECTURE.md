@@ -101,14 +101,15 @@ On a `401`, and only on a `401`:
 ```
 apiClient receives 401
   └─ is this a retry of the same request? → give up, sign out
-  └─ is a refresh already in flight?    → await it, then replay
-  └─ otherwise                          → start one refresh
-       └─ POST /auth/token/refresh/  { refresh } → { access, refresh }
-            ├─ success → store the new pair, replay the original request
-            └─ failure → clear both tokens, redirect to /login
+  └─ otherwise → refreshTokenService.refresh()
+       └─ an in-flight promise exists? → await the same promise
+       └─ otherwise                    → start one refresh
+            └─ POST /auth/token/refresh/  { refresh } → { access, refresh }
+                 ├─ success → store the new pair, replay the original request
+                 └─ failure → clear both tokens, redirect to /login once
 ```
 
-One refresh at a time. Without this, five concurrent requests produce five refresh calls, and rotation makes the last writer win while earlier replays carry a superseded token. The in-flight promise is shared, not a counter.
+One refresh at a time. Without this, five concurrent requests produce five refresh calls, and rotation makes the last writer win while earlier replays carry a superseded token. The in-flight promise is shared, not a counter, and it is cleared when it settles so a later `401` starts a fresh refresh.
 
 The refresh request itself bypasses the interceptor, otherwise it recurses.
 
