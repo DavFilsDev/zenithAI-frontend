@@ -40,9 +40,9 @@ export const Login = () => {
       console.error('Login error:', error);
       
       if (error instanceof ApiError) {
-        if (error.isUnauthorized()) {
+        if (error.code === 'unauthorized') {
           showError('Invalid email or password. Please try again.');
-        } else if (error.isBadRequest()) {
+        } else if (error.code === 'validation_error') {
           showError('Invalid request format. Please check your input.');
         } else {
           showError(error.message || 'Login failed. Please try again.');

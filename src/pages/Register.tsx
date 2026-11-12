@@ -23,6 +23,7 @@ export const Register = () => {
     register, 
     handleSubmit, 
     watch,
+    setError,
     formState: { errors } 
   } = useForm<RegisterForm>();
 
@@ -40,7 +41,29 @@ export const Register = () => {
       toast.success('Account created. Please sign in.');
       navigate('/login', { replace: true });
     } catch (error) {
-      toast.error(error instanceof ApiError ? error.message : 'Registration failed');
+      const apiError = error instanceof ApiError ? error : ApiError.fromAxiosError(error);
+      const fieldErrors = apiError.getFieldErrors();
+      const formFields: Array<keyof RegisterForm> = ['email', 'username', 'password', 'password2'];
+      let mapped = false;
+
+      for (const field of formFields) {
+        const [message] = fieldErrors[field] ?? [];
+        if (message) {
+          setError(field, { type: 'server', message });
+          mapped = true;
+        }
+      }
+
+      const unmapped = Object.entries(fieldErrors)
+        .filter(([field]) => !formFields.includes(field as keyof RegisterForm))
+        .flatMap(([, messages]) => messages);
+
+      const [firstUnmapped] = unmapped;
+      if (firstUnmapped) {
+        toast.error(firstUnmapped);
+      } else if (!mapped) {
+        toast.error(apiError.message);
+      }
     } finally {
       setLoading(false);
     }

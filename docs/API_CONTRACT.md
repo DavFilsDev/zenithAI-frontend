@@ -136,6 +136,12 @@ Every error response, without exception, uses this envelope:
 }
 ```
 
+`src/services/apiError.ts` parses this envelope into a single `ApiError` that
+carries `status`, `code`, `message` and `details`. Validation field messages are
+available through `getFieldErrors()` and are mapped onto the registration form.
+A response that is not this envelope — for example the HTML 404 returned for an
+unknown route — falls back to a message chosen from the HTTP status.
+
 | Code | HTTP | Meaning |
 |---|---|---|
 | `validation_error` | 400 | Invalid payload |
