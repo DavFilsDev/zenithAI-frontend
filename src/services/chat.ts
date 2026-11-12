@@ -1,27 +1,36 @@
 import api from './api';
-import type { Conversation, Message, ChatRequest } from '../types/chat';
+import type {
+  ConversationDetail,
+  ConversationSummary,
+  Message,
+  Paginated,
+} from '../types/chat';
 
 export const chatService = {
-  async getConversations(): Promise<Conversation[]> {
-    const response = await api.get('/chat/conversations/');
+  async getConversations(): Promise<ConversationSummary[]> {
+    const response = await api.get<Paginated<ConversationSummary>>('/conversations/');
+    return response.data.results;
+  },
+
+  async getConversation(uuid: string): Promise<ConversationDetail> {
+    const response = await api.get<ConversationDetail>(`/conversations/${uuid}/`);
     return response.data;
   },
 
-  async getConversation(id: string): Promise<Conversation> {
-    const response = await api.get(`/chat/conversations/${id}/`);
+  async createConversation(title: string): Promise<ConversationSummary> {
+    const response = await api.post<ConversationSummary>('/conversations/', { title });
     return response.data;
   },
 
-  async sendMessage(data: ChatRequest): Promise<Message> {
-    const url = data.conversation_id 
-      ? `/chat/chat/${data.conversation_id}/`
-      : '/chat/chat/';
-    
-    const response = await api.post(url, { message: data.message });
+  async sendMessage(conversationUuid: string, message: string): Promise<Message> {
+    const response = await api.post<Message>(
+      `/conversations/${conversationUuid}/messages/`,
+      { message }
+    );
     return response.data;
   },
 
-  async deleteConversation(id: string): Promise<void> {
-    await api.delete(`/chat/conversations/${id}/`);
+  async deleteConversation(uuid: string): Promise<void> {
+    await api.delete(`/conversations/${uuid}/`);
   },
 };

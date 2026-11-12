@@ -1,13 +1,19 @@
 import api from './api';
 import { tokenManager } from './tokenManager';
 import { ApiError } from './apiError';
-import type { LoginCredentials, RegisterCredentials, AuthResponse, User } from '../types/user';
+import type {
+  LoginCredentials,
+  RegisterCredentials,
+  AuthResponse,
+  LoginResponse,
+  User,
+} from '../types/user';
 
 export const authService = {
   async login(credentials: LoginCredentials): Promise<AuthResponse> {
     try {
-      const response = await api.post('/auth/token/', credentials);
-      const { access, refresh } = response.data;
+      const response = await api.post<LoginResponse>('/auth/token/', credentials);
+      const { access, refresh, user_id, email, username } = response.data;
 
       if (!access || !refresh) {
         throw new Error('Invalid response from server');
@@ -15,12 +21,10 @@ export const authService = {
 
       tokenManager.setTokens(access, refresh);
 
-      const userResponse = await api.get('/auth/profile/');
-      
       return {
         access,
         refresh,
-        user: userResponse.data,
+        user: { id: user_id, email, username },
       };
     } catch (error) {
       if (error instanceof ApiError) {
@@ -30,33 +34,10 @@ export const authService = {
     }
   },
 
-  async register(credentials: RegisterCredentials): Promise<AuthResponse> {
+  async register(credentials: RegisterCredentials): Promise<User> {
     try {
-      const backendData = {
-        email: credentials.email,
-        username: credentials.username,
-        password: credentials.password,
-        password2: credentials.password2,
-      };
-      
-      const response = await api.post('/auth/register/', backendData);
-      
-      if (response.data.access && response.data.refresh) {
-        tokenManager.setTokens(response.data.access, response.data.refresh);
-        
-        const userResponse = await api.get('/auth/profile/');
-        return {
-          access: response.data.access,
-          refresh: response.data.refresh,
-          user: userResponse.data,
-        };
-      }
-      
-      return {
-        access: '',
-        refresh: '',
-        user: response.data,
-      };
+      const response = await api.post<User>('/auth/register/', credentials);
+      return response.data;
     } catch (error) {
       if (error instanceof ApiError) {
         throw error;
@@ -64,10 +45,10 @@ export const authService = {
       throw ApiError.fromAxiosError(error);
     }
   },
-  
+
   async getProfile(): Promise<User> {
     try {
-      const response = await api.get('/auth/profile/');
+      const response = await api.get<User>('/auth/profile/');
       return response.data;
     } catch (error) {
       if (error instanceof ApiError) {

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useChatStore } from '../store/chatStore';
 import { Sidebar } from '../components/layout/Sidebar';
 import { ChatWindow } from '../components/layout/ChatWindow';
@@ -9,12 +9,13 @@ import { ChatInput } from '../components/chat/ChatInput';
 export const Chat: React.FC = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const { id } = useParams<{ id: string }>();
-  
-  const { 
+  const navigate = useNavigate();
+
+  const {
     currentConversation,
-    isDraft, 
-    loadConversation, 
-    sendMessage, 
+    isDraft,
+    loadConversation,
+    sendMessage,
     isSending,
     isLoading,
     clearCurrentConversation
@@ -29,7 +30,12 @@ export const Chat: React.FC = () => {
   }, [id, loadConversation, clearCurrentConversation]);
 
   const handleSendMessage = async (content: string) => {
-    await sendMessage(content, currentConversation?.id);
+    const targetUuid = currentConversation?.uuid ?? id;
+    await sendMessage(content, targetUuid);
+    const uuid = useChatStore.getState().currentConversation?.uuid;
+    if (!targetUuid && uuid) {
+      navigate(`/chat/${uuid}`, { replace: true });
+    }
   };
 
  if (!currentConversation || isDraft) {

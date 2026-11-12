@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FiX, FiMail, FiUser, FiCreditCard, FiLock } from 'react-icons/fi';
+import { FiX, FiMail, FiUser, FiLock } from 'react-icons/fi';
 
 interface UserProfileModalProps {
   isOpen: boolean;
@@ -7,7 +7,6 @@ interface UserProfileModalProps {
   user: {
     email: string;
     username: string;
-    credits: number;
   };
   onUpdateEmail: (email: string) => Promise<void>;
   onUpdateUsername: (username: string) => Promise<void>;
@@ -188,16 +187,6 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                 {user.username}
               </div>
             )}
-          </div>
-
-          {/* Credits Field (Read Only) */}
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-400 flex items-center gap-2">
-              <FiCreditCard size={14} /> Credits
-            </label>
-            <div className="px-3 py-2 bg-white/5 border border-white/10 rounded-lg">
-              {user.credits} credits available
-            </div>
           </div>
 
           {/* Password Field */}

@@ -1,11 +1,15 @@
 export interface User {
-  id: string;
+  id: number;
   email: string;
   username: string;
-  credits?: number;
-  is_premium?: boolean;
-  firstName?: string;
-  lastName?: string;
+}
+
+export interface LoginResponse {
+  access: string;
+  refresh: string;
+  user_id: number;
+  email: string;
+  username: string;
 }
 
 export interface AuthResponse {
@@ -20,8 +24,6 @@ export interface LoginCredentials {
 }
 
 export interface RegisterCredentials extends LoginCredentials {
-  email: string;
   username: string;
-  password: string;
-  password2: string; 
+  password2: string;
 }

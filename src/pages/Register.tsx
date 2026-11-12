@@ -6,14 +6,13 @@ import { Input } from '../components/ui/Input';
 import { Button } from '../components/ui/Button';
 import { useState } from 'react';
 import { CardHeader } from '../components/ui/CardHeader';
+import { ApiError } from '../services/apiError';
 
 interface RegisterForm {
   email: string;
-  username: string; 
+  username: string;
   password: string;
   password2: string;
-  firstName?: string;
-  lastName?: string;
 }
 
 export const Register = () => {
@@ -38,10 +37,10 @@ export const Register = () => {
         password: data.password,
         password2: data.password2,
       });
-      toast.success('Registered successfully!');
-      navigate('/chat');
+      toast.success('Account created. Please sign in.');
+      navigate('/login', { replace: true });
     } catch (error) {
-      toast.error('Registration failed');
+      toast.error(error instanceof ApiError ? error.message : 'Registration failed');
     } finally {
       setLoading(false);
     }

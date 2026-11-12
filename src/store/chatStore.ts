@@ -1,26 +1,29 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import type { Conversation, Message } from '../types/chat';
+import type { ConversationDetail, ConversationSummary, Message } from '../types/chat';
 import { chatService } from '../services/chat';
 import toast from 'react-hot-toast';
 
 interface ChatState {
-    conversations: Conversation[];
-    currentConversation: Conversation | null;
+    conversations: ConversationSummary[];
+    currentConversation: ConversationDetail | null;
     isLoading: boolean;
     isSending: boolean;
     isDraft: boolean;
-    
-    setConversations: (conversations: Conversation[]) => void;
-    setCurrentConversation: (conversation: Conversation | null) => void;
+
+    setConversations: (conversations: ConversationSummary[]) => void;
+    setCurrentConversation: (conversation: ConversationDetail | null) => void;
     addMessage: (message: Message) => void;
     loadConversations: () => Promise<void>;
-    loadConversation: (id: string) => Promise<void>;
-    sendMessage: (content: string, conversationId?: string) => Promise<void>;
-    deleteConversation: (id: string) => Promise<void>;
+    loadConversation: (uuid: string) => Promise<void>;
+    sendMessage: (content: string, conversationUuid?: string) => Promise<void>;
+    deleteConversation: (uuid: string) => Promise<void>;
     clearCurrentConversation: () => void;
     startNewChat: () => void;
 }
+
+const titleFromMessage = (content: string): string =>
+    content.trim().slice(0, 80) || 'New conversation';
 
 export const useChatStore = create<ChatState>()(
     persist(
@@ -32,22 +35,22 @@ export const useChatStore = create<ChatState>()(
             isDraft: false,
 
             setConversations: (conversations) => set({ conversations }),
-        
+
             setCurrentConversation: (conversation) => set({ currentConversation: conversation }),
-        
+
             addMessage: (message) => {
                 const { currentConversation } = get();
                 if (currentConversation) {
-                set({
-                    currentConversation: {
-                        ...currentConversation,
-                        messages: [...currentConversation.messages, message],
-                    },
-                });
+                    set({
+                        currentConversation: {
+                            ...currentConversation,
+                            messages: [...currentConversation.messages, message],
+                        },
+                    });
                 }
             },
 
-            clearCurrentConversation: () => set({ 
+            clearCurrentConversation: () => set({
                 currentConversation: null,
                 isDraft: false,
             }),
@@ -65,10 +68,10 @@ export const useChatStore = create<ChatState>()(
                 }
             },
 
-            loadConversation: async (id) => {
+            loadConversation: async (uuid) => {
                 set({ isLoading: true });
                 try {
-                    const data = await chatService.getConversation(id);
+                    const data = await chatService.getConversation(uuid);
                     set({ currentConversation: data });
                 } catch (error) {
                     console.error('Failed to load conversation:', error);
@@ -78,68 +81,76 @@ export const useChatStore = create<ChatState>()(
                 }
             },
 
-            sendMessage: async (content, conversationId) => {
-                const { currentConversation, addMessage } = get();
-                
+            sendMessage: async (content, conversationUuid) => {
                 if (!content.trim()) return;
-                
+
                 set({ isSending: true });
 
-                const tempMessage: Message = {
-                    id: `temp-${Date.now()}`,
-                    conversation: currentConversation?.id || '',
-                    role: 'user',
-                    content,
-                    created_at: new Date().toISOString(),
-                };
-                
-                addMessage(tempMessage);
+                let targetUuid = conversationUuid ?? get().currentConversation?.uuid;
 
                 try {
-                    const response = await chatService.sendMessage({
-                        message: content,
-                        conversation_id: conversationId || currentConversation?.id,
-                    });
-
-                    if (response.role === 'assistant') {
-                        const { currentConversation } = get();
-                        if (currentConversation) {
-                            const messagesWithoutTemp = currentConversation.messages.filter(
-                                msg => msg.id !== tempMessage.id
-                            );
-                            set({
-                                currentConversation: {
-                                ...currentConversation,
-                                messages: [...messagesWithoutTemp, response],
-                                },
-                            });
-                        }
+                    if (!targetUuid) {
+                        const created = await chatService.createConversation(titleFromMessage(content));
+                        targetUuid = created.uuid;
+                        set({
+                            currentConversation: { ...created, messages: [] },
+                            isDraft: false,
+                        });
                     }
 
-                    get().loadConversations();
-                    
+                    const tempMessage: Message = {
+                        uuid: crypto.randomUUID(),
+                        role: 'user',
+                        content,
+                        created_at: new Date().toISOString(),
+                    };
+
+                    set((state) => ({
+                        currentConversation: state.currentConversation
+                            ? {
+                                ...state.currentConversation,
+                                messages: [...state.currentConversation.messages, tempMessage],
+                            }
+                            : state.currentConversation,
+                    }));
+
+                    const response = await chatService.sendMessage(targetUuid, content);
+
+                    set((state) => ({
+                        currentConversation: state.currentConversation
+                            ? {
+                                ...state.currentConversation,
+                                messages: [...state.currentConversation.messages, response],
+                            }
+                            : state.currentConversation,
+                    }));
+
+                    await get().loadConversations();
                     toast.success('Message sent!');
                 } catch (error) {
-                console.error('Failed to send message:', error);
-                toast.error('Failed to send message');
-                
-                if (currentConversation) {
-                    get().loadConversation(currentConversation.id);
-                }
+                    console.error('Failed to send message:', error);
+                    toast.error('Failed to send message');
+
+                    if (targetUuid) {
+                        get().loadConversation(targetUuid);
+                    }
                 } finally {
                     set({ isSending: false });
                 }
             },
 
-            deleteConversation: async (id) => {
+            deleteConversation: async (uuid) => {
                 try {
-                    await chatService.deleteConversation(id);
-                    
+                    await chatService.deleteConversation(uuid);
+
                     set((state) => ({
-                        conversations: state.conversations.filter((c) => c.id !== id),
-                        currentConversation: state.currentConversation?.id === id ? null : state.currentConversation,
+                        conversations: state.conversations.filter((c) => c.uuid !== uuid),
+                        currentConversation:
+                            state.currentConversation?.uuid === uuid
+                                ? null
+                                : state.currentConversation,
                     }));
-                    
+
                     toast.success('Conversation deleted');
                 } catch (error) {
                     console.error('Failed to delete conversation:', error);
@@ -149,14 +160,7 @@ export const useChatStore = create<ChatState>()(
 
             startNewChat: () => {
                 set({
-                    currentConversation: {
-                    id: 'draft',
-                    user: 'local',
-                    title: '',
-                    messages: [],
-                    created_at: new Date().toISOString(),
-                    updated_at: new Date().toISOString(),
-                    },
+                    currentConversation: null,
                     isDraft: true,
                 });
             },

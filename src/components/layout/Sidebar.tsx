@@ -31,16 +31,16 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
     navigate('/chat');
   };
 
-  const handleConversationClick = (id: string) => {
-    loadConversation(id);
-    navigate(`/chat/${id}`);
+  const handleConversationClick = (uuid: string) => {
+    loadConversation(uuid);
+    navigate(`/chat/${uuid}`);
   };
 
-  const handleDelete = async (e: React.MouseEvent, id: string) => {
+  const handleDelete = async (e: React.MouseEvent, uuid: string) => {
     e.stopPropagation();
     
     if (window.confirm('Are you sure you want to delete this conversation?')) {
-      await deleteConversation(id);
+      await deleteConversation(uuid);
     }
   };
 
@@ -60,7 +60,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
     console.log('Update username:', username);
   };
 
-  const handleUpdatePassword = async (oldPassword: string, newPassword: string) => {
+  const handleUpdatePassword = async () => {
     // Implement API call to update password with proper error handling and success feedback
     console.log('Update password');
   };
@@ -154,7 +154,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
             user={{
               email: user?.email || '',
               username: user?.username || '',
-              credits: user?.credits || 0,
             }}
             onUpdateEmail={handleUpdateEmail}
             onUpdateUsername={handleUpdateUsername}
@@ -214,8 +213,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
             ) : (
               conversations.map((conversation) => (
                 <div
-                  key={conversation.id}
-                  onClick={() => handleConversationClick(conversation.id)}
+                  key={conversation.uuid}
+                  onClick={() => handleConversationClick(conversation.uuid)}
                   className="relative group p-3 mx-2 my-1 cursor-pointer rounded-xl hover:bg-white/10 dark:hover:bg-white/5 transition-all duration-200"
                 >
                   <div className="font-medium truncate pr-8">
@@ -227,7 +226,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
                     })}
                   </div>
                   <button
-                    onClick={(e) => handleDelete(e, conversation.id)}
+                    onClick={(e) => handleDelete(e, conversation.uuid)}
                     className="absolute right-2 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 hover:text-red-500 transition-all duration-200"
                     title="Delete conversation"
                   >
@@ -258,7 +257,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
             user={{
               email: user?.email || '',
               username: user?.username || '',
-              credits: user?.credits || 0,
             }}
             onUpdateEmail={handleUpdateEmail}
             onUpdateUsername={handleUpdateUsername}
