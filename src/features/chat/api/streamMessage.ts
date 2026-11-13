@@ -53,7 +53,7 @@ const postStream = (
       method: 'POST',
       headers,
       body: JSON.stringify({ message: content }),
-      signal,
+      signal: signal ?? null,
     }
   );
 };

@@ -120,11 +120,11 @@ Three kinds, never mixed in one component:
 ### Toasts
 
 - One `notify` module is the only caller of `react-hot-toast`. Components and stores use `notify.success`, `notify.error`, `notify.loading` and `notify.rateLimit`.
-- One `Toaster` in `App.tsx`, with no per-toast defaults. Durations live in `toastConfig`, one per severity.
+- One `Toaster` in `providers.tsx`, with no per-toast defaults. Durations live in `toastConfig`, one per severity.
 
 ### Types
 
-- `strict` is on and is actually enforced, including `noUncheckedIndexedAccess`.
+- `strict`, `noUncheckedIndexedAccess` and `exactOptionalPropertyTypes` are on and enforced by `tsc -b`.
 - No `any`. When a third-party type is wrong, the boundary is narrowed by hand, in one place.
 - `import type { X }` for type-only imports, required by `verbatimModuleSyntax`.
 - Enums are avoided, `erasableSyntaxOnly` is on. A closed set of strings is a union type.

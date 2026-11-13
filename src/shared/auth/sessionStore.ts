@@ -5,7 +5,7 @@ import type { User } from '../api/types';
 
 export type SessionStatus = 'loading' | 'authenticated' | 'anonymous';
 
-interface SessionState {
+export interface SessionState {
   user: User | null;
   status: SessionStatus;
   setUser: (user: User | null) => void;
