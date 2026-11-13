@@ -1,6 +1,6 @@
 # Architecture
 
-This document describes the **target** architecture. It is the state the roadmap in [`IMPROVEMENT_PLAN.md`](IMPROVEMENT_PLAN.md) converges to, not the state of the code today. Where the two differ, the plan says so with a file path.
+This document describes the target architecture. P2 implemented the tree, the layers, the query ownership and the streaming flow below; the remaining differences are called out where they matter, most notably token storage, which P4.3 changes.
 
 The API this architecture is built against is described in [`API_CONTRACT.md`](API_CONTRACT.md). The rules that govern the code are in [`CONVENTIONS.md`](CONVENTIONS.md).
 
@@ -17,43 +17,60 @@ The API this architecture is built against is described in [`API_CONTRACT.md`](A
 ```
 src/
 ├── main.tsx                     entry point, no logic
+├── index.css                    the only stylesheet
+├── assets/
 ├── app/
-│   ├── App.tsx                  providers, no data fetching
+│   ├── App.tsx                  providers and routes, no data fetching
 │   ├── router.tsx               routes, lazy, guards
-│   ├── providers.tsx            QueryClient, Auth, Theme
-│   └── ErrorBoundary.tsx        last resort for a render crash
+│   ├── providers.tsx            QueryClient, Theme, ProfileBootstrap
+│   ├── ChatShell.tsx            authenticated shell, owns the profile modal
+│   └── ProfileBootstrap.tsx     session bootstrap from GET /auth/profile/
 ├── features/
 │   ├── auth/
-│   │   ├── api/authApi.ts       register, token, refresh, logout, profile
-│   │   ├── model/authStore.ts   session slice: user, status
+│   │   ├── api/authApi.ts       register, token, logout, profile
+│   │   ├── api/queryKeys.ts
 │   │   ├── model/useLogin.ts    react-hook-form + mutation
 │   │   ├── model/useRegister.ts
-│   │   ├── model/useProfile.ts  GET and PATCH /auth/profile/
+│   │   ├── model/useProfile.ts  useProfileQuery and useUpdateProfile
+│   │   ├── model/useLogout.ts
 │   │   ├── pages/LoginPage.tsx
 │   │   ├── pages/RegisterPage.tsx
-│   │   └── components/          AuthCard, PasswordField
-│   └── chat/
-│       ├── api/conversationsApi.ts
-│       ├── api/messagesApi.ts
-│       ├── api/streamMessage.ts the SSE adapter
-│       ├── model/useConversations.ts
-│       ├── model/useConversation.ts
-│       ├── model/useSendMessage.ts
-│       ├── model/chatUiStore.ts sidebar, draft, streaming flag
-│       ├── pages/ChatPage.tsx
-│       ├── pages/ConversationPage.tsx
-│       └── components/          ConversationList, MessageList, MessageBubble, Composer
-├── shared/
-│   ├── api/
-│   │   ├── apiClient.ts         instance, base URL, timeout
-│   │   ├── authInterceptor.ts   request header, single-flight refresh
-│   │   ├── apiError.ts          ApiError with code and details
-│   │   ├── errorCodes.ts        the codes the contract defines
-│   │   └── env.ts               typed, validated import.meta.env
-│   ├── ui/                      Button, Input, Modal, Spinner, Toast
-│   ├── hooks/                   useMediaQuery, useFocusTrap, useOnClickOutside
-│   └── lib/                     formatDate, cn, parseRetryAfter
-└── types/                       only cross-feature types
+│   │   └── components/UserProfileModal.tsx
+│   ├── chat/
+│   │   ├── api/conversationsApi.ts
+│   │   ├── api/messagesApi.ts
+│   │   ├── api/streamMessage.ts the SSE adapter
+│   │   ├── api/queryKeys.ts
+│   │   ├── api/types.ts
+│   │   ├── model/useConversations.ts
+│   │   ├── model/useConversation.ts
+│   │   ├── model/useSendMessage.ts
+│   │   ├── model/chatUiStore.ts sidebar, draft, streaming flag
+│   │   ├── pages/ChatPage.tsx
+│   │   └── components/          Sidebar, ConversationList, ChatWindow,
+│   │                            MessageList, MessageBubble, Composer,
+│   │                            SidebarHeader, SettingsDropdown, UserButton
+│   └── home/
+│       ├── pages/HomePage.tsx
+│       └── components/          AnimatedBackground, GlassButton, Typewriter
+└── shared/
+    ├── api/
+    │   ├── apiClient.ts         instance, base URL, timeout
+    │   ├── authInterceptor.ts   request header, single-flight refresh
+    │   ├── apiError.ts          ApiError with code and details
+    │   ├── api.generated.ts     generated from the backend schema
+    │   ├── env.ts               typed, validated import.meta.env
+    │   ├── tokenManager.ts      token storage; P4.3 moves access to memory
+    │   ├── userCache.ts         cached profile, no conversation data
+    │   └── types.ts             shared request and response types
+    ├── auth/
+    │   ├── sessionStore.ts      Zustand session slice: user, status
+    │   └── useSession.ts
+    ├── ui/                      Button, Input, CardHeader, ThemeToggle,
+    │                            ThemeProvider, Spinner, RateLimitToast,
+    │                            notify, toastConfig
+    ├── hooks/useOnClickOutside.ts
+    └── lib/                     logger, parseRetryAfter
 ```
 
 `shared/` is the only place a feature may import from outside itself. When a second feature needs something, it is promoted to `shared/` in the same commit, never imported across.
@@ -82,13 +99,18 @@ LoginPage
   └─ useLogin (react-hook-form + zod)
        └─ useMutation
             └─ authApi.login({ email, password })
-                 └─ POST /auth/token/          { access, refresh }
-                      └─ tokenStore.setTokens()
-                           ├─ access  → memory
-                           └─ refresh → sessionStorage
+                 └─ POST /auth/token/  { access, refresh, user_id, email, username }
+                      ├─ tokenManager.setTokens()
+                      │    ├─ access  → memory
+                      │    └─ refresh → sessionStorage
+                      └─ userCache.write(user)
+       └─ onSuccess
+            ├─ sessionStore.setUser(user)
+            ├─ queryClient.setQueryData(authKeys.profile, user)
+            └─ invalidate conversations
 ```
 
-The access token lives in a module-level variable, never in `localStorage`. The refresh token lives in `sessionStorage` so the session does not outlive the tab. Nothing is written to `localStorage`.
+The target is an access token in a module-level variable, never in `localStorage`, and a refresh token in `sessionStorage` so the session does not outlive the tab. That is P4.3. Today `tokenManager` still writes both tokens to `localStorage`, which is the defect P4.3 closes; the flow above is otherwise the implemented one.
 
 ### Attaching the token
 
@@ -101,13 +123,13 @@ On a `401`, and only on a `401`:
 ```
 apiClient receives 401
   └─ is this an auth or profile endpoint? → reject, no refresh
-  └─ is this a retry of the same request? → sign out only on a 401
-  └─ otherwise → refreshTokenService.refresh()
+  └─ is this a retry of the same request? → endSession() on a 401
+  └─ otherwise → refreshAccessToken()
        └─ an in-flight promise exists? → await the same promise
        └─ otherwise                    → start one refresh
             └─ POST /auth/token/refresh/  { refresh } → { access, refresh }
                  ├─ success → store the new pair, replay the original request
-                 └─ failure → sign out only on a 401
+                 └─ failure → endSession() on a 401
 ```
 
 One refresh at a time. Without this, five concurrent requests produce five refresh calls, and rotation makes the last writer win while earlier replays carry a superseded token. The in-flight promise is shared, not a counter, and it is cleared when it settles so a later `401` starts a fresh refresh.
@@ -125,17 +147,18 @@ In development, every failed request is logged with its HTTP status and contract
 ### Sign out
 
 ```
-logout()
-  └─ authService.logout()  captures the refresh token, clears tokens and cached profile
-  └─ resetChatStore()      clears chat-storage and in-memory conversations
-  └─ the route guard sends the user to /login
+useLogout
+  └─ authApi.logout()      captures the refresh token, clears tokens and cached profile
+  └─ sessionStore.clear()  clears the user and marks the session anonymous
+  └─ queryClient.clear()   drops every cached conversation and message
+  └─ navigate('/login')
 ```
 
-The server call is best effort: a failed blacklist must not trap the user in a session they asked to leave. The local clear happens whatever the server answers. TanStack Query is not installed yet; until P2.2, `resetChatStore()` is the local cache clear, and the same sign-out path will clear the query cache when it arrives.
+The server call is best effort: a failed blacklist must not trap the user in a session they asked to leave. The local clear happens whatever the server answers, in `onSettled`, so a failed logout still clears the cache and the route guard sends the user to `/login`.
 
 ### Bootstrap
 
-On boot, if tokens exist, the app restores the cached profile and calls `GET /auth/profile/` once, inside a pending state, then refreshes the session from the answer. A transient `500` or network failure keeps the cached session and the tokens; only a `401` or `403` clears them, because a transient failure must not look like a logout.
+On boot, `ProfileBootstrap` restores the cached profile and calls `GET /auth/profile/` once, inside a pending state, then refreshes the session from the answer. A transient `500` or network failure keeps the cached session and the tokens; only a `401` or `403` calls `endSession()`, because a transient failure must not look like a logout.
 
 ## 5. Streaming flow
 
@@ -144,14 +167,15 @@ On boot, if tokens exist, the app restores the cached profile and calls `GET /au
 ```
 Composer
   └─ useSendMessage
+       ├─ conversationsApi.create()               only when the route has no uuid
        └─ AbortController                        one per in-flight stream
-            └─ streamMessage({ conversationId, content, signal })
+            └─ streamMessage(uuid, content, { signal, onToken })
                  └─ fetch(POST ..., { signal, headers })
                       └─ response.body.getReader()
                            └─ TextDecoder + buffer split on "\n\n"
                                 └─ parse "event:" and "data:" lines
-                                     ├─ token  → append to the draft message
-                                     ├─ done   → commit ids, stop, invalidate the list
+                                     ├─ token  → onToken(content), append to the assistant message
+                                     ├─ done   → stop, invalidate messages, detail and list
                                      └─ error  → throw ApiError(code, message)
 ```
 
@@ -166,7 +190,7 @@ Rules the adapter must hold to:
 
 ### State during a stream
 
-The draft lives in the query cache under the conversation's message list, not in a component. `useSendMessage` owns the lifecycle: optimistic user message, streamed assistant draft, then `done` triggers a refetch of the conversation and of the list. A component that unmounts mid-stream leaves no orphan state behind, because the state was never in the component.
+The optimistic user message and the streamed assistant message live in the query cache under the conversation's message list, not in a component. `useSendMessage` owns the lifecycle: create the conversation if needed, add the optimistic pair, append each token, then on `done` invalidate the messages, the conversation detail and the list. A component that unmounts mid-stream leaves no orphan state behind, because the state was never in the component; the composer draft is restored only when the failure is `rate_limited` or `quota_exhausted`.
 
 ## 6. Error handling
 
@@ -190,7 +214,7 @@ Every response failure and every thrown value passes through one constructor. A 
 | `apiClient` | transport: timeout, cancellation, refresh, normalisation |
 | mutation hook | decides the user-visible outcome, per mutation |
 | component | renders a state, never parses a message |
-| `ErrorBoundary` | a render crash, nothing else |
+| `ErrorBoundary` (P4.8) | a render crash, nothing else |
 
 A mutation hook maps codes to outcomes, once, next to the mutation: `validation_error` to field errors, `unauthorized` to a sign-out, `rate_limited` and `quota_exhausted` to a banner carrying `Retry-After`, `llm_unavailable` to a retry affordance, `not_found` to a redirect.
 
@@ -200,7 +224,7 @@ A mutation hook maps codes to outcomes, once, next to the mutation: `validation_
 
 ### Last resort
 
-`app/ErrorBoundary.tsx` catches a render crash, shows a recoverable screen, and offers a reload. Network failures never reach it, because they are values by then.
+P4.8 adds `app/ErrorBoundary.tsx` to catch a render crash, show a recoverable screen, and offer a reload. Network failures never reach it, because they are values by then.
 
 ## 7. Rendering and routes
 
@@ -209,11 +233,10 @@ A mutation hook maps codes to outcomes, once, next to the mutation: `validation_
 | `/` | `HomePage` | public | lazily |
 | `/login` | `LoginPage` | public, redirect if signed in | lazily |
 | `/register` | `RegisterPage` | public, redirect if signed in | lazily |
-| `/chat` | `ChatPage` | authenticated | lazily |
-| `/chat/:uuid` | `ConversationPage` | authenticated | lazily |
-| `*` | `NotFoundPage` | public | eagerly |
+| `/chat/:uuid?` | `ChatShell` → `ChatPage` | authenticated | after the guard resolves |
+| `*` | redirect to `/` | public | eagerly |
 
-Every page component is behind `React.lazy` with a shared `Suspense` fallback, so the initial bundle carries the router and nothing else. The guard is a layout route rendering an `Outlet`, so a new protected route costs one line.
+`HomePage`, `LoginPage` and `RegisterPage` are behind `React.lazy` with a shared `Suspense` fallback. The authenticated shell is one route with an optional `uuid`, so creating the first conversation changes the URL without remounting `ChatPage` or cancelling the stream. The guard is a layout route rendering an `Outlet`, so a new protected route costs one line.
 
 `BrowserRouter` is used, not the data router: there is no loader, and the server state is TanStack Query's job. The consequence is that every host must rewrite unknown paths to `index.html`, which is a deployment requirement, not a code one.
 
@@ -225,8 +248,8 @@ Every page component is behind `React.lazy` with a shared `Suspense` fallback, s
 | App name | `VITE_APP_NAME`, injected into the document title |
 | Default theme | `VITE_DEFAULT_THEME`, applied before first paint |
 | Design tokens | `@theme` in CSS, no `tailwind.config.js` |
-| Dark mode | class-based `@custom-variant dark`, toggled by `ThemeContext` |
+| Dark mode | class-based `@custom-variant dark`, toggled by `ThemeProvider` |
 | Markdown | `@plugin "@tailwindcss/typography"` in `index.css` |
-| Type safety | `strict` plus `noUncheckedIndexedAccess`, enforced by a real `tsc -b` |
+| Type safety | `strict` today; P3.1 makes `tsc -b` the gate and P3.2 adds `noUncheckedIndexedAccess` |
 
 An unset or malformed variable is a startup error with a readable message, never an `undefined` that surfaces later as a 404 on an unknown host.

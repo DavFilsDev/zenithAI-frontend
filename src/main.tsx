@@ -1,8 +1,8 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
-import App from './App.tsx'
-import { env } from './config/env'
+import App from './app/App'
+import { env } from './shared/api/env'
 
 document.documentElement.classList.toggle('dark', env.defaultTheme === 'dark')
 

@@ -2,7 +2,7 @@
 
 Audit of the current code, then the roadmap that brings it to the architecture in [`ARCHITECTURE.md`](ARCHITECTURE.md) and the contract in [`API_CONTRACT.md`](API_CONTRACT.md). The target architecture and the API contract are the reference; this document is the work list.
 
-Nothing here has been implemented yet. Every checkbox is open. A box is ticked in the same commit that completes it, and a pull request that moves one says which one.
+The audit in section 1 describes the code as it was before P0; its file paths refer to files that have since moved or been deleted. The roadmap in section 2 is the live status. A box is ticked in the same commit that completes it, and a pull request that moves one says which one.
 
 ## 1. Audit findings
 
@@ -212,15 +212,15 @@ One client, one refresh, one error shape. This is the foundation the streaming w
 
 The phase that makes the product feel like the product.
 
-- [ ] **P2.1** Add the `GET /conversations/{uuid}/messages/` client, and stop relying on messages embedded in the conversation payload. — *S* — opening a conversation fetches its messages from the contract endpoint. — Depends on: P0.2.
-- [ ] **P2.2** Add TanStack Query and move all server state into it: conversations, conversation detail, messages, profile. — *L* — no `useEffect` in the codebase fetches data, and `QueryClientProvider` wraps the app. — Depends on: P1.5.
-- [ ] **P2.3** Reduce Zustand to UI state only: sidebar, composer draft, streaming flag, theme. Remove `persist` from the chat store. — *M* — nothing conversation-related is in `localStorage`, and the `chat-storage` key is gone. — Depends on: P2.2.
-- [ ] **P2.4** Build the SSE adapter: `fetch` plus `ReadableStream`, a buffer split on the blank line, `token` / `done` / `error` handled as declared. — *L* — a stream interrupted mid-chunk still renders every complete fragment received so far, and a stream that ends without `done` is reported as an error rather than a truncated answer. — Depends on: P1.2.
-- [ ] **P2.5** Cancel properly: one `AbortController` per in-flight stream, aborted on unmount, on a second send, and on a route change. Always release the reader. — *M* — navigating away mid-answer leaves no open connection and no orphan draft, visible in the network panel. — Depends on: P2.4.
-- [ ] **P2.6** Write the streamed answer into the query cache, and refetch the conversation and the list on `done`. — *M* — reloading during a stream loses nothing, and the conversation title appears in the sidebar as soon as it exists. — Depends on: P2.4, P2.2.
-- [ ] **P2.7** Implement conversation creation, rename and delete against the contract, with `PATCH` limited to `title`. — *M* — a conversation can be created, renamed and deleted, and no `PUT` is ever issued. — Depends on: P0.3.
-- [ ] **P2.8** Move to a feature-based tree: `app/`, `features/auth`, `features/chat`, `shared/`, as described in [`ARCHITECTURE.md`](ARCHITECTURE.md). — *L* — no feature imports another feature's internals, and the old `pages/`, `contexts/`, `services/`, `store/` and `types/` directories no longer exist. — Depends on: P2.2, P2.3, P2.7.
-- [ ] **P2.9** Add pagination to the conversation list, reading `results` and using `count`, `next` and `previous` for navigation. — *M* — the list pages at 20 items and the backend's page size is respected. — Depends on: P2.7.
+- [x] **P2.1** Add the `GET /conversations/{uuid}/messages/` client, and stop relying on messages embedded in the conversation payload. — *S* — opening a conversation fetches its messages from the contract endpoint. — Depends on: P0.2.
+- [x] **P2.2** Add TanStack Query and move all server state into it: conversations, conversation detail, messages, profile. — *L* — no `useEffect` in the codebase fetches data, and `QueryClientProvider` wraps the app. — Depends on: P1.5.
+- [x] **P2.3** Reduce Zustand to UI state only: sidebar, composer draft, streaming flag, theme. Remove `persist` from the chat store. — *M* — nothing conversation-related is in `localStorage`, and the `chat-storage` key is gone. — Depends on: P2.2.
+- [x] **P2.4** Build the SSE adapter: `fetch` plus `ReadableStream`, a buffer split on the blank line, `token` / `done` / `error` handled as declared. — *L* — a stream interrupted mid-chunk still renders every complete fragment received so far, and a stream that ends without `done` is reported as an error rather than a truncated answer. — Depends on: P1.2.
+- [x] **P2.5** Cancel properly: one `AbortController` per in-flight stream, aborted on unmount, on a second send, and on a route change. Always release the reader. — *M* — navigating away mid-answer leaves no open connection and no orphan draft, visible in the network panel. — Depends on: P2.4.
+- [x] **P2.6** Write the streamed answer into the query cache, and refetch the conversation and the list on `done`. — *M* — reloading during a stream loses nothing, and the conversation title appears in the sidebar as soon as it exists. — Depends on: P2.4, P2.2.
+- [x] **P2.7** Implement conversation creation, rename and delete against the contract, with `PATCH` limited to `title`. — *M* — a conversation can be created, renamed and deleted, and no `PUT` is ever issued. — Depends on: P0.3.
+- [x] **P2.8** Move to a feature-based tree: `app/`, `features/auth`, `features/chat`, `shared/`, as described in [`ARCHITECTURE.md`](ARCHITECTURE.md). — *L* — no feature imports another feature's internals, and the old `pages/`, `contexts/`, `services/`, `store/` and `types/` directories no longer exist. — Depends on: P2.2, P2.3, P2.7.
+- [x] **P2.9** Add pagination to the conversation list, reading `results` and using `count`, `next` and `previous` for navigation. — *M* — the list pages at 20 items and the backend's page size is respected. — Depends on: P2.7.
 
 ### P3 — Quality
 
