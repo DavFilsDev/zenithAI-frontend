@@ -152,7 +152,7 @@ Three kinds, never mixed in one component:
 
 ### Accessibility
 
-- Every interactive element is a real `button`, `a` or `input`. A `div` with an `onClick` is a bug.
+- Every interactive element is a real `button`, `a` or `input`. A `div` with an `onClick` is a bug; the `jsx-a11y` recommended rules enforce this in `npm run lint`.
 - Every icon-only control has an `aria-label`. A control that toggles has `aria-expanded` or `aria-pressed`.
 - Every input has a `label` bound with `htmlFor` to a matching `id`, and an error linked with `aria-describedby` and announced.
 - Anything that appears or updates asynchronously is inside an `aria-live` region: the streaming answer, the loading state, a toast.
