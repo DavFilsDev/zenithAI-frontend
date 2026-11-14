@@ -126,6 +126,7 @@ Three kinds, never mixed in one component:
 
 - `strict`, `noUncheckedIndexedAccess` and `exactOptionalPropertyTypes` are on and enforced by `tsc -b`.
 - No `any`. When a third-party type is wrong, the boundary is narrowed by hand, in one place.
+- Lint is type-aware: `typescript-eslint` runs `recommendedTypeChecked`. Promises are awaited, returned, or explicitly ignored with `void`; async functions are not passed to props that expect a `void` return.
 - `import type { X }` for type-only imports, required by `verbatimModuleSyntax`.
 - Enums are avoided, `erasableSyntaxOnly` is on. A closed set of strings is a union type.
 - The environment is typed once, in a `vite-env.d.ts` that validates the shape of `import.meta.env`. An unset variable is a startup error, not a `undefined` that fails later.
