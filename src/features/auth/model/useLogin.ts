@@ -4,19 +4,20 @@ import { authApi } from '../api/authApi';
 import { authKeys } from '../api/queryKeys';
 import { useSessionStore } from '../../../shared/auth/sessionStore';
 import { notify } from '../../../shared/ui/notify';
+import type { LoginCredentials } from '../../../shared/api/types';
 
 export const useLogin = () => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
   return useMutation({
-    mutationFn: authApi.login,
+    mutationFn: (credentials: LoginCredentials) => authApi.login(credentials),
     onSuccess: ({ user }) => {
       useSessionStore.getState().setUser(user);
       queryClient.setQueryData(authKeys.profile, user);
-      queryClient.invalidateQueries({ queryKey: ['conversations'] });
+      void queryClient.invalidateQueries({ queryKey: ['conversations'] });
       notify.success(`Welcome back, ${user.username || user.email}!`);
-      navigate('/chat', { replace: true });
+      void navigate('/chat', { replace: true });
     },
   });
 };

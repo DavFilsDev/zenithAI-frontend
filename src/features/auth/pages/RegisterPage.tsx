@@ -36,7 +36,7 @@ export const RegisterPage = () => {
         password2: data.password2,
       });
       notify.success('Account created. Please sign in.');
-      navigate('/login', { replace: true });
+      void navigate('/login', { replace: true });
     } catch (error) {
       const apiError = error instanceof ApiError ? error : ApiError.fromAxiosError(error);
       const fieldErrors = apiError.getFieldErrors();
@@ -69,7 +69,12 @@ export const RegisterPage = () => {
       <div className="max-w-md w-full p-8 space-y-6 bg-white/10 dark:bg-white/5 backdrop-blur-md border border-white/20 dark:border-white/10 rounded-2xl shadow-xl">
         <CardHeader phrase="Create your account and join the most advanced AI coding platform!" />
 
-        <form onSubmit={handleSubmit(onSubmit)} className="mt-6 space-y-4">
+        <form
+          onSubmit={(event) => {
+            void handleSubmit(onSubmit)(event);
+          }}
+          className="mt-6 space-y-4"
+        >
           <Input
             label="Email"
             type="email"
