@@ -228,7 +228,7 @@ Make the strict settings real, and add the tests that were never there.
 
 - [x] **P3.1** Fix the type-check: `tsc -b` in `type-check`, `composite` on the referenced projects, and the real gate in `build`. — *S* — a deliberate type error fails `npm run type-check` and `npm run build`. — Depends on: —
 - [x] **P3.2** Add `noUncheckedIndexedAccess` and `exactOptionalPropertyTypes`, and fix what they surface. — *M* — the build is clean with both on. — Depends on: P3.1.
-- [ ] **P3.3** Turn on type-aware `typescript-eslint`, so the current `recommended` set becomes the checked one. — *M* — `no-floating-promises` and `no-misused-promises` are active and the codebase is clean. — Depends on: P3.1.
+- [x] **P3.3** Turn on type-aware `typescript-eslint`, so the current `recommended` set becomes the checked one. — *M* — `no-floating-promises` and `no-misused-promises` are active and the codebase is clean. — Depends on: P3.1.
 - [ ] **P3.4** Add `eslint-plugin-jsx-a11y` and fix the violations it reports. — *M* — the plugin is in the lint set and `npm run lint` passes with `--max-warnings 0`. — Depends on: P3.1.
 - [ ] **P3.5** Repair the `lint` script: drop the redundant `--ext`, scope the flat config so no file is left unconfigured, and keep `--max-warnings 0` only once the config is exhaustive. — *S* — `npm run lint` exits 0 on a clean tree. — Depends on: —
 - [ ] **P3.6** Add Prettier with `prettier-plugin-tailwindcss`, and a `format` script. — *S* — `npm run format` rewrites the tree, and a second run is a no-op. — Depends on: —

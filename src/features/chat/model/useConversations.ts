@@ -31,8 +31,8 @@ export const useRenameConversation = () => {
         conversationKeys.detail(conversation.uuid),
         (current) => (current ? { ...current, ...conversation } : current)
       );
-      queryClient.invalidateQueries({ queryKey: conversationKeys.all });
-      queryClient.invalidateQueries({ queryKey: conversationKeys.detail(conversation.uuid) });
+      void queryClient.invalidateQueries({ queryKey: conversationKeys.all });
+      void queryClient.invalidateQueries({ queryKey: conversationKeys.detail(conversation.uuid) });
       notify.success('Conversation renamed.');
     },
   });
@@ -46,7 +46,7 @@ export const useDeleteConversation = () => {
     onSuccess: (_data, uuid) => {
       queryClient.removeQueries({ queryKey: conversationKeys.detail(uuid) });
       queryClient.removeQueries({ queryKey: conversationKeys.messages(uuid) });
-      queryClient.invalidateQueries({ queryKey: conversationKeys.all });
+      void queryClient.invalidateQueries({ queryKey: conversationKeys.all });
       notify.success('Conversation deleted.');
     },
   });

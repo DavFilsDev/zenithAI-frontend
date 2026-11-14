@@ -119,7 +119,9 @@ export const UserProfileModal = ({
                 {errorMessage && <p className="text-xs text-red-500">{errorMessage}</p>}
                 <div className="flex gap-2">
                   <button
-                    onClick={handleUpdateEmail}
+                    onClick={() => {
+                      void handleUpdateEmail();
+                    }}
                     disabled={isLoading}
                     className="flex-1 px-3 py-1 bg-[rgb(var(--color-primary))] text-white rounded-lg hover:opacity-90 transition disabled:opacity-50"
                   >
@@ -165,7 +167,9 @@ export const UserProfileModal = ({
                 {errorMessage && <p className="text-xs text-red-500">{errorMessage}</p>}
                 <div className="flex gap-2">
                   <button
-                    onClick={handleUpdateUsername}
+                    onClick={() => {
+                      void handleUpdateUsername();
+                    }}
                     disabled={isLoading}
                     className="flex-1 px-3 py-1 bg-[rgb(var(--color-primary))] text-white rounded-lg hover:opacity-90 transition disabled:opacity-50"
                   >

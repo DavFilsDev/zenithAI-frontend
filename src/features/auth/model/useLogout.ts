@@ -9,14 +9,14 @@ export const useLogout = () => {
   const navigate = useNavigate();
 
   return useMutation({
-    mutationFn: authApi.logout,
+    mutationFn: () => authApi.logout(),
     onSettled: () => {
       const user = useSessionStore.getState().user;
       const name = user?.username || user?.email || 'User';
 
       useSessionStore.getState().clear();
       queryClient.clear();
-      navigate('/login', { replace: true });
+      void navigate('/login', { replace: true });
       notify.success(`You are logged out successfully! See you soon ${name}!`);
     },
   });

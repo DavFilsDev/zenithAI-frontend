@@ -1,9 +1,13 @@
-import axios from 'axios';
+import axios, { type InternalAxiosRequestConfig } from 'axios';
 import { env } from './env';
 import { tokenManager } from './tokenManager';
 import { shouldSkipRefresh, refreshAccessToken, endSession } from './authInterceptor';
 import { ApiError } from './apiError';
 import { logApiError } from '../lib/logger';
+
+interface RetryableRequestConfig extends InternalAxiosRequestConfig {
+  _retry?: boolean;
+}
 
 const api = axios.create({
   baseURL: env.apiUrl,
@@ -34,14 +38,18 @@ api.interceptors.request.use(
 
 api.interceptors.response.use(
   (response) => response,
-  async (error) => {
-    const originalRequest = error.config;
-
-    if (shouldSkipRefresh(originalRequest?.url)) {
+  async (error: unknown) => {
+    if (!axios.isAxiosError(error)) {
       return reject(error);
     }
 
-    if (originalRequest?._retry) {
+    const originalRequest = error.config as RetryableRequestConfig | undefined;
+
+    if (!originalRequest || shouldSkipRefresh(originalRequest.url)) {
+      return reject(error);
+    }
+
+    if (originalRequest._retry) {
       if (error.response?.status === 401) {
         endSession();
       }

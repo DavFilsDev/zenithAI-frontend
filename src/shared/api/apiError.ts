@@ -106,10 +106,10 @@ export class ApiError extends Error {
     }
 
     const status = error.response?.status ?? 0;
-    const body = error.response?.data;
+    const body: unknown = error.response?.data;
     const envelope = envelopeFrom(body);
     const details = envelope && isRecord(envelope.details) ? envelope.details : null;
-    const retryAfterHeader = error.response?.headers?.['retry-after'];
+    const retryAfterHeader: unknown = error.response?.headers?.['retry-after'];
     const retryAfter = typeof retryAfterHeader === 'string' ? parseRetryAfter(retryAfterHeader) : null;
 
     return new ApiError(envelope?.message ?? messageFrom(status, body, error.message), status, {

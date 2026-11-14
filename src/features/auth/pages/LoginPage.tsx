@@ -49,7 +49,12 @@ export const LoginPage = () => {
       <div className="max-w-md w-full p-8 space-y-6 bg-white/10 dark:bg-white/5 backdrop-blur-md border border-white/20 dark:border-white/10 rounded-2xl shadow-xl">
         <CardHeader phrase="Welcome back to your smart coding companion!" />
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+        <form
+          onSubmit={(event) => {
+            void handleSubmit(onSubmit)(event);
+          }}
+          className="space-y-5"
+        >
           <Input
             label="Email"
             type="email"
