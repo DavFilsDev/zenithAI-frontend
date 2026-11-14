@@ -38,11 +38,11 @@ export const Sidebar = ({ user, onLogout, onOpenProfile }: SidebarProps) => {
   const handleNewChat = () => {
     setDraft('');
     setConversationPage(1);
-    navigate('/chat');
+    void navigate('/chat');
   };
 
   const handleSelect = (uuid: string) => {
-    navigate(`/chat/${uuid}`);
+    void navigate(`/chat/${uuid}`);
   };
 
   const handleDelete = async (uuid: string) => {
@@ -54,7 +54,7 @@ export const Sidebar = ({ user, onLogout, onOpenProfile }: SidebarProps) => {
       await deleteConversation.mutateAsync(uuid);
 
       if (activeUuid === uuid) {
-        navigate('/chat', { replace: true });
+        void navigate('/chat', { replace: true });
       }
 
       if (conversationPage > 1 && conversationsQuery.data?.results.length === 1) {
@@ -170,8 +170,12 @@ export const Sidebar = ({ user, onLogout, onOpenProfile }: SidebarProps) => {
         hasNext={Boolean(conversationsQuery.data?.next)}
         hasPrevious={Boolean(conversationsQuery.data?.previous)}
         onSelect={handleSelect}
-        onDelete={handleDelete}
-        onRename={handleRename}
+        onDelete={(uuid) => {
+          void handleDelete(uuid);
+        }}
+        onRename={(uuid, title) => {
+          void handleRename(uuid, title);
+        }}
         onPageChange={setConversationPage}
       />
 

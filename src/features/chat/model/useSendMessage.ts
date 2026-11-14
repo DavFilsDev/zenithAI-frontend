@@ -63,8 +63,8 @@ export const useSendMessage = () => {
             ...conversation,
             messages: [],
           });
-          queryClient.invalidateQueries({ queryKey: conversationKeys.all });
-          navigate(`/chat/${targetUuid}`, { replace: true });
+          void queryClient.invalidateQueries({ queryKey: conversationKeys.all });
+          void navigate(`/chat/${targetUuid}`, { replace: true });
         }
 
         if (!targetUuid) {
@@ -116,8 +116,8 @@ export const useSendMessage = () => {
             conversationKeys.messages(targetUuid),
             (messages = []) => messages.filter((message) => !message.uuid.startsWith('temp-'))
           );
-          queryClient.invalidateQueries({ queryKey: conversationKeys.messages(targetUuid) });
-          queryClient.invalidateQueries({ queryKey: conversationKeys.detail(targetUuid) });
+          void queryClient.invalidateQueries({ queryKey: conversationKeys.messages(targetUuid) });
+          void queryClient.invalidateQueries({ queryKey: conversationKeys.detail(targetUuid) });
         }
 
         if (error instanceof DOMException && error.name === 'AbortError') {

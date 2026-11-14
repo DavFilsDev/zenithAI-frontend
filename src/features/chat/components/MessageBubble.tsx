@@ -68,7 +68,9 @@ export const MessageBubble = ({ message }: MessageBubbleProps) => {
         {!isTyping && (
           <div className="flex gap-2 mt-2 justify-end opacity-50 group-hover:opacity-100 transition">
             <button
-              onClick={handleCopy}
+              onClick={() => {
+                void handleCopy();
+              }}
               title="Copy message"
               className="p-1.5 rounded-lg bg-white/10 dark:bg-white/5 border border-white/10 hover:bg-white/20 transition"
             >
