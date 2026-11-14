@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { formatDistanceToNow } from 'date-fns';
 import { FiMessageSquare, FiTrash2, FiEdit2, FiCheck, FiX } from 'react-icons/fi';
 import type { ConversationSummary } from '../api/types';
@@ -30,6 +30,13 @@ export const ConversationList = ({
 }: ConversationListProps) => {
   const [editingUuid, setEditingUuid] = useState<string | null>(null);
   const [title, setTitle] = useState('');
+  const titleInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (editingUuid) {
+      titleInputRef.current?.focus();
+    }
+  }, [editingUuid]);
 
   const startEditing = (conversation: ConversationSummary) => {
     setEditingUuid(conversation.uuid);
@@ -88,9 +95,9 @@ export const ConversationList = ({
                 className="flex items-center gap-1"
               >
                 <input
+                  ref={titleInputRef}
                   value={title}
                   onChange={(event) => setTitle(event.target.value)}
-                  autoFocus
                   className="min-w-0 flex-1 rounded-lg border border-white/20 bg-white/10 px-2 py-1 text-sm outline-none focus:border-[rgb(var(--color-primary))]"
                 />
                 <button
