@@ -77,7 +77,10 @@ export const UserProfileModal = ({
 
   return (
     <>
-      <div
+      <button
+        type="button"
+        aria-label="Close profile dialog"
+        tabIndex={-1}
         className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 animate-fade-in"
         onClick={onClose}
       />
@@ -96,7 +99,10 @@ export const UserProfileModal = ({
         <div className="p-6 space-y-4">
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <label className="text-sm font-medium text-gray-400 flex items-center gap-2">
+              <label
+                htmlFor="profile-email"
+                className="text-sm font-medium text-gray-400 flex items-center gap-2"
+              >
                 <FiMail size={14} /> Email
               </label>
               {editingField !== 'email' && (
@@ -111,6 +117,7 @@ export const UserProfileModal = ({
             {editingField === 'email' ? (
               <div className="space-y-2">
                 <input
+                  id="profile-email"
                   type="email"
                   value={email}
                   onChange={(event) => setEmail(event.target.value)}
@@ -144,7 +151,10 @@ export const UserProfileModal = ({
 
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <label className="text-sm font-medium text-gray-400 flex items-center gap-2">
+              <label
+                htmlFor="profile-username"
+                className="text-sm font-medium text-gray-400 flex items-center gap-2"
+              >
                 <FiUser size={14} /> Username
               </label>
               {editingField !== 'username' && (
@@ -159,6 +169,7 @@ export const UserProfileModal = ({
             {editingField === 'username' ? (
               <div className="space-y-2">
                 <input
+                  id="profile-username"
                   type="text"
                   value={username}
                   onChange={(event) => setUsername(event.target.value)}
