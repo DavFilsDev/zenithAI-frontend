@@ -114,7 +114,7 @@ npm run lint
 npm run build
 ```
 
-`type-check` and `build` share the same `tsc -b` gate. `lint` runs the flat ESLint config with type-aware `typescript-eslint` rules, including `no-floating-promises` and `no-misused-promises`, and `--max-warnings 0`. All three pass on the current tree; `build` still reports the pre-existing >500 kB chunk warning.
+`type-check` and `build` share the same `tsc -b` gate. `lint` runs the flat ESLint config with type-aware `typescript-eslint` rules, including `no-floating-promises` and `no-misused-promises`, plus the `jsx-a11y` recommended set, and `--max-warnings 0`. All three pass on the current tree; `build` still reports the pre-existing >500 kB chunk warning.
 
 There is no `test`, no `test:coverage`, no `test:e2e`, no `format` and no `deploy` script. Nothing runs tests, because nothing has been written yet.
 
