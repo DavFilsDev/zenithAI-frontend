@@ -1,0 +1,871 @@
+openapi: 3.0.3
+info:
+  title: Zenith AI API
+  version: 1.0.0
+  description: "\n    Zenith AI is a chatbot platform API built with Django REST Framework.\n\n
+    \   ## Features\n    - User authentication with JWT\n    - Conversation management\n
+    \   - Message history\n\n    ## Authentication\n    Most endpoints require JWT
+    authentication via Bearer token.\n    Obtain tokens via `/api/v1/auth/token/`
+    endpoint.\n    "
+paths:
+  /api/v1/auth/logout/:
+    post:
+      operationId: auth_logout_create
+      description: Blacklist the presented refresh token so it can no longer be used
+      summary: Logout
+      tags:
+      - Authentication
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenBlacklistRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenBlacklistRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenBlacklistRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '204':
+          description: Refresh token blacklisted
+        '400':
+          description: Refresh token missing or malformed
+        '401':
+          description: Invalid or expired refresh token
+  /api/v1/auth/profile/:
+    get:
+      operationId: auth_profile_retrieve
+      description: Retrieve the profile of the currently authenticated user
+      summary: Get user profile
+      tags:
+      - Users
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+              examples:
+                SuccessfulResponse:
+                  value:
+                    id: 1
+                    email: user@example.com
+                    username: johndoe
+                  summary: Successful Response
+          description: Profile retrieved successfully
+        '401':
+          description: Authentication credentials not provided or invalid
+    patch:
+      operationId: auth_profile_partial_update
+      description: Partially update the authenticated user's profile information
+      summary: Partially update user profile
+      tags:
+      - Users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedUserRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedUserRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedUserRequest'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+        '400':
+          description: Invalid data provided
+        '401':
+          description: Authentication required
+  /api/v1/auth/register/:
+    post:
+      operationId: auth_register_create
+      description: Create a new user account with email and password
+      summary: Register new user
+      tags:
+      - Authentication
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+            examples:
+              ValidRegistration:
+                value:
+                  email: user@example.com
+                  username: newuser
+                  password: SecurePass123!
+                  password2: SecurePass123!
+                summary: Valid Registration
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+                description: Unspecified response body
+          description: ''
+  /api/v1/auth/token/:
+    post:
+      operationId: auth_token_create
+      description: Authenticate with email/password to receive access and refresh
+        tokens
+      summary: Login - Get JWT Tokens
+      tags:
+      - Authentication
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPairRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPairRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPairRequest'
+        required: true
+      responses:
+        '200':
+          description: Login successful
+        '401':
+          description: Invalid credentials
+  /api/v1/auth/token/refresh/:
+    post:
+      operationId: auth_token_refresh_create
+      description: Get a new access token using a valid refresh token
+      summary: Refresh access token
+      tags:
+      - Authentication
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenRefreshRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenRefreshRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenRefreshRequest'
+        required: true
+      responses:
+        '200':
+          description: New access token generated
+        '401':
+          description: Invalid or expired refresh token
+  /api/v1/chat/conversations/:
+    get:
+      operationId: chat_conversations_list
+      description: Retrieve all conversations for the authenticated user, ordered
+        by most recent
+      summary: List all conversations
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      tags:
+      - Chat
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedConversationListList'
+              examples:
+                SuccessfulResponse:
+                  value:
+                    count: 123
+                    next: http://api.example.org/accounts/?page=4
+                    previous: http://api.example.org/accounts/?page=2
+                    results:
+                    - - uuid: 3f7a2c1e-8b4d-4f0e-9a2c-1e8b4d4f0e9a
+                        title: My First Conversation
+                        created_at: '2026-03-03T10:00:00Z'
+                        updated_at: '2026-03-03T10:00:00Z'
+                        message_count: 0
+                  summary: Successful Response
+          description: List of conversations retrieved successfully
+        '401':
+          description: Authentication credentials not provided or invalid
+    post:
+      operationId: chat_conversations_create
+      description: Create a new conversation with the specified title
+      summary: Create a new conversation
+      tags:
+      - Chat
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConversationRequest'
+            examples:
+              CreateRequest:
+                value:
+                  title: My New Conversation
+                summary: Create Request
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ConversationRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ConversationRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConversationList'
+              examples:
+                CreateResponse:
+                  value:
+                    uuid: 3f7a2c1e-8b4d-4f0e-9a2c-1e8b4d4f0e9a
+                    title: My New Conversation
+                    created_at: '2026-03-03T10:00:00Z'
+                    updated_at: '2026-03-03T10:00:00Z'
+                    message_count: 0
+                  summary: Create Response
+          description: Conversation created successfully
+        '400':
+          description: Invalid data provided (e.g., missing title)
+        '401':
+          description: Authentication required
+  /api/v1/chat/conversations/{conversation_id}/messages/:
+    get:
+      operationId: chat_conversations_messages_list
+      description: Retrieve all messages of a conversation owned by the authenticated
+        user
+      summary: List messages of a conversation
+      parameters:
+      - in: path
+        name: conversation_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      tags:
+      - Chat
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedMessageList'
+          description: Messages of the conversation
+        '401':
+          description: Authentication required
+        '404':
+          description: Conversation not found or not owned by the caller
+    post:
+      operationId: chat_conversations_messages_create
+      description: Send a message inside an existing conversation and return the complete
+        assistant message
+      summary: Send a message in a conversation
+      parameters:
+      - in: path
+        name: conversation_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - Chat
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: {}
+              description: Unspecified request body
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              additionalProperties: {}
+              description: Unspecified request body
+          multipart/form-data:
+            schema:
+              type: object
+              additionalProperties: {}
+              description: Unspecified request body
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+          description: Assistant message created
+        '400':
+          description: Message field is required
+        '401':
+          description: Authentication required
+        '404':
+          description: Conversation not found or not owned by the caller
+        '429':
+          description: Rate or quota limit exceeded (`rate_limited` / `quota_exhausted`),
+            see the `Retry-After` header
+        '503':
+          description: The AI provider is unavailable
+  /api/v1/chat/conversations/{conversation_id}/messages/stream/:
+    post:
+      operationId: chat_conversations_messages_stream_create
+      description: Send a message inside an existing conversation and stream the assistant
+        reply as Server-Sent Events (`text/event-stream`). Emits `token` events with
+        the reply fragments, then a `done` event carrying the message and conversation
+        ids, or an `error` event in the contract error format.
+      summary: Stream a message in a conversation
+      parameters:
+      - in: path
+        name: conversation_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - Chat
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: {}
+              description: Unspecified request body
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              additionalProperties: {}
+              description: Unspecified request body
+          multipart/form-data:
+            schema:
+              type: object
+              additionalProperties: {}
+              description: Unspecified request body
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: string
+          description: 'SSE stream: `token`, then `done`, or an `error` event'
+        '400':
+          description: Message field is required
+        '401':
+          description: Authentication required
+        '404':
+          description: Conversation not found or not owned by the caller
+        '429':
+          description: Rate or quota limit exceeded (`rate_limited` / `quota_exhausted`),
+            see the `Retry-After` header
+  /api/v1/chat/conversations/{uuid}/:
+    get:
+      operationId: chat_conversations_retrieve
+      description: Retrieve a specific conversation with all its messages
+      summary: Get conversation details
+      parameters:
+      - in: path
+        name: uuid
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - Chat
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Conversation'
+              examples:
+                SuccessfulResponse:
+                  value:
+                    uuid: 3f7a2c1e-8b4d-4f0e-9a2c-1e8b4d4f0e9a
+                    title: My First Conversation
+                    created_at: '2026-03-03T10:00:00Z'
+                    updated_at: '2026-03-03T10:06:00Z'
+                    message_count: 2
+                    messages:
+                    - uuid: 5e4b3a2c-1d9f-4b8e-a3c5-6d7f8a9b0c1d
+                      role: user
+                      content: What is Django?
+                      created_at: '2026-03-03T10:04:00Z'
+                    - uuid: a1b2c3d4-5e6f-4a7b-8c9d-0e1f2a3b4c5d
+                      role: assistant
+                      content: Django is a Python web framework...
+                      created_at: '2026-03-03T10:04:01Z'
+                  summary: Successful Response
+          description: Conversation details retrieved successfully
+        '401':
+          description: Authentication required
+        '403':
+          description: You don't have permission to access this conversation
+        '404':
+          description: Conversation not found
+    patch:
+      operationId: chat_conversations_partial_update
+      description: Partially update a conversation title (PATCH)
+      summary: Partially update conversation
+      parameters:
+      - in: path
+        name: uuid
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - Chat
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedConversationRequest'
+            examples:
+              PartialUpdateRequest:
+                value:
+                  title: New Title Only
+                summary: Partial Update Request
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedConversationRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedConversationRequest'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Conversation'
+          description: ''
+        '400':
+          description: Invalid data
+        '401':
+          description: Authentication required
+        '403':
+          description: Permission denied
+        '404':
+          description: Conversation not found
+    delete:
+      operationId: chat_conversations_destroy
+      description: Delete a conversation and all its messages
+      summary: Delete conversation
+      parameters:
+      - in: path
+        name: uuid
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - Chat
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: Conversation deleted successfully
+        '401':
+          description: Authentication required
+        '403':
+          description: Permission denied
+        '404':
+          description: Conversation not found
+  /api/v1/health/:
+    get:
+      operationId: health_retrieve
+      description: 'Public readiness probe: returns 200 when the service and the database
+        are reachable, 503 when the database is not. No authentication is required.'
+      summary: Health check
+      tags:
+      - System
+      security:
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Health'
+          description: Service and database are available
+        '503':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Health'
+          description: The database is unreachable
+  /api/v1/health/live/:
+    get:
+      operationId: health_live_retrieve
+      description: Public liveness probe that only confirms the process is serving
+        requests. It does not query the database, so platform health checks do not
+        wake a suspended database.
+      summary: Liveness check
+      tags:
+      - System
+      security:
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Liveness'
+          description: The service is running
+components:
+  schemas:
+    Conversation:
+      type: object
+      properties:
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        title:
+          type: string
+          maxLength: 200
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        messages:
+          type: array
+          items:
+            $ref: '#/components/schemas/Message'
+          readOnly: true
+        message_count:
+          type: integer
+          readOnly: true
+          default: 0
+      required:
+      - created_at
+      - message_count
+      - messages
+      - title
+      - updated_at
+      - uuid
+    ConversationList:
+      type: object
+      properties:
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        title:
+          type: string
+          maxLength: 200
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        message_count:
+          type: integer
+          readOnly: true
+          default: 0
+      required:
+      - created_at
+      - message_count
+      - title
+      - updated_at
+      - uuid
+    ConversationRequest:
+      type: object
+      properties:
+        title:
+          type: string
+          minLength: 1
+          maxLength: 200
+      required:
+      - title
+    Health:
+      type: object
+      properties:
+        status:
+          type: string
+        database:
+          type: string
+      required:
+      - database
+      - status
+    Liveness:
+      type: object
+      properties:
+        status:
+          type: string
+      required:
+      - status
+    Message:
+      type: object
+      properties:
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        role:
+          $ref: '#/components/schemas/RoleEnum'
+        content:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - content
+      - created_at
+      - role
+      - uuid
+    MessageRequest:
+      type: object
+      properties:
+        role:
+          $ref: '#/components/schemas/RoleEnum'
+        content:
+          type: string
+          minLength: 1
+      required:
+      - content
+      - role
+    PaginatedConversationListList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/ConversationList'
+    PaginatedMessageList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Message'
+    PatchedConversationRequest:
+      type: object
+      properties:
+        title:
+          type: string
+          minLength: 1
+          maxLength: 200
+    PatchedUserRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          minLength: 1
+          maxLength: 254
+        username:
+          type: string
+          minLength: 1
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+            only.
+          pattern: ^[\w.@+-]+$
+          maxLength: 150
+    RegisterRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          minLength: 1
+          maxLength: 254
+        username:
+          type: string
+          minLength: 1
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+            only.
+          pattern: ^[\w.@+-]+$
+          maxLength: 150
+        password:
+          type: string
+          writeOnly: true
+          minLength: 1
+        password2:
+          type: string
+          writeOnly: true
+          minLength: 1
+      required:
+      - email
+      - password
+      - password2
+      - username
+    RoleEnum:
+      enum:
+      - user
+      - assistant
+      - system
+      type: string
+      description: |-
+        * `user` - User
+        * `assistant` - Assistant
+        * `system` - System
+    TokenBlacklistRequest:
+      type: object
+      properties:
+        refresh:
+          type: string
+          writeOnly: true
+          minLength: 1
+      required:
+      - refresh
+    TokenObtainPairRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          writeOnly: true
+          minLength: 1
+        password:
+          type: string
+          writeOnly: true
+          minLength: 1
+      required:
+      - email
+      - password
+    TokenRefreshRequest:
+      type: object
+      properties:
+        refresh:
+          type: string
+          minLength: 1
+      required:
+      - refresh
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        email:
+          type: string
+          format: email
+          maxLength: 254
+        username:
+          type: string
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+            only.
+          pattern: ^[\w.@+-]+$
+          maxLength: 150
+      required:
+      - email
+      - id
+      - username
+  securitySchemes:
+    jwtAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+servers:
+- url: /api/v1
+tags:
+- name: Authentication
+  description: User registration and login
+- name: Users
+  description: User profile management
+- name: Chat
+  description: Conversations and messages
