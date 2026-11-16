@@ -10,7 +10,7 @@ export const SidebarHeader = ({ isOpen, onToggle }: SidebarHeaderProps) => {
   const [showTooltip, setShowTooltip] = useState(false);
 
   return (
-    <div className="flex items-center justify-between p-4 border-b border-white/10">
+    <div className="flex items-center justify-between border-b border-white/10 p-4">
       <h1 className="text-xl font-bold tracking-wide">
         Zenith<span className="text-[rgb(var(--color-primary))]">AI</span>
       </h1>
@@ -20,7 +20,8 @@ export const SidebarHeader = ({ isOpen, onToggle }: SidebarHeaderProps) => {
           onClick={onToggle}
           onMouseEnter={() => setShowTooltip(true)}
           onMouseLeave={() => setShowTooltip(false)}
-          className="p-2 rounded-lg hover:bg-white/10 transition-all duration-200"
+          aria-label={isOpen ? 'Collapse sidebar' : 'Expand sidebar'}
+          className="rounded-lg p-2 transition-all duration-200 hover:bg-white/10"
         >
           <FiSidebar
             size={20}
@@ -29,7 +30,7 @@ export const SidebarHeader = ({ isOpen, onToggle }: SidebarHeaderProps) => {
         </button>
 
         {showTooltip && (
-          <div className="absolute left-full top-1/2 -translate-y-1/2 ml-2 px-2 py-1 text-xs bg-gray-900 text-white border border-white/20 rounded whitespace-nowrap">
+          <div className="absolute top-1/2 left-full ml-2 -translate-y-1/2 rounded border border-white/20 bg-gray-900 px-2 py-1 text-xs whitespace-nowrap text-white">
             {isOpen ? 'Collapse sidebar (Ctrl+B)' : 'Expand sidebar (Ctrl+B)'}
           </div>
         )}
