@@ -34,6 +34,9 @@ export default defineConfig([
         tsconfigRootDir: import.meta.dirname,
       },
     },
+    rules: {
+      'jsx-a11y/no-noninteractive-tabindex': ['error', { tags: ['pre'] }],
+    },
   },
   {
     files: ['src/test/**/*.{ts,tsx}'],
