@@ -29,7 +29,7 @@ export const SettingsDropdown = ({
       <div className="relative" ref={dropdownRef}>
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="w-full flex items-center justify-center p-2 rounded-lg hover:bg-white/10 transition-all duration-200 group"
+          className="group flex w-full items-center justify-center rounded-lg p-2 transition-all duration-200 hover:bg-white/10"
           title="Settings"
         >
           <FiSettings
@@ -39,13 +39,13 @@ export const SettingsDropdown = ({
         </button>
 
         {isOpen && (
-          <div className="absolute left-full top-0 ml-5 min-w-[160px] bg-[rgb(var(--color-bg))] border border-white/10 rounded-xl shadow-2xl overflow-hidden animate-slide-right z-50">
+          <div className="animate-slide-right absolute top-0 left-full z-50 ml-5 min-w-[160px] overflow-hidden rounded-xl border border-white/10 bg-[rgb(var(--color-bg))] shadow-2xl">
             <button
               onClick={() => {
                 onToggleTheme();
                 setIsOpen(false);
               }}
-              className="w-full flex items-center gap-3 px-4 py-3 hover:bg-white/10 transition-colors duration-200 whitespace-nowrap"
+              className="flex w-full items-center gap-3 px-4 py-3 whitespace-nowrap transition-colors duration-200 hover:bg-white/10"
             >
               <ThemeIcon size={18} />
               <span className="text-sm">{themeLabel}</span>
@@ -58,7 +58,7 @@ export const SettingsDropdown = ({
                 onLogout();
                 setIsOpen(false);
               }}
-              className="w-full flex items-center gap-3 px-4 py-3 hover:bg-red-500/10 transition-colors duration-200 text-red-500 whitespace-nowrap"
+              className="flex w-full items-center gap-3 px-4 py-3 whitespace-nowrap text-red-500 transition-colors duration-200 hover:bg-red-500/10"
             >
               <FiLogOut size={18} />
               <span className="text-sm">Logout</span>
@@ -73,23 +73,20 @@ export const SettingsDropdown = ({
     <div className="relative" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-white/10 transition-all duration-200 group"
+        className="group flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-all duration-200 hover:bg-white/10"
       >
-        <FiSettings
-          size={18}
-          className="transition-transform duration-200 group-hover:rotate-90"
-        />
+        <FiSettings size={18} className="transition-transform duration-200 group-hover:rotate-90" />
         <span className="text-sm">Settings</span>
       </button>
 
       {isOpen && (
-        <div className="absolute bottom-full left-0 right-0 mb-2 bg-[rgb(var(--color-bg))] border border-white/10 rounded-xl shadow-2xl overflow-hidden animate-slide-up z-50">
+        <div className="animate-slide-up absolute right-0 bottom-full left-0 z-50 mb-2 overflow-hidden rounded-xl border border-white/10 bg-[rgb(var(--color-bg))] shadow-2xl">
           <button
             onClick={() => {
               onToggleTheme();
               setIsOpen(false);
             }}
-            className="w-full flex items-center gap-3 px-4 py-3 hover:bg-white/10 transition-colors duration-200"
+            className="flex w-full items-center gap-3 px-4 py-3 transition-colors duration-200 hover:bg-white/10"
           >
             <ThemeIcon size={18} />
             <span className="text-sm">{themeLabel}</span>
@@ -102,7 +99,7 @@ export const SettingsDropdown = ({
               onLogout();
               setIsOpen(false);
             }}
-            className="w-full flex items-center gap-3 px-4 py-3 hover:bg-red-500/10 transition-colors duration-200 text-red-500"
+            className="flex w-full items-center gap-3 px-4 py-3 text-red-500 transition-colors duration-200 hover:bg-red-500/10"
           >
             <FiLogOut size={18} />
             <span className="text-sm">Logout</span>
