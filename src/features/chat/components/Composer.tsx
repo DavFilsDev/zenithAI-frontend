@@ -52,6 +52,8 @@ export const Composer = ({ onSendMessage, disabled }: ComposerProps) => {
           onKeyDown={handleKeyDown}
           placeholder={disabled ? 'Please wait...' : "What's on your mind?"}
           aria-label="Message"
+          aria-busy={disabled || undefined}
+          aria-multiline="true"
           disabled={disabled}
           rows={1}
           className="flex-1 resize-none bg-transparent pr-10 text-[rgb(var(--color-text))] outline-none placeholder:opacity-60"
