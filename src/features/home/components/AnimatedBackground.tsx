@@ -18,20 +18,13 @@ export const AnimatedBackground = () => {
   }, []);
 
   return (
-    <div
-      className="absolute inset-0 flex items-center justify-center pointer-events-none overflow-hidden"
-    >
+    <div className="pointer-events-none absolute inset-0 flex items-center justify-center overflow-hidden">
       <img
         src={bg}
         alt="background"
-        className="
-            w-[1200px] md:w-[1600px]
-            opacity-[0.08]
-            transition-transform duration-700 ease-out
-            select-none
-        "
+        className="w-[1200px] opacity-[0.08] transition-transform duration-700 ease-out select-none md:w-[1600px]"
         style={{
-            transform: `translate(${position.x}px, ${position.y}px) rotate(${position.x * 0.15}deg)`
+          transform: `translate(${position.x}px, ${position.y}px) rotate(${position.x * 0.15}deg)`,
         }}
       />
     </div>

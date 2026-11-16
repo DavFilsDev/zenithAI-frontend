@@ -9,8 +9,8 @@ export const HomePage = () => {
   const { user } = useSession();
 
   return (
-    <div className="h-screen w-full overflow-hidden bg-[rgb(var(--color-bg))] text-[rgb(var(--color-text))] flex flex-col">
-      <header className="flex items-center justify-between px-6 py-4 border-b border-white/10 backdrop-blur-md">
+    <div className="flex h-screen w-full flex-col overflow-hidden bg-[rgb(var(--color-bg))] text-[rgb(var(--color-text))]">
+      <header className="flex items-center justify-between border-b border-white/10 px-6 py-4 backdrop-blur-md">
         <h1 className="text-xl font-bold tracking-wide">
           Zenith<span className="text-[rgb(var(--color-primary))]">AI</span>
         </h1>
@@ -20,10 +20,10 @@ export const HomePage = () => {
 
           {!user && (
             <>
-              <Link to="/login" className="text-sm opacity-80 hover:opacity-100 transition">
+              <Link to="/login" className="text-sm opacity-80 transition hover:opacity-100">
                 Login
               </Link>
-              <Link to="/register" className="text-sm opacity-80 hover:opacity-100 transition">
+              <Link to="/register" className="text-sm opacity-80 transition hover:opacity-100">
                 Register
               </Link>
             </>
@@ -32,7 +32,7 @@ export const HomePage = () => {
           {user && (
             <Link
               to="/chat"
-              className="px-4 py-2 rounded-lg bg-[rgb(var(--color-primary))] text-white hover:opacity-90 transition"
+              className="rounded-lg bg-[rgb(var(--color-primary))] px-4 py-2 text-white transition hover:opacity-90"
             >
               Chat
             </Link>
@@ -40,16 +40,16 @@ export const HomePage = () => {
         </div>
       </header>
 
-      <main className="relative flex-1 flex items-center justify-center px-6 overflow-hidden">
+      <main className="relative flex flex-1 items-center justify-center overflow-hidden px-6">
         <AnimatedBackground />
 
-        <div className="relative z-10 text-center max-w-2xl">
+        <div className="relative z-10 max-w-2xl text-center">
           <Typewriter
             text="Zenith AI — your AI assistant for debugging code like a pro!"
             speed={80}
           />
 
-          <p className="mt-4 text-sm md:text-lg opacity-80">
+          <p className="mt-4 text-sm opacity-80 md:text-lg">
             Get real-time coding guidance and best practices for all languages.
           </p>
 
@@ -59,19 +59,19 @@ export const HomePage = () => {
         </div>
       </main>
 
-      <footer className="w-full py-2 mt-auto bg-white/10 dark:bg-white/5 backdrop-blur-md border-t border-white/20 dark:border-white/10 text-sm text-[rgb(var(--color-text))] flex flex-col md:flex-row items-center justify-center gap-4 transition-colors shadow-inner shadow-white/5">
+      <footer className="mt-auto flex w-full flex-col items-center justify-center gap-4 border-t border-white/20 bg-white/10 py-2 text-sm text-[rgb(var(--color-text))] shadow-inner shadow-white/5 backdrop-blur-md transition-colors md:flex-row dark:border-white/10 dark:bg-white/5">
         <p>© 2026 Zenith AI</p>
 
         <div className="flex gap-4">
           <Link
             to="/privacy"
-            className="hover:underline opacity-80 hover:text-[rgb(var(--color-primary))] transition"
+            className="opacity-80 transition hover:text-[rgb(var(--color-primary))] hover:underline"
           >
             Privacy
           </Link>
           <Link
             to="/terms"
-            className="hover:underline opacity-80 hover:text-[rgb(var(--color-primary))] transition"
+            className="opacity-80 transition hover:text-[rgb(var(--color-primary))] hover:underline"
           >
             Terms
           </Link>

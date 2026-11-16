@@ -26,14 +26,10 @@ export const Typewriter = ({ text, speed = 100 }: TypewriterProps) => {
   }, []);
 
   return (
-    <h2 className="text-3xl md:text-5xl font-bold leading-tight">
+    <h2 className="text-3xl leading-tight font-bold md:text-5xl">
       {displayedText}
       <span
-        className={`
-          ml-1
-          text-[rgb(var(--color-primary))]
-          ${showCursor ? 'opacity-100' : 'opacity-0'}
-        `}
+        className={`ml-1 text-[rgb(var(--color-primary))] ${showCursor ? 'opacity-100' : 'opacity-0'} `}
       >
         |
       </span>
