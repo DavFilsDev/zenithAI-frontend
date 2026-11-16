@@ -50,7 +50,7 @@ const rateLimit = (apiError: ApiError, onRetry?: () => void): string =>
         onDismiss={() => toast.dismiss(instance.id)}
       />
     ),
-    toastConfig.rateLimit
+    toastConfig.rateLimit,
   );
 
 const dismiss = (toastId?: string): void => {
