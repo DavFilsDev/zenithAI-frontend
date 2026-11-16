@@ -79,14 +79,14 @@ src/
 
 A dependency points in one direction only.
 
-| Layer | Knows about | Never does |
-|---|---|---|
-| `app/` | every layer | fetch data itself |
-| `features/*/pages` | its own feature, `shared/ui` | call `apiClient` directly |
-| `features/*/model` | its own feature, `shared/api` | render |
-| `features/*/api` | `shared/api` | import React state |
-| `shared/api` | `env` | import a feature |
-| `shared/ui` | nothing but React | call the API |
+| Layer              | Knows about                   | Never does                |
+| ------------------ | ----------------------------- | ------------------------- |
+| `app/`             | every layer                   | fetch data itself         |
+| `features/*/pages` | its own feature, `shared/ui`  | call `apiClient` directly |
+| `features/*/model` | its own feature, `shared/api` | render                    |
+| `features/*/api`   | `shared/api`                  | import React state        |
+| `shared/api`       | `env`                         | import a feature          |
+| `shared/ui`        | nothing but React             | call the API              |
 
 A page composes a feature's components and reads its hooks. It holds no `useState` of its own and issues no request.
 
@@ -198,23 +198,23 @@ The optimistic user message and the streamed assistant message live in the query
 
 `shared/api/apiError.ts`:
 
-| Field | Type | Source |
-|---|---|---|
-| `code` | contract code union | `error.code` in the body |
-| `message` | `string` | `error.message` in the body |
-| `details` | `Record<string, string[]>` | `error.details` |
-| `status` | `number` | HTTP status |
+| Field     | Type                       | Source                      |
+| --------- | -------------------------- | --------------------------- |
+| `code`    | contract code union        | `error.code` in the body    |
+| `message` | `string`                   | `error.message` in the body |
+| `details` | `Record<string, string[]>` | `error.details`             |
+| `status`  | `number`                   | HTTP status                 |
 
 Every response failure and every thrown value passes through one constructor. A caller never sees a raw Axios error, and never branches on a status number when a code is available.
 
 ### Where errors are handled
 
-| Layer | Responsibility |
-|---|---|
-| `apiClient` | transport: timeout, cancellation, refresh, normalisation |
-| mutation hook | decides the user-visible outcome, per mutation |
-| component | renders a state, never parses a message |
-| `ErrorBoundary` (P4.8) | a render crash, nothing else |
+| Layer                  | Responsibility                                           |
+| ---------------------- | -------------------------------------------------------- |
+| `apiClient`            | transport: timeout, cancellation, refresh, normalisation |
+| mutation hook          | decides the user-visible outcome, per mutation           |
+| component              | renders a state, never parses a message                  |
+| `ErrorBoundary` (P4.8) | a render crash, nothing else                             |
 
 A mutation hook maps codes to outcomes, once, next to the mutation: `validation_error` to field errors, `unauthorized` to a sign-out, `rate_limited` and `quota_exhausted` to a banner carrying `Retry-After`, `llm_unavailable` to a retry affordance, `not_found` to a redirect.
 
@@ -228,13 +228,13 @@ P4.8 adds `app/ErrorBoundary.tsx` to catch a render crash, show a recoverable sc
 
 ## 7. Rendering and routes
 
-| Route | Component | Guard | Loaded |
-|---|---|---|---|
-| `/` | `HomePage` | public | lazily |
-| `/login` | `LoginPage` | public, redirect if signed in | lazily |
-| `/register` | `RegisterPage` | public, redirect if signed in | lazily |
-| `/chat/:uuid?` | `ChatShell` → `ChatPage` | authenticated | after the guard resolves |
-| `*` | redirect to `/` | public | eagerly |
+| Route          | Component                | Guard                         | Loaded                   |
+| -------------- | ------------------------ | ----------------------------- | ------------------------ |
+| `/`            | `HomePage`               | public                        | lazily                   |
+| `/login`       | `LoginPage`              | public, redirect if signed in | lazily                   |
+| `/register`    | `RegisterPage`           | public, redirect if signed in | lazily                   |
+| `/chat/:uuid?` | `ChatShell` → `ChatPage` | authenticated                 | after the guard resolves |
+| `*`            | redirect to `/`          | public                        | eagerly                  |
 
 `HomePage`, `LoginPage` and `RegisterPage` are behind `React.lazy` with a shared `Suspense` fallback. The authenticated shell is one route with an optional `uuid`, so creating the first conversation changes the URL without remounting `ChatPage` or cancelling the stream. The guard is a layout route rendering an `Outlet`, so a new protected route costs one line.
 
@@ -242,14 +242,14 @@ P4.8 adds `app/ErrorBoundary.tsx` to catch a render crash, show a recoverable sc
 
 ## 8. Build and configuration
 
-| Concern | Mechanism |
-|---|---|
-| API base URL | `VITE_API_URL`, validated once in `shared/api/env.ts` |
-| App name | `VITE_APP_NAME`, injected into the document title |
-| Default theme | `VITE_DEFAULT_THEME`, applied before first paint |
-| Design tokens | `@theme` in CSS, no `tailwind.config.js` |
-| Dark mode | class-based `@custom-variant dark`, toggled by `ThemeProvider` |
-| Markdown | `@plugin "@tailwindcss/typography"` in `index.css` |
-| Type safety | `strict`, `noUncheckedIndexedAccess` and `exactOptionalPropertyTypes`, enforced by `tsc -b` |
+| Concern       | Mechanism                                                                                   |
+| ------------- | ------------------------------------------------------------------------------------------- |
+| API base URL  | `VITE_API_URL`, validated once in `shared/api/env.ts`                                       |
+| App name      | `VITE_APP_NAME`, injected into the document title                                           |
+| Default theme | `VITE_DEFAULT_THEME`, applied before first paint                                            |
+| Design tokens | `@theme` in CSS, no `tailwind.config.js`                                                    |
+| Dark mode     | class-based `@custom-variant dark`, toggled by `ThemeProvider`                              |
+| Markdown      | `@plugin "@tailwindcss/typography"` in `index.css`                                          |
+| Type safety   | `strict`, `noUncheckedIndexedAccess` and `exactOptionalPropertyTypes`, enforced by `tsc -b` |
 
 An unset or malformed variable is a startup error with a readable message, never an `undefined` that surfaces later as a 404 on an unknown host.

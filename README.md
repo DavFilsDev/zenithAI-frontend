@@ -16,43 +16,46 @@ The application is functional but mid-refactor. It is honest about the gap betwe
 
 - Public landing page, login and registration
 - JWT sign-in, session restore on reload, sign-out
-- Conversation list, one chat per conversation, conversation deletion
+- Conversation creation, list, rename, deletion and pagination
+- Streaming SSE answers rendered token by token
+- Profile editing
 - Markdown rendering of assistant answers
 - Dark and light theme, persisted
 - Responsive layout with a collapsible sidebar
+- Vitest, Testing Library, MSW and Playwright coverage for the main flows
 
 **Not yet implemented, and documented as such:**
 
-- **Streaming.** Answers arrive in one complete response. There is no token-by-token rendering, and there is no WebSocket code: the contract defines SSE only.
-- **Profile editing.** The profile modal opens and the fields are editable, but the save handlers are stubs and nothing is sent. Until P1.1 lands, do not rely on it.
-- **Conversations cannot be renamed**, and there is no explicit conversation creation: a new chat is currently a client-side draft.
-- **No tests and no continuous integration.** Zero test files exist today.
-- **No deployed instance yet.** See the roadmap below.
-- **Not accessible.** The conversation list cannot be reached by keyboard, and the profile modal has no dialog semantics. Fixing this is phase P4, not a detail.
+- **GFM and syntax highlighting.** Tables render as raw text and fenced code is not highlighted. Fixed by P4.2.
+- **Full accessibility.** Keyboard access, dialog focus handling and reduced-motion coverage are phase P4 work.
+- **No continuous integration and no deployed instance.** See the roadmap below.
+- **No `/privacy` or `/terms` pages.** The catch-all route redirects both to `/`.
 
 ## Stack
 
-| | |
-|---|---|
-| Framework | React 19, with React Router 7 |
-| Language | TypeScript 5.9 |
-| Build tool | Vite 7 |
-| Styling | Tailwind CSS 4, configured in CSS |
-| Server state | TanStack Query |
-| UI state | Zustand for the session and chat UI, a React context for the theme |
-| HTTP client | Axios for JSON, `fetch` for the SSE stream |
-| Forms | React Hook Form |
-| Markdown | react-markdown |
-| Notifications | react-hot-toast |
-| Icons | react-icons and lucide-react, both in use |
+|               |                                                                    |
+| ------------- | ------------------------------------------------------------------ |
+| Framework     | React 19, with React Router 7                                      |
+| Language      | TypeScript 5.9                                                     |
+| Build tool    | Vite 7                                                             |
+| Styling       | Tailwind CSS 4, configured in CSS                                  |
+| Server state  | TanStack Query                                                     |
+| UI state      | Zustand for the session and chat UI, a React context for the theme |
+| HTTP client   | Axios for JSON, `fetch` for the SSE stream                         |
+| Forms         | React Hook Form                                                    |
+| Markdown      | react-markdown                                                     |
+| Notifications | react-hot-toast                                                    |
+| Icons         | react-icons and lucide-react, both in use                          |
+| Testing       | Vitest, Testing Library, MSW and Playwright                        |
 
-Not installed, and therefore not used: Prism or any syntax highlighter, CSS Modules, any WebSocket library, any test runner.
+Not installed, and therefore not used: Prism or any syntax highlighter, CSS Modules, any WebSocket library.
 
 ## Requirements
 
 - Node.js 20.19 or newer
 - npm
-- The backend running on `http://localhost:8000`
+- The backend running on `http://localhost:8000` for development
+- Chromium for Playwright, installed once with `npx playwright install chromium`
 
 ## Local setup
 
@@ -77,11 +80,11 @@ The frontend is on <http://localhost:5173>, the backend on <http://localhost:800
 
 `.env.example` lists every variable the project declares.
 
-| Variable | Value | Read by |
-|---|---|---|
-| `VITE_API_URL` | `http://localhost:8000/api/v1` | The Axios instance and the token refresh call |
-| `VITE_APP_NAME` | `Zenith AI` | The document title |
-| `VITE_DEFAULT_THEME` | `dark` | The theme applied before first paint |
+| Variable             | Value                          | Read by                                       |
+| -------------------- | ------------------------------ | --------------------------------------------- |
+| `VITE_API_URL`       | `http://localhost:8000/api/v1` | The Axios instance and the token refresh call |
+| `VITE_APP_NAME`      | `Zenith AI`                    | The document title                            |
+| `VITE_DEFAULT_THEME` | `dark`                         | The theme applied before first paint          |
 
 Only `VITE_API_URL` affects where requests go. All three are validated at startup with `zod`: a missing or malformed value stops the app with a message naming the variable. `VITE_APP_NAME` sets the document title and `VITE_DEFAULT_THEME` sets the theme applied before the first paint; a theme saved in `localStorage` still wins over the default.
 
@@ -89,34 +92,41 @@ On the free static hosts, `VITE_*` values are inlined at build time, so a differ
 
 ## Scripts
 
-These six exist today. Anything else you may have read elsewhere does not.
+These scripts exist today:
 
 ```bash
-npm run dev                # dev server on port 5173, opens a browser
-npm run build              # production build into dist/
-npm run preview            # serve the production build locally
-npm run lint               # ESLint
-npm run type-check         # TypeScript
-npm run generate:api-types # regenerate src/shared/api/api.generated.ts from the backend schema
+npm run dev                   # dev server on port 5173, opens a browser
+npm run build                 # production build into dist/
+npm run preview               # serve the production build locally
+npm run lint                  # ESLint
+npm run type-check            # TypeScript
+npm run format                # rewrite the tree with Prettier
+npm run format:check          # fail if the tree is not formatted
+npm run test                  # Vitest, once
+npm run test:coverage         # Vitest with the coverage gate
+npm run test:e2e              # Playwright, starts Vite itself
+npm run generate:api-types    # regenerate src/shared/api/api.generated.ts from the backend schema
+npm run generate:msw-handlers # regenerate the MSW handlers from the vendored schema
 ```
 
-One caveat, fixed in P3.5:
-
-- `lint` may fail on configuration warnings rather than on code. The type-check and the type step of `build` run `tsc -b` with `strict`, `noUncheckedIndexedAccess` and `exactOptionalPropertyTypes`, so a type error fails both.
+`test:e2e` starts Vite on `127.0.0.1:5173` with `BROWSER=none`, uses Chromium, and intercepts `/api/v1` at the browser boundary. The journeys do not need the backend or an LLM key.
 
 ## Quality gates
 
 Run these before committing:
 
 ```bash
+npm run format:check
 npm run type-check
 npm run lint
+npm run test:coverage
+npm run test:e2e
 npm run build
 ```
 
-`type-check` and `build` share the same `tsc -b` gate. `lint` runs the flat ESLint config with type-aware `typescript-eslint` rules, including `no-floating-promises` and `no-misused-promises`, plus the `jsx-a11y` recommended set, and `--max-warnings 0`. All three pass on the current tree; `build` still reports the pre-existing >500 kB chunk warning.
+`type-check` and `build` share the same `tsc -b` gate with `strict`, `noUncheckedIndexedAccess` and `exactOptionalPropertyTypes`. `lint` runs the flat ESLint config with type-aware `typescript-eslint` rules, including `no-floating-promises` and `no-misused-promises`, plus the `jsx-a11y` recommended set, and `--max-warnings 0`. `test:coverage` enforces the 80% threshold on `features/` and `shared/api/`. All gates pass on the current tree; `build` still reports the pre-existing >500 kB chunk warning.
 
-There is no `test`, no `test:coverage`, no `test:e2e`, no `format` and no `deploy` script. Nothing runs tests, because nothing has been written yet.
+`lint-staged` runs ESLint and `tsc -b` on staged TS/TSX files, and Prettier on the rest, so a commit cannot carry a type or lint error.
 
 ## Project structure
 
@@ -130,15 +140,16 @@ src/
 │   ├── auth/        api, model, pages, components
 │   ├── chat/        api, model, pages, components
 │   └── home/        pages, components
-└── shared/
-    ├── api/         client, interceptor, errors, env, tokens, generated types
-    ├── auth/        session store and useSession
-    ├── ui/          Button, Input, theme, toasts, Spinner
-    ├── hooks/       useOnClickOutside
-    └── lib/         logger, parseRetryAfter
+├── shared/
+│   ├── api/         client, interceptor, errors, env, tokens, generated types
+│   ├── auth/        session store and useSession
+│   ├── ui/          Button, Input, theme, toasts, Spinner
+│   ├── hooks/       useOnClickOutside
+│   └── lib/         logger, parseRetryAfter
+└── test/            MSW server, generated handlers, render helpers
 ```
 
-There is no `public/` directory, no `src/utils/`, no `src/styles/`, and no test directory. The full tree and the layer rules are in [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
+Unit tests sit next to their subject. Shared test support is in `src/test/`, and browser journeys are in `e2e/` with their API mock in `e2e/support/`. There is no `public/`, `src/utils/` or `src/styles/`. The full tree and the layer rules are in [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
 
 ## Known issues
 
@@ -151,14 +162,14 @@ Each of these is a defect found during the audit, tracked in [`docs/IMPROVEMENT_
 
 Phases, with effort, acceptance criteria and dependencies, are in [`docs/IMPROVEMENT_PLAN.md`](docs/IMPROVEMENT_PLAN.md).
 
-| Phase | Scope |
-|---|---|
-| P0 | Consistency with the contract: base URL, conversation paths, environment validation, dead code removal |
-| P1 | The API layer: profile editing, single-flight refresh, real logout, generated types, rate-limit UX |
-| P2 | Streaming over SSE, TanStack Query for server state, the feature-based structure |
-| P3 | Quality: a type-check that works, stricter linting, Prettier, husky, Vitest, Playwright |
-| P4 | Security and accessibility: sanitization, token storage, keyboard access, dialogs, Lighthouse |
-| P5 | Continuous integration, free deployment, and a showcase |
+| Phase | Scope                                                                                                  |
+| ----- | ------------------------------------------------------------------------------------------------------ |
+| P0    | Consistency with the contract: base URL, conversation paths, environment validation, dead code removal |
+| P1    | The API layer: profile editing, single-flight refresh, real logout, generated types, rate-limit UX     |
+| P2    | Streaming over SSE, TanStack Query for server state, the feature-based structure                       |
+| P3    | Quality: a type-check that works, stricter linting, Prettier, husky, Vitest, Playwright                |
+| P4    | Security and accessibility: sanitization, token storage, keyboard access, dialogs, Lighthouse          |
+| P5    | Continuous integration, free deployment, and a showcase                                                |
 
 - [`docs/IMPROVEMENT_PLAN.md`](docs/IMPROVEMENT_PLAN.md) — audit findings, roadmap, token storage, free hosting, zero-cost rules
 - [`docs/API_CONTRACT.md`](docs/API_CONTRACT.md) — the API contract shared with the backend repository

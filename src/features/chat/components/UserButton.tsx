@@ -11,7 +11,7 @@ export const UserButton = ({ username, onClick, variant = 'full' }: UserButtonPr
     return (
       <button
         onClick={onClick}
-        className="w-full flex items-center justify-center p-2 rounded-lg hover:bg-white/10 transition-all duration-200"
+        className="flex w-full items-center justify-center rounded-lg p-2 transition-all duration-200 hover:bg-white/10"
         title="Profile"
       >
         <FiUser size={20} />
@@ -22,7 +22,7 @@ export const UserButton = ({ username, onClick, variant = 'full' }: UserButtonPr
   return (
     <button
       onClick={onClick}
-      className="w-full flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-white/10 transition-all duration-200"
+      className="flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-all duration-200 hover:bg-white/10"
     >
       <FiUser size={18} />
       <span className="text-sm">{username || 'User'}</span>

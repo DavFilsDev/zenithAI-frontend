@@ -43,24 +43,26 @@ export const Composer = ({ onSendMessage, disabled }: ComposerProps) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="p-4 border-t border-white/10">
-      <div className="relative flex items-end rounded-2xl px-3 py-2 bg-white/10 dark:bg-white/5 backdrop-blur-md border border-white/20 dark:border-white/10 focus-within:ring-2 focus-within:ring-[rgb(var(--color-primary))]">
+    <form onSubmit={handleSubmit} className="border-t border-white/10 p-4">
+      <div className="relative flex items-end rounded-2xl border border-white/20 bg-white/10 px-3 py-2 backdrop-blur-md focus-within:ring-2 focus-within:ring-[rgb(var(--color-primary))] dark:border-white/10 dark:bg-white/5">
         <textarea
           ref={textareaRef}
           value={draft}
           onChange={(event) => setDraft(event.target.value)}
           onKeyDown={handleKeyDown}
           placeholder={disabled ? 'Please wait...' : "What's on your mind?"}
+          aria-label="Message"
           disabled={disabled}
           rows={1}
-          className="flex-1 resize-none bg-transparent text-[rgb(var(--color-text))] outline-none placeholder:opacity-60 pr-10"
+          className="flex-1 resize-none bg-transparent pr-10 text-[rgb(var(--color-text))] outline-none placeholder:opacity-60"
           style={{ minHeight: '24px', maxHeight: '120px', overflow: 'hidden' }}
         />
 
         <button
           type="submit"
           disabled={disabled || !draft.trim()}
-          className="absolute right-1 bottom-1 p-2 rounded-xl bg-white/10 dark:bg-white/5 backdrop-blur-md border border-white/20 dark:border-white/10 text-[rgb(var(--color-primary))] hover:bg-white/20 dark:hover:bg-white/10 transition-all duration-200 disabled:opacity-40 flex items-center justify-center"
+          aria-label="Send message"
+          className="absolute right-1 bottom-1 flex items-center justify-center rounded-xl border border-white/20 bg-white/10 p-2 text-[rgb(var(--color-primary))] backdrop-blur-md transition-all duration-200 hover:bg-white/20 disabled:opacity-40 dark:border-white/10 dark:bg-white/5 dark:hover:bg-white/10"
         >
           <IoSend size={18} />
         </button>

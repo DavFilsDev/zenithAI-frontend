@@ -1,9 +1,5 @@
 import api from '../../../shared/api/apiClient';
-import type {
-  ConversationDetail,
-  ConversationListPage,
-  ConversationSummary,
-} from './types';
+import type { ConversationDetail, ConversationListPage, ConversationSummary } from './types';
 
 export const conversationsApi = {
   async list(page = 1): Promise<ConversationListPage> {

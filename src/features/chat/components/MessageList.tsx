@@ -20,9 +20,9 @@ export const MessageList = ({ messages, isLoading, isSending }: MessageListProps
 
   if (messages.length === 0 && !isLoading) {
     return (
-      <div className="flex-1 flex items-center justify-center p-8">
+      <div className="flex flex-1 items-center justify-center p-8">
         <div className="text-center text-[rgb(var(--color-text))] opacity-60">
-          <p className="text-lg mb-2">No messages yet</p>
+          <p className="mb-2 text-lg">No messages yet</p>
           <p className="text-sm">Start a conversation by sending a message below!</p>
         </div>
       </div>
@@ -30,25 +30,25 @@ export const MessageList = ({ messages, isLoading, isSending }: MessageListProps
   }
 
   return (
-    <div className="flex-1 overflow-y-auto p-4 space-y-4">
+    <div className="flex-1 space-y-4 overflow-y-auto p-4">
       {messages.map((message) => (
         <MessageBubble key={message.uuid} message={message} />
       ))}
 
       {showTyping && (
-        <div className="flex justify-start mb-4">
-          <div className="bg-white/10 backdrop-blur-md rounded-xl p-4">
+        <div className="mb-4 flex justify-start">
+          <div className="rounded-xl bg-white/10 p-4 backdrop-blur-md">
             <div className="flex space-x-2">
               <div
-                className="w-2 h-2 bg-[rgb(var(--color-primary))] rounded-full animate-bounce"
+                className="h-2 w-2 animate-bounce rounded-full bg-[rgb(var(--color-primary))]"
                 style={{ animationDelay: '0ms' }}
               />
               <div
-                className="w-2 h-2 bg-[rgb(var(--color-primary))] rounded-full animate-bounce"
+                className="h-2 w-2 animate-bounce rounded-full bg-[rgb(var(--color-primary))]"
                 style={{ animationDelay: '150ms' }}
               />
               <div
-                className="w-2 h-2 bg-[rgb(var(--color-primary))] rounded-full animate-bounce"
+                className="h-2 w-2 animate-bounce rounded-full bg-[rgb(var(--color-primary))]"
                 style={{ animationDelay: '300ms' }}
               />
             </div>
@@ -58,7 +58,7 @@ export const MessageList = ({ messages, isLoading, isSending }: MessageListProps
 
       {isLoading && (
         <div className="flex justify-center p-4">
-          <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-[rgb(var(--color-primary))]" />
+          <div className="h-6 w-6 animate-spin rounded-full border-b-2 border-[rgb(var(--color-primary))]" />
         </div>
       )}
 

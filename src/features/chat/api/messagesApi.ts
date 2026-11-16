@@ -3,10 +3,9 @@ import type { Message, MessageListPage } from './types';
 
 export const messagesApi = {
   async list(uuid: string, page = 1): Promise<MessageListPage> {
-    const response = await api.get<MessageListPage>(
-      `/chat/conversations/${uuid}/messages/`,
-      { params: { page } }
-    );
+    const response = await api.get<MessageListPage>(`/chat/conversations/${uuid}/messages/`, {
+      params: { page },
+    });
     return response.data;
   },
 

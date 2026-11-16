@@ -6,10 +6,26 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "lint": "eslint . --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "type-check": "tsc -b",
-    "generate:api-types": "openapi-typescript \"${API_SCHEMA_URL:-http://localhost:8000/api/v1/schema/}\" -o src/shared/api/api.generated.ts"
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "test:e2e": "playwright test",
+    "prepare": "husky",
+    "generate:api-types": "openapi-typescript \"${API_SCHEMA_URL:-http://localhost:8000/api/v1/schema/}\" -o src/shared/api/api.generated.ts",
+    "generate:msw-handlers": "msw-auto-mock src/shared/api/openapi.yml -o src/test/msw --typescript --base-url http://localhost:8000 --codes 200,201,204 --static && node -e \"require('node:fs').rmSync('src/test/msw/native.ts', { force: true })\""
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "eslint --max-warnings 0",
+      "bash -c 'tsc -b'"
+    ],
+    "*.{js,mjs,cjs,json,css,md,html,yml,yaml}": [
+      "prettier --write"
+    ]
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.2.1",
@@ -30,19 +46,33 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
+    "@faker-js/faker": "^10.6.0",
+    "@playwright/test": "^1.65.1",
     "@tailwindcss/typography": "^0.5.19",
+    "@testing-library/jest-dom": "^7.0.1",
+    "@testing-library/react": "^16.3.3",
+    "@testing-library/user-event": "^14.6.10",
     "@types/node": "^24.12.0",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^5.1.1",
+    "@vitest/coverage-v8": "^5.1.0",
     "eslint": "^9.39.1",
     "eslint-plugin-jsx-a11y": "^6.10.2",
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.4.24",
     "globals": "^16.5.0",
+    "husky": "^9.1.7",
+    "jsdom": "^29.1.1",
+    "lint-staged": "^17.6.0",
+    "msw": "^3.0.5",
+    "msw-auto-mock": "^0.32.1",
     "openapi-typescript": "^7.13.0",
+    "prettier": "^3.10.1",
+    "prettier-plugin-tailwindcss": "^0.8.1",
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.48.0",
-    "vite": "^7.3.1"
+    "vite": "^7.3.1",
+    "vitest": "^5.1.0"
   }
 }

@@ -1,0 +1,9 @@
+dist
+coverage
+playwright-report
+test-results
+node_modules
+package-lock.json
+src/shared/api/api.generated.ts
+src/shared/api/openapi.yml
+src/test/msw

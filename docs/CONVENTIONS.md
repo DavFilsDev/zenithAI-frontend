@@ -8,11 +8,11 @@ Rules for this repository. They apply to code and documentation alike. Anything 
 
 One branch per subject, named after its prefix:
 
-| Prefix | Use |
-|---|---|
-| `docs/*` | Documentation only |
-| `feat/*` | New behaviour |
-| `fix/*` | Bug fix |
+| Prefix    | Use                                                                      |
+| --------- | ------------------------------------------------------------------------ |
+| `docs/*`  | Documentation only                                                       |
+| `feat/*`  | New behaviour                                                            |
+| `fix/*`   | Bug fix                                                                  |
 | `chore/*` | Tooling, dependencies, configuration, refactors with no behaviour change |
 
 Examples: `docs/api-contract-v1`, `feat/streaming-sse`, `fix/refresh-single-flight`, `chore/vitest-setup`.
@@ -37,11 +37,17 @@ A branch carries one subject. Unrelated changes are split into several branches,
 
 ### Comments
 
-- No comment unless it explains a non-obvious *why*. Never a *what*: the code says what it does.
+- No comment unless it explains a non-obvious _why_. Never a _what_: the code says what it does.
 - No decorative comments, no section banners, no commented-out code.
 - No JSDoc that only restates the name of a function or a prop. A doc comment is allowed when it explains a constraint, a non-obvious side effect, or a decision that would otherwise look wrong.
 - Rules from React, Vite or TypeScript itself do not need to be repeated in the code.
 - One line per comment, written in English, ending with a period only if it is a full sentence.
+
+### Formatting
+
+- Prettier is the only formatter. `npm run format` rewrites the tree, and `npm run format:check` is the gate.
+- Tailwind classes are sorted by `prettier-plugin-tailwindcss`. Generated files are listed in `.prettierignore` and are not formatted by hand.
+- `lint-staged` runs ESLint and `tsc -b` on staged TS/TSX files, and Prettier on the remaining staged files.
 
 ## React and TypeScript conventions
 
@@ -90,11 +96,11 @@ src/
 
 Three kinds, never mixed in one component:
 
-| Kind | Lives in | Examples |
-|---|---|---|
-| Server state | TanStack Query | conversations, messages, profile |
-| UI state | Zustand | sidebar open, composer draft, streaming flag |
-| Local state | `useState` | input value, field being edited |
+| Kind         | Lives in       | Examples                                     |
+| ------------ | -------------- | -------------------------------------------- |
+| Server state | TanStack Query | conversations, messages, profile             |
+| UI state     | Zustand        | sidebar open, composer draft, streaming flag |
+| Local state  | `useState`     | input value, field being edited              |
 
 - Zustand stores are sliced by feature, one `useXxxStore` per slice, and selected field by field. A component never subscribes to the whole store.
 - Nothing is persisted to `localStorage` unless it survives a reload by design, and the list of persisted keys is short and explicit. The session keys (`accessToken`, `refreshToken`, `authUser`) are owned by `tokenManager` and `userCache`; no component reads them directly. Conversation content is not persisted.
@@ -145,10 +151,10 @@ Three kinds, never mixed in one component:
 
 - Vitest with Testing Library, and MSW for the network. A test never mocks a module that talks to the API.
 - Naming: `describe('<unit>')` / `it('returns the paginated conversations')`. A test name states the expected outcome, not the function name.
-- Every user-visible flow has at least one test: sign in, send a message, read a rate-limit error.
+- Every user-visible flow has at least one test: sign in, register, send a message, read a rate-limit error, cancel a stream, sign out.
 - Accessibility is asserted where it matters: `getByRole` over `getByTestId`, and no test id that exists only to make a selector work.
-- Playwright covers two or three end-to-end journeys only. Anything more belongs in a unit or integration test.
-- Coverage target: 80% on `features/` and `shared/api/`, measured, enforced in CI.
+- Playwright covers two or three end-to-end journeys only. It starts Vite with `BROWSER=none`, intercepts `/api/v1` in the browser, and does not need a backend or an LLM key.
+- Coverage target: 80% on `features/` and `shared/api/`, enforced by `npm run test:coverage` and wired into CI in P5.2.
 
 ### Accessibility
 

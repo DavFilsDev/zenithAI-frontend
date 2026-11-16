@@ -13,39 +13,39 @@ Status: implemented. Every endpoint in §3 is live, including SSE streaming, and
 
 ## 2. Environments
 
-| | Value |
-|---|---|
-| Frontend (dev) | `http://localhost:5173` |
-| Backend (dev) | `http://localhost:8000` |
+|                        | Value                   |
+| ---------------------- | ----------------------- |
+| Frontend (dev)         | `http://localhost:5173` |
+| Backend (dev)          | `http://localhost:8000` |
 | `CORS_ALLOWED_ORIGINS` | `http://localhost:5173` |
-| API base path | `/api/v1/` |
-| Swagger UI | `/api/v1/docs/` |
-| ReDoc | `/api/v1/redoc/` |
-| OpenAPI schema | `/api/v1/schema/` |
+| API base path          | `/api/v1/`              |
+| Swagger UI             | `/api/v1/docs/`         |
+| ReDoc                  | `/api/v1/redoc/`        |
+| OpenAPI schema         | `/api/v1/schema/`       |
 
 ## 3. Endpoints
 
 Status legend: **Implemented** = available today, **Planned** = described by this contract, not built yet.
 Usage legend: **Used by frontend** = the current frontend code exercises this endpoint.
 
-| Method | Path | Auth | Status | Currently served at | Used by frontend |
-|---|---|---|---|---|---|
-| POST | `/auth/register/` | No | Implemented | `POST /api/v1/auth/register/` | Yes |
-| POST | `/auth/token/` | No | Implemented | `POST /api/v1/auth/token/` | Yes |
-| POST | `/auth/token/refresh/` | No | Implemented | `POST /api/v1/auth/token/refresh/` | Yes |
-| POST | `/auth/logout/` | No | Implemented | `POST /api/v1/auth/logout/` | Yes |
-| GET | `/auth/profile/` | Yes | Implemented | `GET /api/v1/auth/profile/` | Yes |
-| PATCH | `/auth/profile/` | Yes | Implemented | `PATCH /api/v1/auth/profile/` | Yes |
-| GET | `/conversations/` | Yes | Implemented | `GET /api/v1/chat/conversations/` (paginated) | Yes |
-| POST | `/conversations/` | Yes | Implemented | `POST /api/v1/chat/conversations/` | Yes |
-| GET | `/conversations/{uuid}/` | Yes | Implemented | `GET /api/v1/chat/conversations/{uuid}/` | Yes |
-| PATCH | `/conversations/{uuid}/` | Yes | Implemented | `PATCH /api/v1/chat/conversations/{uuid}/` | Yes |
-| DELETE | `/conversations/{uuid}/` | Yes | Implemented | `DELETE /api/v1/chat/conversations/{uuid}/` | Yes |
-| GET | `/conversations/{uuid}/messages/` | Yes | Implemented | `GET /api/v1/chat/conversations/{uuid}/messages/` | Yes |
-| POST | `/conversations/{uuid}/messages/` | Yes | Implemented | `POST /api/v1/chat/conversations/{uuid}/messages/` | No |
-| POST | `/conversations/{uuid}/messages/stream/` | Yes | Implemented | `POST /api/v1/chat/conversations/{uuid}/messages/stream/` | Yes |
-| GET | `/health/` | No | Implemented | `GET /api/v1/health/` | No |
-| GET | `/health/live/` | No | Implemented | `GET /api/v1/health/live/` | No |
+| Method | Path                                     | Auth | Status      | Currently served at                                       | Used by frontend |
+| ------ | ---------------------------------------- | ---- | ----------- | --------------------------------------------------------- | ---------------- |
+| POST   | `/auth/register/`                        | No   | Implemented | `POST /api/v1/auth/register/`                             | Yes              |
+| POST   | `/auth/token/`                           | No   | Implemented | `POST /api/v1/auth/token/`                                | Yes              |
+| POST   | `/auth/token/refresh/`                   | No   | Implemented | `POST /api/v1/auth/token/refresh/`                        | Yes              |
+| POST   | `/auth/logout/`                          | No   | Implemented | `POST /api/v1/auth/logout/`                               | Yes              |
+| GET    | `/auth/profile/`                         | Yes  | Implemented | `GET /api/v1/auth/profile/`                               | Yes              |
+| PATCH  | `/auth/profile/`                         | Yes  | Implemented | `PATCH /api/v1/auth/profile/`                             | Yes              |
+| GET    | `/conversations/`                        | Yes  | Implemented | `GET /api/v1/chat/conversations/` (paginated)             | Yes              |
+| POST   | `/conversations/`                        | Yes  | Implemented | `POST /api/v1/chat/conversations/`                        | Yes              |
+| GET    | `/conversations/{uuid}/`                 | Yes  | Implemented | `GET /api/v1/chat/conversations/{uuid}/`                  | Yes              |
+| PATCH  | `/conversations/{uuid}/`                 | Yes  | Implemented | `PATCH /api/v1/chat/conversations/{uuid}/`                | Yes              |
+| DELETE | `/conversations/{uuid}/`                 | Yes  | Implemented | `DELETE /api/v1/chat/conversations/{uuid}/`               | Yes              |
+| GET    | `/conversations/{uuid}/messages/`        | Yes  | Implemented | `GET /api/v1/chat/conversations/{uuid}/messages/`         | Yes              |
+| POST   | `/conversations/{uuid}/messages/`        | Yes  | Implemented | `POST /api/v1/chat/conversations/{uuid}/messages/`        | No               |
+| POST   | `/conversations/{uuid}/messages/stream/` | Yes  | Implemented | `POST /api/v1/chat/conversations/{uuid}/messages/stream/` | Yes              |
+| GET    | `/health/`                               | No   | Implemented | `GET /api/v1/health/`                                     | No               |
+| GET    | `/health/live/`                          | No   | Implemented | `GET /api/v1/health/live/`                                | No               |
 
 ### 3.1 Method set
 
@@ -61,21 +61,21 @@ Creating a conversation explicitly is supported. Sending a message to a conversa
 
 These are the real call sites in `src/`, all of them on the `/api/v1` base:
 
-| Contract endpoint | Called from | Path actually requested |
-|---|---|---|
-| `POST /auth/register/` | `src/features/auth/api/authApi.ts` | `/auth/register/` |
-| `POST /auth/token/` | `src/features/auth/api/authApi.ts` | `/auth/token/` |
-| `POST /auth/token/refresh/` | `src/shared/api/authInterceptor.ts` | `/auth/token/refresh/` |
-| `GET /auth/profile/` | `src/features/auth/api/authApi.ts` | `/auth/profile/` |
-| `PATCH /auth/profile/` | `src/features/auth/api/authApi.ts` | `/auth/profile/` |
-| `POST /auth/logout/` | `src/features/auth/api/authApi.ts` | `/auth/logout/` |
-| `GET /conversations/` | `src/features/chat/api/conversationsApi.ts` | `/chat/conversations/` |
-| `POST /conversations/` | `src/features/chat/api/conversationsApi.ts` | `/chat/conversations/` |
-| `GET /conversations/{uuid}/` | `src/features/chat/api/conversationsApi.ts` | `/chat/conversations/{uuid}/` |
-| `PATCH /conversations/{uuid}/` | `src/features/chat/api/conversationsApi.ts` | `/chat/conversations/{uuid}/` |
-| `DELETE /conversations/{uuid}/` | `src/features/chat/api/conversationsApi.ts` | `/chat/conversations/{uuid}/` |
-| `GET /conversations/{uuid}/messages/` | `src/features/chat/api/messagesApi.ts` | `/chat/conversations/{uuid}/messages/` |
-| `POST /conversations/{uuid}/messages/stream/` | `src/features/chat/api/streamMessage.ts` | `/chat/conversations/{uuid}/messages/stream/` |
+| Contract endpoint                             | Called from                                 | Path actually requested                       |
+| --------------------------------------------- | ------------------------------------------- | --------------------------------------------- |
+| `POST /auth/register/`                        | `src/features/auth/api/authApi.ts`          | `/auth/register/`                             |
+| `POST /auth/token/`                           | `src/features/auth/api/authApi.ts`          | `/auth/token/`                                |
+| `POST /auth/token/refresh/`                   | `src/shared/api/authInterceptor.ts`         | `/auth/token/refresh/`                        |
+| `GET /auth/profile/`                          | `src/features/auth/api/authApi.ts`          | `/auth/profile/`                              |
+| `PATCH /auth/profile/`                        | `src/features/auth/api/authApi.ts`          | `/auth/profile/`                              |
+| `POST /auth/logout/`                          | `src/features/auth/api/authApi.ts`          | `/auth/logout/`                               |
+| `GET /conversations/`                         | `src/features/chat/api/conversationsApi.ts` | `/chat/conversations/`                        |
+| `POST /conversations/`                        | `src/features/chat/api/conversationsApi.ts` | `/chat/conversations/`                        |
+| `GET /conversations/{uuid}/`                  | `src/features/chat/api/conversationsApi.ts` | `/chat/conversations/{uuid}/`                 |
+| `PATCH /conversations/{uuid}/`                | `src/features/chat/api/conversationsApi.ts` | `/chat/conversations/{uuid}/`                 |
+| `DELETE /conversations/{uuid}/`               | `src/features/chat/api/conversationsApi.ts` | `/chat/conversations/{uuid}/`                 |
+| `GET /conversations/{uuid}/messages/`         | `src/features/chat/api/messagesApi.ts`      | `/chat/conversations/{uuid}/messages/`        |
+| `POST /conversations/{uuid}/messages/stream/` | `src/features/chat/api/streamMessage.ts`    | `/chat/conversations/{uuid}/messages/stream/` |
 
 Only the health checks have no frontend call site. Message history comes from `GET /conversations/{uuid}/messages/`, not from the conversation payload, and every send uses the streaming endpoint. The non-streaming `POST /conversations/{uuid}/messages/` remains in the contract but the frontend does not call it.
 
@@ -109,24 +109,24 @@ The frontend reads `results`, and uses `count`, `next` and `previous` for naviga
 
 On sign-out the frontend clears both tokens and the cached profile locally and calls this endpoint best effort with the captured refresh token. A failed blacklist does not keep the user signed in.
 
-| Endpoint | Request | Response |
-|---|---|---|
-| `POST /auth/register/` | `{"email", "username", "password", "password2"}` | `201` user object |
-| `POST /auth/token/` | `{"email", "password"}` | `{"access", "refresh"}` |
-| `POST /auth/token/refresh/` | `{"refresh"}` | `{"access", "refresh"}` |
-| `POST /auth/logout/` | `{"refresh"}` | `204` |
-| `GET /auth/profile/` | — | `200` user object |
-| `PATCH /auth/profile/` | partial user object | `200` user object |
+| Endpoint                    | Request                                          | Response                |
+| --------------------------- | ------------------------------------------------ | ----------------------- |
+| `POST /auth/register/`      | `{"email", "username", "password", "password2"}` | `201` user object       |
+| `POST /auth/token/`         | `{"email", "password"}`                          | `{"access", "refresh"}` |
+| `POST /auth/token/refresh/` | `{"refresh"}`                                    | `{"access", "refresh"}` |
+| `POST /auth/logout/`        | `{"refresh"}`                                    | `204`                   |
+| `GET /auth/profile/`        | —                                                | `200` user object       |
+| `PATCH /auth/profile/`      | partial user object                              | `200` user object       |
 
 ## 7. Streaming
 
 Streaming is **SSE only** (`text/event-stream`). WebSocket is not used anywhere.
 
-| Event | Payload |
-|---|---|
-| `token` | `data: {"content":"<fragment>"}` |
-| `done` | `data: {"message_id":"<uuid>","conversation_id":"<uuid>"}` |
-| `error` | `data: {"code":"<code>","message":"<text>"}` |
+| Event   | Payload                                                    |
+| ------- | ---------------------------------------------------------- |
+| `token` | `data: {"content":"<fragment>"}`                           |
+| `done`  | `data: {"message_id":"<uuid>","conversation_id":"<uuid>"}` |
+| `error` | `data: {"code":"<code>","message":"<text>"}`               |
 
 A non-streaming message post returns the complete assistant message.
 
@@ -151,16 +151,16 @@ available through `getFieldErrors()` and are mapped onto the registration form.
 A response that is not this envelope — for example the HTML 404 returned for an
 unknown route — falls back to a message chosen from the HTTP status.
 
-| Code | HTTP | Meaning |
-|---|---|---|
-| `validation_error` | 400 | Invalid payload |
-| `unauthorized` | 401 | Missing, invalid or expired token |
-| `forbidden` | 403 | Authenticated but not allowed |
-| `not_found` | 404 | Unknown resource, or not owned by the caller |
-| `rate_limited` | 429 | Per-IP or per-user throttling |
-| `quota_exhausted` | 429 | Global daily cap reached |
-| `llm_unavailable` | 503 | Provider unreachable, errored or rate limited |
-| `server_error` | 500 | Unexpected failure |
+| Code               | HTTP | Meaning                                       |
+| ------------------ | ---- | --------------------------------------------- |
+| `validation_error` | 400  | Invalid payload                               |
+| `unauthorized`     | 401  | Missing, invalid or expired token             |
+| `forbidden`        | 403  | Authenticated but not allowed                 |
+| `not_found`        | 404  | Unknown resource, or not owned by the caller  |
+| `rate_limited`     | 429  | Per-IP or per-user throttling                 |
+| `quota_exhausted`  | 429  | Global daily cap reached                      |
+| `llm_unavailable`  | 503  | Provider unreachable, errored or rate limited |
+| `server_error`     | 500  | Unexpected failure                            |
 
 A resource that exists but belongs to someone else returns `404 not_found`, never `403`, so that ids cannot be probed.
 
@@ -182,21 +182,21 @@ A resource that exists but belongs to someone else returns `404 not_found`, neve
 
 Backend:
 
-| Variable | Purpose |
-|---|---|
-| `SECRET_KEY` | Django signing key |
-| `DEBUG` | `True` in dev, `False` in prod |
-| `ALLOWED_HOSTS` | Comma-separated host list |
-| `DATABASE_URL` or `DB_*` | Database connection |
-| `CORS_ALLOWED_ORIGINS` | Comma-separated frontend origins |
-| `LLM_PROVIDER` | Active provider (`gemini`, `groq`) |
-| `LLM_API_KEY` | Free provider key |
-| `LLM_MODEL` | Model id |
+| Variable                 | Purpose                            |
+| ------------------------ | ---------------------------------- |
+| `SECRET_KEY`             | Django signing key                 |
+| `DEBUG`                  | `True` in dev, `False` in prod     |
+| `ALLOWED_HOSTS`          | Comma-separated host list          |
+| `DATABASE_URL` or `DB_*` | Database connection                |
+| `CORS_ALLOWED_ORIGINS`   | Comma-separated frontend origins   |
+| `LLM_PROVIDER`           | Active provider (`gemini`, `groq`) |
+| `LLM_API_KEY`            | Free provider key                  |
+| `LLM_MODEL`              | Model id                           |
 
 Frontend:
 
-| Variable | Value |
-|---|---|
+| Variable       | Value                          |
+| -------------- | ------------------------------ |
 | `VITE_API_URL` | `http://localhost:8000/api/v1` |
 
 ## 12. Generated types

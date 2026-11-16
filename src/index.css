@@ -1,14 +1,14 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
-@plugin "@tailwindcss/typography";
+@plugin '@tailwindcss/typography';
 
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
   /* Primary (modern blue system) */
-  --color-primary: 37 99 235;        /* blue-600 */
+  --color-primary: 37 99 235; /* blue-600 */
   --color-primary-light: 96 165 250; /* blue-400 */
-  --color-primary-dark: 29 78 216;   /* blue-700 */
+  --color-primary-dark: 29 78 216; /* blue-700 */
 
   /* Semantic colors (unchanged) */
   --color-success: 34 197 94;
@@ -22,9 +22,9 @@
 
 .dark {
   /* Blue adapted for dark mode */
-  --color-primary: 59 130 246;        /* blue-500 */
+  --color-primary: 59 130 246; /* blue-500 */
   --color-primary-light: 147 197 253; /* blue-300 */
-  --color-primary-dark: 37 99 235;    /* blue-600 */
+  --color-primary-dark: 37 99 235; /* blue-600 */
 
   --color-success: 74 222 128;
   --color-error: 248 113 113;

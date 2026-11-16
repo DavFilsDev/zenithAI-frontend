@@ -31,21 +31,21 @@ export const MessageBubble = ({ message }: MessageBubbleProps) => {
         <div
           className={`rounded-xl p-4 ${
             isUser
-              ? 'bg-[rgb(var(--color-primary))]/10 text-[rgb(var(--color-text))] border border-[rgb(var(--color-primary))]/20 backdrop-blur-md'
-              : 'bg-white/10 dark:bg-white/5 backdrop-blur-md border border-white/10'
+              ? 'border border-[rgb(var(--color-primary))]/20 bg-[rgb(var(--color-primary))]/10 text-[rgb(var(--color-text))] backdrop-blur-md'
+              : 'border border-white/10 bg-white/10 backdrop-blur-md dark:bg-white/5'
           }`}
         >
           {isUser ? (
             <p className="whitespace-pre-wrap">{message.content}</p>
           ) : isTyping ? (
             <div className="flex space-x-2 py-1">
-              <div className="w-2 h-2 bg-[rgb(var(--color-primary))] rounded-full animate-bounce" />
+              <div className="h-2 w-2 animate-bounce rounded-full bg-[rgb(var(--color-primary))]" />
               <div
-                className="w-2 h-2 bg-[rgb(var(--color-primary))] rounded-full animate-bounce"
+                className="h-2 w-2 animate-bounce rounded-full bg-[rgb(var(--color-primary))]"
                 style={{ animationDelay: '150ms' }}
               />
               <div
-                className="w-2 h-2 bg-[rgb(var(--color-primary))] rounded-full animate-bounce"
+                className="h-2 w-2 animate-bounce rounded-full bg-[rgb(var(--color-primary))]"
                 style={{ animationDelay: '300ms' }}
               />
             </div>
@@ -56,7 +56,7 @@ export const MessageBubble = ({ message }: MessageBubbleProps) => {
           )}
 
           {!isTyping && (
-            <span className="text-xs mt-2 block opacity-60">
+            <span className="mt-2 block text-xs opacity-60">
               {new Date(message.created_at).toLocaleTimeString([], {
                 hour: '2-digit',
                 minute: '2-digit',
@@ -66,13 +66,13 @@ export const MessageBubble = ({ message }: MessageBubbleProps) => {
         </div>
 
         {!isTyping && (
-          <div className="flex gap-2 mt-2 justify-end opacity-50 group-hover:opacity-100 transition">
+          <div className="mt-2 flex justify-end gap-2 opacity-50 transition group-hover:opacity-100">
             <button
               onClick={() => {
                 void handleCopy();
               }}
               title="Copy message"
-              className="p-1.5 rounded-lg bg-white/10 dark:bg-white/5 border border-white/10 hover:bg-white/20 transition"
+              className="rounded-lg border border-white/10 bg-white/10 p-1.5 transition hover:bg-white/20 dark:bg-white/5"
             >
               <Copy size={16} />
             </button>

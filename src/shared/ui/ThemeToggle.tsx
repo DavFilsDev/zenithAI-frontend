@@ -9,44 +9,25 @@ export const ThemeToggle = () => {
   return (
     <button
       onClick={toggleTheme}
-      className="
-        relative w-16 h-9 rounded-full p-1
-        bg-red-200 dark:bg-white/5
-        border border-gray-400 dark:border-white/10
-        backdrop-blur-md
-        flex items-center justify-between
-        transition-all duration-300
-      "
+      className="relative flex h-9 w-16 items-center justify-between rounded-full border border-gray-400 bg-red-200 p-1 backdrop-blur-md transition-all duration-300 dark:border-white/10 dark:bg-white/5"
     >
       <div
-        className={`
-          absolute top-1 left-1 w-7 h-7 rounded-full
-          flex items-center justify-center
-          shadow-md
-          transition-all duration-300 ease-in-out
-          ${
-            isDark
-              ? 'translate-x-0 bg-[rgb(var(--color-primary))]'
-              : 'translate-x-7 bg-yellow-400'
-          }
-        `}
+        className={`absolute top-1 left-1 flex h-7 w-7 items-center justify-center rounded-full shadow-md transition-all duration-300 ease-in-out ${
+          isDark ? 'translate-x-0 bg-[rgb(var(--color-primary))]' : 'translate-x-7 bg-yellow-400'
+        } `}
       />
 
-      <div className="z-10 w-7 h-7 flex items-center justify-center">
+      <div className="z-10 flex h-7 w-7 items-center justify-center">
         <Moon
           size={16}
-          className={`transition-colors duration-300 ${
-            isDark ? 'text-white' : 'text-gray-400'
-          }`}
+          className={`transition-colors duration-300 ${isDark ? 'text-white' : 'text-gray-400'}`}
         />
       </div>
 
-      <div className="z-10 w-7 h-7 flex items-center justify-center">
+      <div className="z-10 flex h-7 w-7 items-center justify-center">
         <Sun
           size={16}
-          className={`transition-colors duration-300 ${
-            !isDark ? 'text-white' : 'text-yellow-400'
-          }`}
+          className={`transition-colors duration-300 ${!isDark ? 'text-white' : 'text-yellow-400'}`}
         />
       </div>
     </button>

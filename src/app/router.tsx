@@ -5,17 +5,17 @@ import { useSessionStore } from '../shared/auth/sessionStore';
 import { ChatShell } from './ChatShell';
 
 const HomePage = lazy(() =>
-  import('../features/home/pages/HomePage').then((module) => ({ default: module.HomePage }))
+  import('../features/home/pages/HomePage').then((module) => ({ default: module.HomePage })),
 );
 
 const LoginPage = lazy(() =>
-  import('../features/auth/pages/LoginPage').then((module) => ({ default: module.LoginPage }))
+  import('../features/auth/pages/LoginPage').then((module) => ({ default: module.LoginPage })),
 );
 
 const RegisterPage = lazy(() =>
   import('../features/auth/pages/RegisterPage').then((module) => ({
     default: module.RegisterPage,
-  }))
+  })),
 );
 
 const RequireAuth = () => {

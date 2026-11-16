@@ -82,10 +82,11 @@ export const useSendMessage = () => {
         const userMessage = temporaryMessage('user', content);
         const assistantMessage = temporaryMessage('assistant', '');
 
-        queryClient.setQueryData<Message[]>(
-          conversationKeys.messages(uuid),
-          (messages = []) => [...messages, userMessage, assistantMessage]
-        );
+        queryClient.setQueryData<Message[]>(conversationKeys.messages(uuid), (messages = []) => [
+          ...messages,
+          userMessage,
+          assistantMessage,
+        ]);
 
         let assistantContent = '';
 
@@ -93,14 +94,12 @@ export const useSendMessage = () => {
           signal: controller.signal,
           onToken: (token) => {
             assistantContent += token;
-            queryClient.setQueryData<Message[]>(
-              conversationKeys.messages(uuid),
-              (messages = []) =>
-                messages.map((message) =>
-                  message.uuid === assistantMessage.uuid
-                    ? { ...message, content: assistantContent }
-                    : message
-                )
+            queryClient.setQueryData<Message[]>(conversationKeys.messages(uuid), (messages = []) =>
+              messages.map((message) =>
+                message.uuid === assistantMessage.uuid
+                  ? { ...message, content: assistantContent }
+                  : message,
+              ),
             );
           },
         });
@@ -114,7 +113,7 @@ export const useSendMessage = () => {
         if (targetUuid) {
           queryClient.setQueryData<Message[]>(
             conversationKeys.messages(targetUuid),
-            (messages = []) => messages.filter((message) => !message.uuid.startsWith('temp-'))
+            (messages = []) => messages.filter((message) => !message.uuid.startsWith('temp-')),
           );
           void queryClient.invalidateQueries({ queryKey: conversationKeys.messages(targetUuid) });
           void queryClient.invalidateQueries({ queryKey: conversationKeys.detail(targetUuid) });
@@ -143,7 +142,7 @@ export const useSendMessage = () => {
         }
       }
     },
-    [navigate, queryClient]
+    [navigate, queryClient],
   );
 
   return { send, isSending, abort };

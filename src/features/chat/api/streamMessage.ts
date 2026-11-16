@@ -35,7 +35,7 @@ const parseEvent = (chunk: string): ParsedEvent | null => {
 const postStream = (
   conversationUuid: string,
   content: string,
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ): Promise<Response> => {
   const token = tokenManager.getAccessToken();
   const headers: Record<string, string> = {
@@ -54,14 +54,14 @@ const postStream = (
       headers,
       body: JSON.stringify({ message: content }),
       signal: signal ?? null,
-    }
+    },
   );
 };
 
 export const streamMessage = async (
   conversationUuid: string,
   content: string,
-  { signal, onToken }: StreamMessageOptions
+  { signal, onToken }: StreamMessageOptions,
 ): Promise<void> => {
   let response = await postStream(conversationUuid, content, signal);
 

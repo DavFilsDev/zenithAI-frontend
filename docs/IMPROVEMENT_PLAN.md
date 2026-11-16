@@ -10,41 +10,41 @@ Read-only pass over `src/`, the config files, and every claim in the previous `R
 
 ### 1.1 The documentation described a product that does not exist
 
-| Claim in the old README | Reality |
-|---|---|
-| "Real-time Chat: WebSocket support" (`:100`), "WebSocket: Native WebSocket API" (`:122`), "Check WebSocket URL" (`:220`) | No WebSocket, no `EventSource`, no `ReadableStream` anywhere in `src/`. Not one line. |
-| "Code Highlighting: Prism.js" (`:121`) | `prismjs` is not a dependency. No highlighter is installed at all. |
-| "Styling: Tailwind CSS + CSS Modules" (`:113`) | Zero `*.module.css` files. One stylesheet: `src/index.css`. |
-| "Server state: React Query" (`:207`) | `@tanstack/react-query` is not in `package.json`. |
-| "Framework: React 18" (`:110`) | `react` and `react-dom` are `^19.2.0` (`package.json:15-16`). |
-| "Type Safety: Full TypeScript support" (`:106`) | `strict` is declared, and never enforced. See 1.7. |
-| `npm run format` (`:95`), `test` (`:137`), `test:coverage` (`:140`), `test:e2e` (`:143`), `npm run deploy` (`:172`) | None of the five exists. `prettier` is not even a dependency. |
-| "MIT License - see LICENSE file" (`:225`) | There was no `LICENSE` file. |
-| `VITE_APP_NAME` set to a different product's name and a "Clone" suffix (`:71`) | Contradicted `.env.example:3`, read by no code, and the product name is forbidden by the contract. |
-| `VITE_DEFAULT_THEME` (`:72`) | Existed in neither `.env.example` nor the code. |
-| `public/`, `src/utils/`, `src/styles/` (`:45`, `:55`, `:57`) | None of the three directories exists. |
-| "Settings - User preferences" (`:129`) | A dropdown holding a theme toggle and a logout. No page, no route. |
-| "Profile - User profile management" (`:130`) | A modal, and its three save handlers are `console.log`. See 1.6. |
-| "Icons: React Icons" (`:119`) | `react-icons` in 6 files and `lucide-react` in 4, in parallel. `date-fns` is used and was not listed at all. |
-| "Email: miharisoadavidfils.com" (`:231`) | Not an address. |
-| "Documentation: Check the Wiki" (`:230`) | No wiki. |
-| "Start backend: `docker-compose up`" (`:249`) | The backend has no `docker-compose`. |
-| "Not availible from now" (`:7`) | Typo, and a dead live-demo link. |
+| Claim in the old README                                                                                                  | Reality                                                                                                      |
+| ------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------ |
+| "Real-time Chat: WebSocket support" (`:100`), "WebSocket: Native WebSocket API" (`:122`), "Check WebSocket URL" (`:220`) | No WebSocket, no `EventSource`, no `ReadableStream` anywhere in `src/`. Not one line.                        |
+| "Code Highlighting: Prism.js" (`:121`)                                                                                   | `prismjs` is not a dependency. No highlighter is installed at all.                                           |
+| "Styling: Tailwind CSS + CSS Modules" (`:113`)                                                                           | Zero `*.module.css` files. One stylesheet: `src/index.css`.                                                  |
+| "Server state: React Query" (`:207`)                                                                                     | `@tanstack/react-query` is not in `package.json`.                                                            |
+| "Framework: React 18" (`:110`)                                                                                           | `react` and `react-dom` are `^19.2.0` (`package.json:15-16`).                                                |
+| "Type Safety: Full TypeScript support" (`:106`)                                                                          | `strict` is declared, and never enforced. See 1.7.                                                           |
+| `npm run format` (`:95`), `test` (`:137`), `test:coverage` (`:140`), `test:e2e` (`:143`), `npm run deploy` (`:172`)      | None of the five exists. `prettier` is not even a dependency.                                                |
+| "MIT License - see LICENSE file" (`:225`)                                                                                | There was no `LICENSE` file.                                                                                 |
+| `VITE_APP_NAME` set to a different product's name and a "Clone" suffix (`:71`)                                           | Contradicted `.env.example:3`, read by no code, and the product name is forbidden by the contract.           |
+| `VITE_DEFAULT_THEME` (`:72`)                                                                                             | Existed in neither `.env.example` nor the code.                                                              |
+| `public/`, `src/utils/`, `src/styles/` (`:45`, `:55`, `:57`)                                                             | None of the three directories exists.                                                                        |
+| "Settings - User preferences" (`:129`)                                                                                   | A dropdown holding a theme toggle and a logout. No page, no route.                                           |
+| "Profile - User profile management" (`:130`)                                                                             | A modal, and its three save handlers are `console.log`. See 1.6.                                             |
+| "Icons: React Icons" (`:119`)                                                                                            | `react-icons` in 6 files and `lucide-react` in 4, in parallel. `date-fns` is used and was not listed at all. |
+| "Email: miharisoadavidfils.com" (`:231`)                                                                                 | Not an address.                                                                                              |
+| "Documentation: Check the Wiki" (`:230`)                                                                                 | No wiki.                                                                                                     |
+| "Start backend: `docker-compose up`" (`:249`)                                                                            | The backend has no `docker-compose`.                                                                         |
+| "Not availible from now" (`:7`)                                                                                          | Typo, and a dead live-demo link.                                                                             |
 
 ### 1.2 The API calls are on paths the contract does not describe
 
 `VITE_API_URL` was `http://localhost:8000/api`. The contract base is `/api/v1`, and the conversation paths are flat. The real call sites:
 
-| Contract endpoint | Call site | Path requested today |
-|---|---|---|
-| `POST /auth/register/` | `src/services/auth.ts:42` | `/auth/register/` |
-| `POST /auth/token/` | `src/services/auth.ts:9` | `/auth/token/` |
-| `POST /auth/token/refresh/` | `src/services/refreshTokenService.ts:15` | `/auth/token/refresh/` |
-| `GET /auth/profile/` | `src/services/auth.ts:18`, `:47`, `:70` | `/auth/profile/` |
-| `GET /conversations/` | `src/services/chat.ts:6` | `/chat/conversations/` |
-| `GET /conversations/{uuid}/` | `src/services/chat.ts:11` | `/chat/conversations/{id}/` |
-| `POST /conversations/{uuid}/messages/` | `src/services/chat.ts:17` | `/chat/chat/{conversation_id}/` |
-| `DELETE /conversations/{uuid}/` | `src/services/chat.ts:25` | `/chat/conversations/{id}/` |
+| Contract endpoint                      | Call site                                | Path requested today            |
+| -------------------------------------- | ---------------------------------------- | ------------------------------- |
+| `POST /auth/register/`                 | `src/services/auth.ts:42`                | `/auth/register/`               |
+| `POST /auth/token/`                    | `src/services/auth.ts:9`                 | `/auth/token/`                  |
+| `POST /auth/token/refresh/`            | `src/services/refreshTokenService.ts:15` | `/auth/token/refresh/`          |
+| `GET /auth/profile/`                   | `src/services/auth.ts:18`, `:47`, `:70`  | `/auth/profile/`                |
+| `GET /conversations/`                  | `src/services/chat.ts:6`                 | `/chat/conversations/`          |
+| `GET /conversations/{uuid}/`           | `src/services/chat.ts:11`                | `/chat/conversations/{id}/`     |
+| `POST /conversations/{uuid}/messages/` | `src/services/chat.ts:17`                | `/chat/chat/{conversation_id}/` |
+| `DELETE /conversations/{uuid}/`        | `src/services/chat.ts:25`                | `/chat/conversations/{id}/`     |
 
 Five contract endpoints have no call site at all: `POST /auth/logout/`, `PATCH /auth/profile/`, `POST /conversations/`, `GET /conversations/{uuid}/messages/`, `GET /health/`. There is no `PUT` and no `PATCH` anywhere in `src/`.
 
@@ -143,13 +143,13 @@ Three toast systems coexist: `<Toaster>` with inline styles at `src/App.tsx:53-1
 
 ### 1.12 Dead and duplicated code
 
-| Kind | Where |
-|---|---|
-| Whole files | `src/hooks/useChat.ts` (124 lines, a second full implementation of the chat domain in `useState`, imported nowhere), `src/components/ui/CustomToast.tsx` (44 lines, imported nowhere) |
-| Exports | `refreshTokenService.refreshWithRetry` (`refreshTokenService.ts:29-39`, holds 3 of the 7 `any` tokens), `interface AuthError` (`types/auth.ts:1-5`), `ApiError.isNotFound()` (`apiError.ts:23-25`), `useChatStore.setConversations` / `setCurrentConversation` (`chatStore.ts:14-15`) |
-| Duplication | `UserProfileModal` mounted twice, `SettingsDropdown` mounted twice, the sidebar collapse toggle written twice (`Sidebar.tsx:90-104` and `SidebarHeader.tsx:18-37`), the sun/moon icon taken from `react-icons` in `SettingsDropdown.tsx:67-72` and from `lucide-react` in `ThemeToggle.tsx:34-43` |
-| Config | `VITE_WS_URL` and `VITE_APP_NAME` declared and never read, `tailwind.config.js` never loaded, `@tailwindcss/typography` installed and never activated |
-| Routing | No `*` catch-all, so `src/pages/Home.tsx:74` and `:77` link to `/privacy` and `/terms`, which do not exist, with the two labels swapped. `GlassButton.tsx:25` renders a router destination as a plain `<a href>`, forcing a full page load. `index.html:5` points at `/vite.svg` with no `public/` directory. `ChatWindow.tsx:31-33` renders the literal string "title chat" as the conversation heading, and the real title is never shown. |
+| Kind        | Where                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| ----------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Whole files | `src/hooks/useChat.ts` (124 lines, a second full implementation of the chat domain in `useState`, imported nowhere), `src/components/ui/CustomToast.tsx` (44 lines, imported nowhere)                                                                                                                                                                                                                                                        |
+| Exports     | `refreshTokenService.refreshWithRetry` (`refreshTokenService.ts:29-39`, holds 3 of the 7 `any` tokens), `interface AuthError` (`types/auth.ts:1-5`), `ApiError.isNotFound()` (`apiError.ts:23-25`), `useChatStore.setConversations` / `setCurrentConversation` (`chatStore.ts:14-15`)                                                                                                                                                        |
+| Duplication | `UserProfileModal` mounted twice, `SettingsDropdown` mounted twice, the sidebar collapse toggle written twice (`Sidebar.tsx:90-104` and `SidebarHeader.tsx:18-37`), the sun/moon icon taken from `react-icons` in `SettingsDropdown.tsx:67-72` and from `lucide-react` in `ThemeToggle.tsx:34-43`                                                                                                                                            |
+| Config      | `VITE_WS_URL` and `VITE_APP_NAME` declared and never read, `tailwind.config.js` never loaded, `@tailwindcss/typography` installed and never activated                                                                                                                                                                                                                                                                                        |
+| Routing     | No `*` catch-all, so `src/pages/Home.tsx:74` and `:77` link to `/privacy` and `/terms`, which do not exist, with the two labels swapped. `GlassButton.tsx:25` renders a router destination as a plain `<a href>`, forcing a full page load. `index.html:5` points at `/vite.svg` with no `public/` directory. `ChatWindow.tsx:31-33` renders the literal string "title chat" as the conversation heading, and the real title is never shown. |
 
 ### 1.13 Tests and CI
 
@@ -185,78 +185,78 @@ Effort: **S** under half a day, **M** one to three days, **L** more than three d
 
 Make the code match the contract's shape before adding anything. Nothing here changes behaviour for a user except that the app stops lying about what it does.
 
-- [x] **P0.1** Remove `VITE_WS_URL` from `.env.example`, the README and the contract. — *S* — the variable is neither declared nor read anywhere. — Depends on: —
-- [x] **P0.2** Point `VITE_API_URL` at `/api/v1` and move every call site onto the mounted `/chat/conversations/` endpoints, with UUIDs. The backend keeps the `/chat/` prefix; the bare `/conversations/` path does not exist. — *M* — no path outside the live backend is requested by any file, and conversation ids are UUIDs. — Depends on: P0.1.
-- [x] **P0.3** Create the conversation explicitly with `POST /conversations/` before posting the first message, and delete the `'draft'` id hack. — *M* — no literal `'draft'` id is sent, and a new conversation gets a real UUID from the response. — Depends on: P0.2.
-- [x] **P0.4** Read the environment through one typed module, validate it with `zod`, and fail with a readable message when a variable is missing or malformed. — *M* — a bad `VITE_API_URL` stops the app at startup with a message naming the variable, instead of producing silent 404s. — Depends on: —
-- [x] **P0.5** Add `VITE_APP_NAME` to the document title and `VITE_DEFAULT_THEME` to the initial theme, replacing the hardcoded `<title>` in `index.html` and the unconditional `classList.add("dark")` in `src/main.tsx`. — *S* — the title reads "Zenith AI" and the initial theme follows the variable, with no flash of the wrong theme. — Depends on: P0.4.
-- [x] **P0.6** Parse the contract error envelope in `ApiError`, expose `code` and `details`, and map `validation_error` onto form fields. — *M* — a bad password shows the server's message, and no caller reads `data.detail`. — Depends on: —
-- [x] **P0.7** Delete the dead code found in 1.12: `src/hooks/useChat.ts`, `src/components/ui/CustomToast.tsx`, `refreshWithRetry`, `interface AuthError`, the unused store actions, the dead CSS rules, and the duplicate `@keyframes fadeIn`. — *S* — the files are gone, the build passes, and the dead CSS no longer ships. — Depends on: —
-- [x] **P0.8** Remove `tailwind.config.js`, confirm no `any` tokens remain in `src/`, and activate `@tailwindcss/typography`. — *S* — no `tailwind.config.js` exists, `@plugin "@tailwindcss/typography"` and the class-based `dark` variant are in `index.css`, and `grep -rn "\bany\b" src/` returns nothing. — Depends on: —
-- [x] **P0.9** Replace the duplicated token keys in `AuthContext` with `tokenManager` calls, and stop deleting the session when a profile call fails for a transient reason. — *S* — a `500` on boot leaves the user signed in, and the string `'accessToken'` appears in one file only. — Depends on: —
+- [x] **P0.1** Remove `VITE_WS_URL` from `.env.example`, the README and the contract. — _S_ — the variable is neither declared nor read anywhere. — Depends on: —
+- [x] **P0.2** Point `VITE_API_URL` at `/api/v1` and move every call site onto the mounted `/chat/conversations/` endpoints, with UUIDs. The backend keeps the `/chat/` prefix; the bare `/conversations/` path does not exist. — _M_ — no path outside the live backend is requested by any file, and conversation ids are UUIDs. — Depends on: P0.1.
+- [x] **P0.3** Create the conversation explicitly with `POST /conversations/` before posting the first message, and delete the `'draft'` id hack. — _M_ — no literal `'draft'` id is sent, and a new conversation gets a real UUID from the response. — Depends on: P0.2.
+- [x] **P0.4** Read the environment through one typed module, validate it with `zod`, and fail with a readable message when a variable is missing or malformed. — _M_ — a bad `VITE_API_URL` stops the app at startup with a message naming the variable, instead of producing silent 404s. — Depends on: —
+- [x] **P0.5** Add `VITE_APP_NAME` to the document title and `VITE_DEFAULT_THEME` to the initial theme, replacing the hardcoded `<title>` in `index.html` and the unconditional `classList.add("dark")` in `src/main.tsx`. — _S_ — the title reads "Zenith AI" and the initial theme follows the variable, with no flash of the wrong theme. — Depends on: P0.4.
+- [x] **P0.6** Parse the contract error envelope in `ApiError`, expose `code` and `details`, and map `validation_error` onto form fields. — _M_ — a bad password shows the server's message, and no caller reads `data.detail`. — Depends on: —
+- [x] **P0.7** Delete the dead code found in 1.12: `src/hooks/useChat.ts`, `src/components/ui/CustomToast.tsx`, `refreshWithRetry`, `interface AuthError`, the unused store actions, the dead CSS rules, and the duplicate `@keyframes fadeIn`. — _S_ — the files are gone, the build passes, and the dead CSS no longer ships. — Depends on: —
+- [x] **P0.8** Remove `tailwind.config.js`, confirm no `any` tokens remain in `src/`, and activate `@tailwindcss/typography`. — _S_ — no `tailwind.config.js` exists, `@plugin "@tailwindcss/typography"` and the class-based `dark` variant are in `index.css`, and `grep -rn "\bany\b" src/` returns nothing. — Depends on: —
+- [x] **P0.9** Replace the duplicated token keys in `AuthContext` with `tokenManager` calls, and stop deleting the session when a profile call fails for a transient reason. — _S_ — a `500` on boot leaves the user signed in, and the string `'accessToken'` appears in one file only. — Depends on: —
 
 ### P1 — The API layer
 
 One client, one refresh, one error shape. This is the foundation the streaming work in P2 sits on.
 
-- [x] **P1.1** Add `GET /auth/profile/` and `PATCH /auth/profile/` for real, replacing the two update stubs, and make the modal show a real success or failure. The password form is removed because the contract has no password-change endpoint. — *M* — editing the email persists through a reload, and a rejected save keeps the field open with a message. — Depends on: P0.6.
-- [x] **P1.2** Make the refresh single-flight: one in-flight promise shared by every waiting request, the refresh call itself bypassing the interceptor. — *M* — six concurrent `401`s produce exactly one `POST /auth/token/refresh/`, and all six requests replay successfully. — Depends on: P0.2.
-- [x] **P1.3** Add `/auth/profile/` to the no-refresh list, and stop hard-redirecting on a retried non-`401` failure. — *S* — a `500` on a retried request does not sign the user out. — Depends on: P1.2.
-- [x] **P1.4** Call `POST /auth/logout/` on sign-out, best effort, then clear the query cache so no conversation survives the session. — *M* — signing out removes the `chat-storage` entry, and a `401` at `/logout/` still signs the user out locally. — Depends on: P1.2.
-- [x] **P1.5** Generate the API types from the backend's OpenAPI schema with `openapi-typescript`, and commit the generated file with a script that regenerates it. — *M* — a payload field renamed on the backend breaks the type-check rather than production. — Depends on: P0.2.
-- [x] **P1.6** Read the `Retry-After` header and build the `429` experience: a clear message, the remaining time, and a retry affordance. — *M* — a `rate_limited` and a `quota_exhausted` response each produce a specific message with the wait, and no message anywhere offers a purchase. — Depends on: P0.6.
-- [x] **P1.7** Consolidate the three toast systems into one, with one duration per severity. — *S* — one `Toaster`, one call site pattern, one duration table. — Depends on: P0.7.
-- [x] **P1.8** Add a dev-only network panel, or at minimum log unhandled errors with the contract code, instead of discarding them. — *S* — a failed request is visible with its code in the console, and no `catch` block is empty. — Depends on: P1.6.
+- [x] **P1.1** Add `GET /auth/profile/` and `PATCH /auth/profile/` for real, replacing the two update stubs, and make the modal show a real success or failure. The password form is removed because the contract has no password-change endpoint. — _M_ — editing the email persists through a reload, and a rejected save keeps the field open with a message. — Depends on: P0.6.
+- [x] **P1.2** Make the refresh single-flight: one in-flight promise shared by every waiting request, the refresh call itself bypassing the interceptor. — _M_ — six concurrent `401`s produce exactly one `POST /auth/token/refresh/`, and all six requests replay successfully. — Depends on: P0.2.
+- [x] **P1.3** Add `/auth/profile/` to the no-refresh list, and stop hard-redirecting on a retried non-`401` failure. — _S_ — a `500` on a retried request does not sign the user out. — Depends on: P1.2.
+- [x] **P1.4** Call `POST /auth/logout/` on sign-out, best effort, then clear the query cache so no conversation survives the session. — _M_ — signing out removes the `chat-storage` entry, and a `401` at `/logout/` still signs the user out locally. — Depends on: P1.2.
+- [x] **P1.5** Generate the API types from the backend's OpenAPI schema with `openapi-typescript`, and commit the generated file with a script that regenerates it. — _M_ — a payload field renamed on the backend breaks the type-check rather than production. — Depends on: P0.2.
+- [x] **P1.6** Read the `Retry-After` header and build the `429` experience: a clear message, the remaining time, and a retry affordance. — _M_ — a `rate_limited` and a `quota_exhausted` response each produce a specific message with the wait, and no message anywhere offers a purchase. — Depends on: P0.6.
+- [x] **P1.7** Consolidate the three toast systems into one, with one duration per severity. — _S_ — one `Toaster`, one call site pattern, one duration table. — Depends on: P0.7.
+- [x] **P1.8** Add a dev-only network panel, or at minimum log unhandled errors with the contract code, instead of discarding them. — _S_ — a failed request is visible with its code in the console, and no `catch` block is empty. — Depends on: P1.6.
 
 ### P2 — Streaming chat, and the feature architecture
 
 The phase that makes the product feel like the product.
 
-- [x] **P2.1** Add the `GET /conversations/{uuid}/messages/` client, and stop relying on messages embedded in the conversation payload. — *S* — opening a conversation fetches its messages from the contract endpoint. — Depends on: P0.2.
-- [x] **P2.2** Add TanStack Query and move all server state into it: conversations, conversation detail, messages, profile. — *L* — no `useEffect` in the codebase fetches data, and `QueryClientProvider` wraps the app. — Depends on: P1.5.
-- [x] **P2.3** Reduce Zustand to UI state only: sidebar, composer draft, streaming flag, theme. Remove `persist` from the chat store. — *M* — nothing conversation-related is in `localStorage`, and the `chat-storage` key is gone. — Depends on: P2.2.
-- [x] **P2.4** Build the SSE adapter: `fetch` plus `ReadableStream`, a buffer split on the blank line, `token` / `done` / `error` handled as declared. — *L* — a stream interrupted mid-chunk still renders every complete fragment received so far, and a stream that ends without `done` is reported as an error rather than a truncated answer. — Depends on: P1.2.
-- [x] **P2.5** Cancel properly: one `AbortController` per in-flight stream, aborted on unmount, on a second send, and on a route change. Always release the reader. — *M* — navigating away mid-answer leaves no open connection and no orphan draft, visible in the network panel. — Depends on: P2.4.
-- [x] **P2.6** Write the streamed answer into the query cache, and refetch the conversation and the list on `done`. — *M* — reloading during a stream loses nothing, and the conversation title appears in the sidebar as soon as it exists. — Depends on: P2.4, P2.2.
-- [x] **P2.7** Implement conversation creation, rename and delete against the contract, with `PATCH` limited to `title`. — *M* — a conversation can be created, renamed and deleted, and no `PUT` is ever issued. — Depends on: P0.3.
-- [x] **P2.8** Move to a feature-based tree: `app/`, `features/auth`, `features/chat`, `shared/`, as described in [`ARCHITECTURE.md`](ARCHITECTURE.md). — *L* — no feature imports another feature's internals, and the old `pages/`, `contexts/`, `services/`, `store/` and `types/` directories no longer exist. — Depends on: P2.2, P2.3, P2.7.
-- [x] **P2.9** Add pagination to the conversation list, reading `results` and using `count`, `next` and `previous` for navigation. — *M* — the list pages at 20 items and the backend's page size is respected. — Depends on: P2.7.
+- [x] **P2.1** Add the `GET /conversations/{uuid}/messages/` client, and stop relying on messages embedded in the conversation payload. — _S_ — opening a conversation fetches its messages from the contract endpoint. — Depends on: P0.2.
+- [x] **P2.2** Add TanStack Query and move all server state into it: conversations, conversation detail, messages, profile. — _L_ — no `useEffect` in the codebase fetches data, and `QueryClientProvider` wraps the app. — Depends on: P1.5.
+- [x] **P2.3** Reduce Zustand to UI state only: sidebar, composer draft, streaming flag, theme. Remove `persist` from the chat store. — _M_ — nothing conversation-related is in `localStorage`, and the `chat-storage` key is gone. — Depends on: P2.2.
+- [x] **P2.4** Build the SSE adapter: `fetch` plus `ReadableStream`, a buffer split on the blank line, `token` / `done` / `error` handled as declared. — _L_ — a stream interrupted mid-chunk still renders every complete fragment received so far, and a stream that ends without `done` is reported as an error rather than a truncated answer. — Depends on: P1.2.
+- [x] **P2.5** Cancel properly: one `AbortController` per in-flight stream, aborted on unmount, on a second send, and on a route change. Always release the reader. — _M_ — navigating away mid-answer leaves no open connection and no orphan draft, visible in the network panel. — Depends on: P2.4.
+- [x] **P2.6** Write the streamed answer into the query cache, and refetch the conversation and the list on `done`. — _M_ — reloading during a stream loses nothing, and the conversation title appears in the sidebar as soon as it exists. — Depends on: P2.4, P2.2.
+- [x] **P2.7** Implement conversation creation, rename and delete against the contract, with `PATCH` limited to `title`. — _M_ — a conversation can be created, renamed and deleted, and no `PUT` is ever issued. — Depends on: P0.3.
+- [x] **P2.8** Move to a feature-based tree: `app/`, `features/auth`, `features/chat`, `shared/`, as described in [`ARCHITECTURE.md`](ARCHITECTURE.md). — _L_ — no feature imports another feature's internals, and the old `pages/`, `contexts/`, `services/`, `store/` and `types/` directories no longer exist. — Depends on: P2.2, P2.3, P2.7.
+- [x] **P2.9** Add pagination to the conversation list, reading `results` and using `count`, `next` and `previous` for navigation. — _M_ — the list pages at 20 items and the backend's page size is respected. — Depends on: P2.7.
 
 ### P3 — Quality
 
 Make the strict settings real, and add the tests that were never there.
 
-- [x] **P3.1** Fix the type-check: `tsc -b` in `type-check`, `composite` on the referenced projects, and the real gate in `build`. — *S* — a deliberate type error fails `npm run type-check` and `npm run build`. — Depends on: —
-- [x] **P3.2** Add `noUncheckedIndexedAccess` and `exactOptionalPropertyTypes`, and fix what they surface. — *M* — the build is clean with both on. — Depends on: P3.1.
-- [x] **P3.3** Turn on type-aware `typescript-eslint`, so the current `recommended` set becomes the checked one. — *M* — `no-floating-promises` and `no-misused-promises` are active and the codebase is clean. — Depends on: P3.1.
-- [x] **P3.4** Add `eslint-plugin-jsx-a11y` and fix the violations it reports. — *M* — the plugin is in the lint set and `npm run lint` passes with `--max-warnings 0`. — Depends on: P3.1.
-- [ ] **P3.5** Repair the `lint` script: drop the redundant `--ext`, scope the flat config so no file is left unconfigured, and keep `--max-warnings 0` only once the config is exhaustive. — *S* — `npm run lint` exits 0 on a clean tree. — Depends on: —
-- [ ] **P3.6** Add Prettier with `prettier-plugin-tailwindcss`, and a `format` script. — *S* — `npm run format` rewrites the tree, and a second run is a no-op. — Depends on: —
-- [ ] **P3.7** Add husky and lint-staged, so a commit cannot carry a type error or a lint error. — *M* — a commit touching a `.tsx` file runs the linter and the type-check. — Depends on: P3.5.
-- [ ] **P3.8** Add Vitest, Testing Library and MSW, with handlers generated from the OpenAPI schema. — *L* — a test renders a component against a mocked contract response, not a hand-written fixture. — Depends on: P1.5.
-- [ ] **P3.9** Write the tests that matter: sign in, register, send a message, read a `429`, cancel a stream, sign out. — *L* — each of the six flows has a test, and coverage on `features/` and `shared/api/` is at least 80%. — Depends on: P3.8, P2.4.
-- [ ] **P3.10** Add Playwright and two or three end-to-end journeys: sign in and hold a conversation, and hit a rate limit. — *M* — two journeys pass against a locally running stack. — Depends on: P3.9.
+- [x] **P3.1** Fix the type-check: `tsc -b` in `type-check`, `composite` on the referenced projects, and the real gate in `build`. — _S_ — a deliberate type error fails `npm run type-check` and `npm run build`. — Depends on: —
+- [x] **P3.2** Add `noUncheckedIndexedAccess` and `exactOptionalPropertyTypes`, and fix what they surface. — _M_ — the build is clean with both on. — Depends on: P3.1.
+- [x] **P3.3** Turn on type-aware `typescript-eslint`, so the current `recommended` set becomes the checked one. — _M_ — `no-floating-promises` and `no-misused-promises` are active and the codebase is clean. — Depends on: P3.1.
+- [x] **P3.4** Add `eslint-plugin-jsx-a11y` and fix the violations it reports. — _M_ — the plugin is in the lint set and `npm run lint` passes with `--max-warnings 0`. — Depends on: P3.1.
+- [x] **P3.5** Repair the `lint` script: drop the redundant `--ext`, scope the flat config so no file is left unconfigured, and keep `--max-warnings 0` only once the config is exhaustive. — _S_ — `npm run lint` exits 0 on a clean tree. — Depends on: —
+- [x] **P3.6** Add Prettier with `prettier-plugin-tailwindcss`, and a `format` script. — _S_ — `npm run format` rewrites the tree, and a second run is a no-op. — Depends on: —
+- [x] **P3.7** Add husky and lint-staged, so a commit cannot carry a type error or a lint error. — _M_ — a commit touching a `.tsx` file runs the linter and the type-check. — Depends on: P3.5.
+- [x] **P3.8** Add Vitest, Testing Library and MSW, with handlers generated from the OpenAPI schema. — _L_ — a test renders a component against a mocked contract response, not a hand-written fixture. — Depends on: P1.5.
+- [x] **P3.9** Write the tests that matter: sign in, register, send a message, read a `429`, cancel a stream, sign out. — _L_ — each of the six flows has a test, and coverage on `features/` and `shared/api/` is at least 80%. — Depends on: P3.8, P2.4.
+- [x] **P3.10** Add Playwright and two or three end-to-end journeys: sign in and hold a conversation, and hit a rate limit. — _M_ — two journeys pass against a locally running stack. — Depends on: P3.9.
 
 ### P4 — Security and accessibility
 
-- [ ] **P4.1** Keep raw HTML off, add `rehype-sanitize`, and filter link protocols, so the markdown path stays safe if raw HTML is ever enabled. — *S* — `rehype-sanitize` is in the pipeline and a `javascript:` link is neutralised. — Depends on: —
-- [ ] **P4.2** Add `remark-gfm` and a syntax highlighter, and map the `code` and `pre` components. — *M* — a table renders as a table and a fenced block is highlighted. — Depends on: —
-- [ ] **P4.3** Move the access token to memory and the refresh token to `sessionStorage`, following section 4 below. — *M* — no token is readable from `localStorage`, and a reload inside the tab keeps the session while the tab closing ends it. — Depends on: P1.2.
-- [ ] **P4.4** Add a Content Security Policy, as a `<meta>` tag for the static hosts and a real header where the host allows it. — *M* — inline script execution is blocked in the deployed app, and the streaming path still works. — Depends on: —
-- [ ] **P4.5** Make the whole app keyboard reachable: the conversation rows become buttons, the dropdowns take `aria-expanded` and close on `Escape`, every icon-only control gets an accessible name. — *M* — the application is fully navigable with `Tab` alone, including chat history. — Depends on: —
-- [ ] **P4.6** Give the modal real dialog semantics: `role="dialog"`, `aria-modal`, a labelled title, a focus trap, `Escape` to close, focus restored to the trigger, and a scroll lock. Mount it once. — *M* — focus never escapes the modal, and it returns to the button that opened it. — Depends on: —
-- [ ] **P4.7** Label every field, and link its error with `aria-describedby`; announce errors and the loading states with `aria-live`. — *M* — a screen reader announces a validation error and the streaming answer as they arrive. — Depends on: —
-- [ ] **P4.8** Respect `prefers-reduced-motion` and add a route-level `Suspense` and an `ErrorBoundary`. — *M* — animation is off under reduced motion, and a render crash shows a recoverable screen instead of a blank one. — Depends on: —
-- [ ] **P4.9** Fix the broken links: add a `*` catch-all, correct the swapped `/privacy` and `/terms` labels, drop the `<a href>` router navigation, and add a favicon. — *S* — no link in the app leads to a dead route, and a full page load no longer happens on internal navigation. — Depends on: —
-- [ ] **P4.10** Lazy-load every route, and bring Lighthouse to 90 or better on performance, accessibility and best practices. — *M* — the initial bundle carries the router only, and the Lighthouse scores are at or above 90. — Depends on: P2.8, P4.5.
+- [ ] **P4.1** Keep raw HTML off, add `rehype-sanitize`, and filter link protocols, so the markdown path stays safe if raw HTML is ever enabled. — _S_ — `rehype-sanitize` is in the pipeline and a `javascript:` link is neutralised. — Depends on: —
+- [ ] **P4.2** Add `remark-gfm` and a syntax highlighter, and map the `code` and `pre` components. — _M_ — a table renders as a table and a fenced block is highlighted. — Depends on: —
+- [ ] **P4.3** Move the access token to memory and the refresh token to `sessionStorage`, following section 4 below. — _M_ — no token is readable from `localStorage`, and a reload inside the tab keeps the session while the tab closing ends it. — Depends on: P1.2.
+- [ ] **P4.4** Add a Content Security Policy, as a `<meta>` tag for the static hosts and a real header where the host allows it. — _M_ — inline script execution is blocked in the deployed app, and the streaming path still works. — Depends on: —
+- [ ] **P4.5** Make the whole app keyboard reachable: the conversation rows become buttons, the dropdowns take `aria-expanded` and close on `Escape`, every icon-only control gets an accessible name. — _M_ — the application is fully navigable with `Tab` alone, including chat history. — Depends on: —
+- [ ] **P4.6** Give the modal real dialog semantics: `role="dialog"`, `aria-modal`, a labelled title, a focus trap, `Escape` to close, focus restored to the trigger, and a scroll lock. Mount it once. — _M_ — focus never escapes the modal, and it returns to the button that opened it. — Depends on: —
+- [ ] **P4.7** Label every field, and link its error with `aria-describedby`; announce errors and the loading states with `aria-live`. — _M_ — a screen reader announces a validation error and the streaming answer as they arrive. — Depends on: —
+- [ ] **P4.8** Respect `prefers-reduced-motion` and add a route-level `Suspense` and an `ErrorBoundary`. — _M_ — animation is off under reduced motion, and a render crash shows a recoverable screen instead of a blank one. — Depends on: —
+- [ ] **P4.9** Fix the broken links: add a `*` catch-all, correct the swapped `/privacy` and `/terms` labels, drop the `<a href>` router navigation, and add a favicon. — _S_ — no link in the app leads to a dead route, and a full page load no longer happens on internal navigation. — Depends on: —
+- [ ] **P4.10** Lazy-load every route, and bring Lighthouse to 90 or better on performance, accessibility and best practices. — _M_ — the initial bundle carries the router only, and the Lighthouse scores are at or above 90. — Depends on: P2.8, P4.5.
 
 ### P5 — Continuous integration, free deployment, showcase
 
-- [ ] **P5.1** Deploy the frontend to a free static host, and record the choice, the build command, the output directory, the SPA rewrite and the environment variables in the README. — *M* — the deployed URL loads, a deep link such as `/chat` returns the app rather than a 404, and the URL is in the README. — Depends on: P4.9.
-- [ ] **P5.2** Add the GitHub Actions workflow: lint, type-check, test, build, on pull requests and on `main`. — *M* — a pull request with a failing check cannot be merged, and the badge is in the README. — Depends on: P3.9, P2.8.
-- [ ] **P5.3** Add `GET /health/` polling to a status indicator, so a sleeping backend is distinguishable from a broken one. — *S* — the app says the service is waking up rather than showing a bare error. — Depends on: P1.6.
-- [ ] **P5.4** Write the showcase: screenshots, a short recording of a streamed answer, and a section stating the technical decisions and why they were made. — *M* — the README shows the product and explains its choices, with no claim that the code does not support. — Depends on: P5.1.
-- [ ] **P5.5** Add the `/privacy` and `/terms` pages the landing page already links to, stating what is stored and that conversation content is sent to a third-party model provider on a free tier. — *M* — both links resolve, and the pages describe the actual behaviour. — Depends on: P4.9.
+- [ ] **P5.1** Deploy the frontend to a free static host, and record the choice, the build command, the output directory, the SPA rewrite and the environment variables in the README. — _M_ — the deployed URL loads, a deep link such as `/chat` returns the app rather than a 404, and the URL is in the README. — Depends on: P4.9.
+- [ ] **P5.2** Add the GitHub Actions workflow: lint, type-check, test, build, on pull requests and on `main`. — _M_ — a pull request with a failing check cannot be merged, and the badge is in the README. — Depends on: P3.9, P2.8.
+- [ ] **P5.3** Add `GET /health/` polling to a status indicator, so a sleeping backend is distinguishable from a broken one. — _S_ — the app says the service is waking up rather than showing a bare error. — Depends on: P1.6.
+- [ ] **P5.4** Write the showcase: screenshots, a short recording of a streamed answer, and a section stating the technical decisions and why they were made. — _M_ — the README shows the product and explains its choices, with no claim that the code does not support. — Depends on: P5.1.
+- [ ] **P5.5** Add the `/privacy` and `/terms` pages the landing page already links to, stating what is stored and that conversation content is sent to a third-party model provider on a free tier. — _M_ — both links resolve, and the pages describe the actual behaviour. — Depends on: P4.9.
 
 ## 4. Token storage
 
@@ -272,11 +272,11 @@ The contract fixes the transport: "JWT is carried in the request body as JSON, n
 
 That leaves three options, and they trade against each other on the same axis:
 
-| Option | Survives a reload | Exposure window | Verdict |
-|---|---|---|---|
-| Both in `localStorage` | Yes, for 7 days | 7 days | Rejected. A single XSS, or any malicious browser extension, yields a week of impersonation. |
-| Both in memory | No | Until the tab closes | Rejected. Every reload is a new login, which is a bad experience for a product meant to be used casually by anyone. |
-| Access in memory, refresh in `sessionStorage` | Yes, within the tab | Access 15 min, refresh until the tab closes | **Chosen.** |
+| Option                                        | Survives a reload   | Exposure window                             | Verdict                                                                                                             |
+| --------------------------------------------- | ------------------- | ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| Both in `localStorage`                        | Yes, for 7 days     | 7 days                                      | Rejected. A single XSS, or any malicious browser extension, yields a week of impersonation.                         |
+| Both in memory                                | No                  | Until the tab closes                        | Rejected. Every reload is a new login, which is a bad experience for a product meant to be used casually by anyone. |
+| Access in memory, refresh in `sessionStorage` | Yes, within the tab | Access 15 min, refresh until the tab closes | **Chosen.**                                                                                                         |
 
 The access token is the credential every request carries, so keeping it out of persistent storage caps the damage from a script injection at 15 minutes, which is the contract's own access-token lifetime. The refresh token is the one worth persisting, and `sessionStorage` gives persistence across reloads and automatic destruction when the tab closes, which is a browser guarantee no JavaScript can talk the user out of.
 
@@ -323,11 +323,11 @@ Verified on **2026-10-01**. Free tiers change without notice, so re-check the of
 
 The frontend is a client-rendered SPA with no server component, so only static hosting matters here, and the only two things that matter are how much traffic is included and whether deep links work.
 
-| Platform | Free offer | Known limits | Verdict |
-|---|---|---|---|
-| **Cloudflare Pages** | Static hosting with **unmetered bandwidth**. 500 builds per month, one build at a time, 20-minute build timeout, 20,000 files per site, 25 MiB maximum file size, 100 projects per account, unlimited preview deployments, custom domains with TLS. | Pages Functions are billed on the Workers free plan, at 100,000 requests per day and 10 ms of CPU per request. A static SPA with a rewrite uses none of that, but a reverse proxy would, and it is the reason this host has no native `/api` proxy. Concurrent builds are limited to one. | **Recommended** |
-| **Vercel Hobby** | 100 GB of fast data transfer per month, 1 million edge requests, 1 million function invocations, 4 hours of active CPU, 6,000 build minutes, 200 projects, unlimited deployments, 45-minute build timeout, 100 deployments per day. Vite is detected automatically. | The plan's fair-use guidelines restrict it to **personal, non-commercial** use, which is the clause to keep in mind (assumption 10). Transfer and function invocations are metered, so a viral week stops the site rather than billing it. Vercel Functions time out at 60 seconds, which is irrelevant here but fatal for an SSE proxy. | Viable fallback |
-| **Netlify Free** | 300 credits per month, with a production deploy at 15 credits and bandwidth at 20 credits per GB. One concurrent build, unlimited deploy previews, custom domains with SSL. | Since the April 2026 change Netlify bills in credits rather than in bandwidth and build minutes, so the effective bandwidth is roughly 15 GB per month *after* the deploys have been paid for, and it moves with the number of deploys. The cap is hard: no overage, no auto-recharge, and the site is suspended for the rest of the calendar month when it runs out. Accounts created before September 2025 keep the older 100 GB and 300 build minutes. | Not recommended |
+| Platform             | Free offer                                                                                                                                                                                                                                                          | Known limits                                                                                                                                                                                                                                                                                                                                                                                                                                              | Verdict         |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------- |
+| **Cloudflare Pages** | Static hosting with **unmetered bandwidth**. 500 builds per month, one build at a time, 20-minute build timeout, 20,000 files per site, 25 MiB maximum file size, 100 projects per account, unlimited preview deployments, custom domains with TLS.                 | Pages Functions are billed on the Workers free plan, at 100,000 requests per day and 10 ms of CPU per request. A static SPA with a rewrite uses none of that, but a reverse proxy would, and it is the reason this host has no native `/api` proxy. Concurrent builds are limited to one.                                                                                                                                                                 | **Recommended** |
+| **Vercel Hobby**     | 100 GB of fast data transfer per month, 1 million edge requests, 1 million function invocations, 4 hours of active CPU, 6,000 build minutes, 200 projects, unlimited deployments, 45-minute build timeout, 100 deployments per day. Vite is detected automatically. | The plan's fair-use guidelines restrict it to **personal, non-commercial** use, which is the clause to keep in mind (assumption 10). Transfer and function invocations are metered, so a viral week stops the site rather than billing it. Vercel Functions time out at 60 seconds, which is irrelevant here but fatal for an SSE proxy.                                                                                                                  | Viable fallback |
+| **Netlify Free**     | 300 credits per month, with a production deploy at 15 credits and bandwidth at 20 credits per GB. One concurrent build, unlimited deploy previews, custom domains with SSL.                                                                                         | Since the April 2026 change Netlify bills in credits rather than in bandwidth and build minutes, so the effective bandwidth is roughly 15 GB per month _after_ the deploys have been paid for, and it moves with the number of deploys. The cap is hard: no overage, no auto-recharge, and the site is suspended for the rest of the calendar month when it runs out. Accounts created before September 2025 keep the older 100 GB and 300 build minutes. | Not recommended |
 
 ### The deciding factor
 
@@ -339,21 +339,21 @@ What separates them is what happens on a spike. Cloudflare Pages does not meter 
 
 All three need the same rule, because the app uses `BrowserRouter`: a request for an unknown path must return `index.html` rather than a 404.
 
-| Platform | Mechanism |
-|---|---|
-| Cloudflare Pages | A `_redirects` file with `/*  /index.html  200` |
-| Vercel | Framework detection for Vite, or a `rewrites` rule in `vercel.json` that excludes `/assets` |
-| Netlify | A `[[redirects]]` block in `netlify.toml` with `from = "/*"`, `to = "/index.html"`, `status = 200` |
+| Platform         | Mechanism                                                                                          |
+| ---------------- | -------------------------------------------------------------------------------------------------- |
+| Cloudflare Pages | A `_redirects` file with `/*  /index.html  200`                                                    |
+| Vercel           | Framework detection for Vite, or a `rewrites` rule in `vercel.json` that excludes `/assets`        |
+| Netlify          | A `[[redirects]]` block in `netlify.toml` with `from = "/*"`, `to = "/index.html"`, `status = 200` |
 
 Without it, a shared link to `/chat` returns 404 while the app works perfectly from the root. This is the single most common deployment mistake for this stack, and it is why P5.1 lists a deep link as an acceptance criterion.
 
 ### Environment variables
 
-| Platform | How |
-|---|---|
+| Platform         | How                                                                          |
+| ---------------- | ---------------------------------------------------------------------------- |
 | Cloudflare Pages | Project settings, per environment: production and preview are set separately |
-| Vercel | Project settings, per environment, with per-branch overrides |
-| Netlify | Site configuration, per context |
+| Vercel           | Project settings, per environment, with per-branch overrides                 |
+| Netlify          | Site configuration, per context                                              |
 
 `VITE_*` values are inlined at build time, so every environment that needs a different `VITE_API_URL` is a separate build. The preview deployments of the two Git-based hosts therefore build with production values unless they are configured explicitly, which is a trap worth documenting in the README.
 

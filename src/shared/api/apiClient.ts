@@ -33,7 +33,7 @@ api.interceptors.request.use(
 
     return config;
   },
-  (error) => reject(error)
+  (error) => reject(error),
 );
 
 api.interceptors.response.use(
@@ -75,7 +75,7 @@ api.interceptors.response.use(
     }
 
     return reject(error);
-  }
+  },
 );
 
 export default api;

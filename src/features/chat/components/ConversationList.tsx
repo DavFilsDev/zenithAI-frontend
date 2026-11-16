@@ -60,30 +60,32 @@ export const ConversationList = ({
 
   if (isLoading) {
     return (
-      <div className="flex-1 flex items-center justify-center p-4">
-        <div className="animate-spin rounded-full h-6 w-6 border-2 border-transparent border-t-[rgb(var(--color-primary))]" />
+      <div className="flex flex-1 items-center justify-center p-4">
+        <div className="h-6 w-6 animate-spin rounded-full border-2 border-transparent border-t-[rgb(var(--color-primary))]" />
       </div>
     );
   }
 
   if (conversations.length === 0) {
     return (
-      <div className="flex-1 flex flex-col items-center justify-center p-4 text-center text-gray-400">
+      <div className="flex flex-1 flex-col items-center justify-center p-4 text-center text-gray-400">
         <FiMessageSquare size={32} className="mb-2 opacity-50" />
         <p className="text-sm">No conversations yet</p>
-        <p className="text-xs mt-1">Start a new chat to begin</p>
+        <p className="mt-1 text-xs">Start a new chat to begin</p>
       </div>
     );
   }
 
   return (
-    <div className="flex-1 flex flex-col overflow-hidden">
+    <div className="flex flex-1 flex-col overflow-hidden">
       <div className="flex-1 overflow-y-auto">
         {conversations.map((conversation) => (
           <div
             key={conversation.uuid}
-            className={`relative group p-3 mx-2 my-1 rounded-xl transition-all duration-200 ${
-              activeUuid === conversation.uuid ? 'bg-white/10' : 'hover:bg-white/10 dark:hover:bg-white/5'
+            className={`group relative mx-2 my-1 rounded-xl p-3 transition-all duration-200 ${
+              activeUuid === conversation.uuid
+                ? 'bg-white/10'
+                : 'hover:bg-white/10 dark:hover:bg-white/5'
             }`}
           >
             {editingUuid === conversation.uuid ? (
@@ -103,7 +105,7 @@ export const ConversationList = ({
                 <button
                   type="submit"
                   title="Save title"
-                  className="p-1.5 rounded-lg hover:bg-white/10"
+                  className="rounded-lg p-1.5 hover:bg-white/10"
                 >
                   <FiCheck size={14} />
                 </button>
@@ -111,7 +113,7 @@ export const ConversationList = ({
                   type="button"
                   onClick={cancelEditing}
                   title="Cancel rename"
-                  className="p-1.5 rounded-lg hover:bg-white/10"
+                  className="rounded-lg p-1.5 hover:bg-white/10"
                 >
                   <FiX size={14} />
                 </button>
@@ -123,21 +125,21 @@ export const ConversationList = ({
                   onClick={() => onSelect(conversation.uuid)}
                   className="w-full text-left"
                 >
-                  <div className="font-medium truncate pr-16">
+                  <div className="truncate pr-16 font-medium">
                     {conversation.title || 'New Conversation'}
                   </div>
-                  <div className="text-xs text-gray-400 mt-1">
+                  <div className="mt-1 text-xs text-gray-400">
                     {formatDistanceToNow(new Date(conversation.updated_at), {
                       addSuffix: true,
                     })}
                   </div>
                 </button>
-                <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition">
+                <div className="absolute top-1/2 right-2 flex -translate-y-1/2 items-center gap-1 opacity-0 transition group-hover:opacity-100">
                   <button
                     type="button"
                     onClick={() => startEditing(conversation)}
                     title="Rename conversation"
-                    className="p-1.5 rounded-lg hover:bg-white/10 hover:text-[rgb(var(--color-primary))]"
+                    className="rounded-lg p-1.5 hover:bg-white/10 hover:text-[rgb(var(--color-primary))]"
                   >
                     <FiEdit2 size={14} />
                   </button>
@@ -145,7 +147,7 @@ export const ConversationList = ({
                     type="button"
                     onClick={() => onDelete(conversation.uuid)}
                     title="Delete conversation"
-                    className="p-1.5 rounded-lg hover:bg-white/10 hover:text-red-500"
+                    className="rounded-lg p-1.5 hover:bg-white/10 hover:text-red-500"
                   >
                     <FiTrash2 size={14} />
                   </button>

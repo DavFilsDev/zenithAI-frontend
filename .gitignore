@@ -10,12 +10,17 @@ lerna-debug.log*
 node_modules
 dist
 dist-ssr
+coverage
+playwright-report
+test-results
 *.local
+.husky/_
 
 # Local environment files
 .env
 .env.*
 !.env.example
+!.env.test
 
 # Editor directories and files
 .vscode/*
