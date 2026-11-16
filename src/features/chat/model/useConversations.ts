@@ -1,9 +1,4 @@
-import {
-  keepPreviousData,
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from '@tanstack/react-query';
+import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { conversationsApi } from '../api/conversationsApi';
 import { conversationKeys } from '../api/queryKeys';
 import { useChatUiStore } from './chatUiStore';
@@ -29,7 +24,7 @@ export const useRenameConversation = () => {
     onSuccess: (conversation) => {
       queryClient.setQueryData<ConversationDetail>(
         conversationKeys.detail(conversation.uuid),
-        (current) => (current ? { ...current, ...conversation } : current)
+        (current) => (current ? { ...current, ...conversation } : current),
       );
       void queryClient.invalidateQueries({ queryKey: conversationKeys.all });
       void queryClient.invalidateQueries({ queryKey: conversationKeys.detail(conversation.uuid) });
