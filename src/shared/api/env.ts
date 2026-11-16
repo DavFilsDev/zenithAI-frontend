@@ -1,5 +1,7 @@
 import { z } from 'zod';
 
+z.config({ jitless: true });
+
 const envSchema = z.object({
   VITE_API_URL: z.url(),
   VITE_APP_NAME: z.string().min(1),
