@@ -65,7 +65,7 @@ export const streamMessage = async (
 ): Promise<void> => {
   let response = await postStream(conversationUuid, content, signal);
 
-  if (response.status === 401 && tokenManager.hasValidTokens()) {
+  if (response.status === 401 && tokenManager.hasRefreshToken()) {
     try {
       await refreshAccessToken();
     } catch (error) {

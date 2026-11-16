@@ -15,7 +15,7 @@ export interface SessionState {
 
 export const useSessionStore = create<SessionState>((set) => ({
   user: userCache.read(),
-  status: tokenManager.hasValidTokens() ? 'loading' : 'anonymous',
+  status: tokenManager.hasRefreshToken() ? 'loading' : 'anonymous',
   setUser: (user) => {
     if (user) {
       userCache.write(user);

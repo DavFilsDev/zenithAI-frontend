@@ -83,6 +83,11 @@ export const mockApi = async (page: Page, options: MockApiOptions = {}): Promise
       return;
     }
 
+    if (method === 'POST' && scope === 'auth' && resource === 'token' && uuid === 'refresh') {
+      await json(route, { access: 'access-token', refresh: 'refresh-token' });
+      return;
+    }
+
     if (method === 'POST' && scope === 'auth' && resource === 'token') {
       await json(route, {
         access: 'access-token',
@@ -95,6 +100,15 @@ export const mockApi = async (page: Page, options: MockApiOptions = {}): Promise
     }
 
     if (method === 'GET' && scope === 'auth' && resource === 'profile') {
+      if (request.headers()['authorization'] !== 'Bearer access-token') {
+        await json(
+          route,
+          { error: { code: 'unauthorized', message: 'Authentication required.' } },
+          401,
+        );
+        return;
+      }
+
       await json(route, user);
       return;
     }

@@ -65,15 +65,37 @@ describe('apiClient', () => {
     const refresh = vi.fn();
     tokenManager.setTokens('access-token', 'refresh-token');
     server.use(
-      http.get(`${baseUrl}/auth/profile/`, unauthorized),
+      http.post(`${baseUrl}/auth/logout/`, unauthorized),
       http.post(refreshUrl, () => {
         refresh();
         return HttpResponse.json({ access: 'new-access' });
       }),
     );
 
-    await expect(api.get('/auth/profile/')).rejects.toMatchObject({ status: 401 });
+    await expect(api.post('/auth/logout/', { refresh: 'refresh-token' })).rejects.toMatchObject({
+      status: 401,
+    });
     expect(refresh).not.toHaveBeenCalled();
+  });
+
+  it('refreshes the profile after a reload when only the refresh token remains', async () => {
+    let attempts = 0;
+    tokenManager.setTokens('', 'refresh-token');
+    server.use(
+      http.get(`${baseUrl}/auth/profile/`, ({ request }) => {
+        attempts += 1;
+        return request.headers.get('authorization')
+          ? HttpResponse.json({ id: 1, email: 'ada@example.com', username: 'ada' })
+          : unauthorized();
+      }),
+      http.post(refreshUrl, () => HttpResponse.json({ access: 'new-access' })),
+    );
+
+    await expect(api.get('/auth/profile/')).resolves.toMatchObject({
+      data: { email: 'ada@example.com' },
+    });
+    expect(attempts).toBe(2);
+    expect(tokenManager.getAccessToken()).toBe('new-access');
   });
 
   it('ends the session when a refresh is rejected', async () => {

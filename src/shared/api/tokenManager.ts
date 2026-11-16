@@ -1,28 +1,27 @@
-const TOKEN_KEYS = {
-  ACCESS: 'accessToken',
-  REFRESH: 'refreshToken',
-} as const;
+const REFRESH_TOKEN_KEY = 'refreshToken';
+
+let accessToken: string | null = null;
 
 export const tokenManager = {
   getAccessToken(): string | null {
-    return localStorage.getItem(TOKEN_KEYS.ACCESS);
+    return accessToken;
   },
 
   getRefreshToken(): string | null {
-    return localStorage.getItem(TOKEN_KEYS.REFRESH);
+    return sessionStorage.getItem(REFRESH_TOKEN_KEY);
   },
 
   setTokens(access: string, refresh: string): void {
-    localStorage.setItem(TOKEN_KEYS.ACCESS, access);
-    localStorage.setItem(TOKEN_KEYS.REFRESH, refresh);
+    accessToken = access;
+    sessionStorage.setItem(REFRESH_TOKEN_KEY, refresh);
   },
 
   clearTokens(): void {
-    localStorage.removeItem(TOKEN_KEYS.ACCESS);
-    localStorage.removeItem(TOKEN_KEYS.REFRESH);
+    accessToken = null;
+    sessionStorage.removeItem(REFRESH_TOKEN_KEY);
   },
 
-  hasValidTokens(): boolean {
-    return !!this.getAccessToken() && !!this.getRefreshToken();
+  hasRefreshToken(): boolean {
+    return Boolean(this.getRefreshToken());
   },
 };

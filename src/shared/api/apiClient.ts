@@ -56,7 +56,7 @@ api.interceptors.response.use(
       return reject(error);
     }
 
-    if (error.response?.status === 401 && tokenManager.hasValidTokens()) {
+    if (error.response?.status === 401 && tokenManager.hasRefreshToken()) {
       originalRequest._retry = true;
 
       try {
