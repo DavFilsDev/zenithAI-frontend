@@ -110,7 +110,8 @@ export class ApiError extends Error {
     const envelope = envelopeFrom(body);
     const details = envelope && isRecord(envelope.details) ? envelope.details : null;
     const retryAfterHeader: unknown = error.response?.headers?.['retry-after'];
-    const retryAfter = typeof retryAfterHeader === 'string' ? parseRetryAfter(retryAfterHeader) : null;
+    const retryAfter =
+      typeof retryAfterHeader === 'string' ? parseRetryAfter(retryAfterHeader) : null;
 
     return new ApiError(envelope?.message ?? messageFrom(status, body, error.message), status, {
       code: envelope?.code ?? codeFor(status),
@@ -125,7 +126,9 @@ export class ApiError extends Error {
     let body: unknown = null;
 
     try {
-      body = contentType.includes('application/json') ? await response.json() : await response.text();
+      body = contentType.includes('application/json')
+        ? await response.json()
+        : await response.text();
     } catch {
       body = null;
     }
