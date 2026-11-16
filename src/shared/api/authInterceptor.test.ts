@@ -11,8 +11,8 @@ describe('shouldSkipRefresh', () => {
   it('skips auth endpoints and allows API endpoints', () => {
     expect(shouldSkipRefresh('/auth/token/')).toBe(true);
     expect(shouldSkipRefresh('/auth/register/')).toBe(true);
-    expect(shouldSkipRefresh('/auth/profile/')).toBe(true);
     expect(shouldSkipRefresh('/auth/logout/')).toBe(true);
+    expect(shouldSkipRefresh('/auth/profile/')).toBe(false);
     expect(shouldSkipRefresh('/chat/conversations/')).toBe(false);
     expect(shouldSkipRefresh()).toBe(false);
   });

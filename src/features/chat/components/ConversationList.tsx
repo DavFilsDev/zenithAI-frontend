@@ -60,16 +60,23 @@ export const ConversationList = ({
 
   if (isLoading) {
     return (
-      <div className="flex flex-1 items-center justify-center p-4">
-        <div className="h-6 w-6 animate-spin rounded-full border-2 border-transparent border-t-[rgb(var(--color-primary))]" />
+      <div role="status" className="flex flex-1 items-center justify-center p-4">
+        <div
+          aria-hidden="true"
+          className="h-6 w-6 animate-spin rounded-full border-2 border-transparent border-t-[rgb(var(--color-primary))]"
+        />
+        <span className="sr-only">Loading conversations</span>
       </div>
     );
   }
 
   if (conversations.length === 0) {
     return (
-      <div className="flex flex-1 flex-col items-center justify-center p-4 text-center text-gray-400">
-        <FiMessageSquare size={32} className="mb-2 opacity-50" />
+      <div
+        role="status"
+        className="flex flex-1 flex-col items-center justify-center p-4 text-center text-gray-400"
+      >
+        <FiMessageSquare size={32} className="mb-2 opacity-50" aria-hidden="true" />
         <p className="text-sm">No conversations yet</p>
         <p className="mt-1 text-xs">Start a new chat to begin</p>
       </div>
@@ -78,87 +85,99 @@ export const ConversationList = ({
 
   return (
     <div className="flex flex-1 flex-col overflow-hidden">
-      <div className="flex-1 overflow-y-auto">
-        {conversations.map((conversation) => (
-          <div
-            key={conversation.uuid}
-            className={`group relative mx-2 my-1 rounded-xl p-3 transition-all duration-200 ${
-              activeUuid === conversation.uuid
-                ? 'bg-white/10'
-                : 'hover:bg-white/10 dark:hover:bg-white/5'
-            }`}
-          >
-            {editingUuid === conversation.uuid ? (
-              <form
-                onSubmit={(event) => {
-                  event.preventDefault();
-                  saveTitle(conversation.uuid);
-                }}
-                className="flex items-center gap-1"
-              >
-                <input
-                  ref={titleInputRef}
-                  value={title}
-                  onChange={(event) => setTitle(event.target.value)}
-                  className="min-w-0 flex-1 rounded-lg border border-white/20 bg-white/10 px-2 py-1 text-sm outline-none focus:border-[rgb(var(--color-primary))]"
-                />
-                <button
-                  type="submit"
-                  title="Save title"
-                  className="rounded-lg p-1.5 hover:bg-white/10"
-                >
-                  <FiCheck size={14} />
-                </button>
-                <button
-                  type="button"
-                  onClick={cancelEditing}
-                  title="Cancel rename"
-                  className="rounded-lg p-1.5 hover:bg-white/10"
-                >
-                  <FiX size={14} />
-                </button>
-              </form>
-            ) : (
-              <>
-                <button
-                  type="button"
-                  onClick={() => onSelect(conversation.uuid)}
-                  className="w-full text-left"
-                >
-                  <div className="truncate pr-16 font-medium">
-                    {conversation.title || 'New Conversation'}
-                  </div>
-                  <div className="mt-1 text-xs text-gray-400">
-                    {formatDistanceToNow(new Date(conversation.updated_at), {
-                      addSuffix: true,
-                    })}
-                  </div>
-                </button>
-                <div className="absolute top-1/2 right-2 flex -translate-y-1/2 items-center gap-1 opacity-0 transition group-hover:opacity-100">
-                  <button
-                    type="button"
-                    onClick={() => startEditing(conversation)}
-                    title="Rename conversation"
-                    className="rounded-lg p-1.5 hover:bg-white/10 hover:text-[rgb(var(--color-primary))]"
-                  >
-                    <FiEdit2 size={14} />
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => onDelete(conversation.uuid)}
-                    title="Delete conversation"
-                    className="rounded-lg p-1.5 hover:bg-white/10 hover:text-red-500"
-                  >
-                    <FiTrash2 size={14} />
-                  </button>
-                </div>
-              </>
-            )}
-          </div>
-        ))}
-      </div>
+      <ul aria-label="Conversations" className="flex-1 overflow-y-auto">
+        {conversations.map((conversation) => {
+          const conversationTitle = conversation.title || 'New Conversation';
 
-      <div className="flex items-center justify-between border-t border-white/10 px-3 py-2 text-xs">
+          return (
+            <li
+              key={conversation.uuid}
+              className={`group relative mx-2 my-1 rounded-xl p-3 transition-all duration-200 ${
+                activeUuid === conversation.uuid
+                  ? 'bg-white/10'
+                  : 'hover:bg-white/10 dark:hover:bg-white/5'
+              }`}
+            >
+              {editingUuid === conversation.uuid ? (
+                <form
+                  onSubmit={(event) => {
+                    event.preventDefault();
+                    saveTitle(conversation.uuid);
+                  }}
+                  className="flex items-center gap-1"
+                >
+                  <input
+                    ref={titleInputRef}
+                    aria-label="Conversation title"
+                    value={title}
+                    onChange={(event) => setTitle(event.target.value)}
+                    className="min-w-0 flex-1 rounded-lg border border-white/20 bg-white/10 px-2 py-1 text-sm outline-none focus:border-[rgb(var(--color-primary))]"
+                  />
+                  <button
+                    type="submit"
+                    title="Save title"
+                    aria-label="Save title"
+                    className="rounded-lg p-1.5 hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-[rgb(var(--color-primary))] focus-visible:outline-none"
+                  >
+                    <FiCheck size={14} aria-hidden="true" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={cancelEditing}
+                    title="Cancel rename"
+                    aria-label="Cancel rename"
+                    className="rounded-lg p-1.5 hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-[rgb(var(--color-primary))] focus-visible:outline-none"
+                  >
+                    <FiX size={14} aria-hidden="true" />
+                  </button>
+                </form>
+              ) : (
+                <>
+                  <button
+                    type="button"
+                    onClick={() => onSelect(conversation.uuid)}
+                    aria-current={activeUuid === conversation.uuid ? 'page' : undefined}
+                    aria-label={`Open ${conversationTitle}`}
+                    className="w-full rounded-lg text-left focus-visible:ring-2 focus-visible:ring-[rgb(var(--color-primary))] focus-visible:outline-none"
+                  >
+                    <div className="truncate pr-16 font-medium">{conversationTitle}</div>
+                    <div className="mt-1 text-xs text-gray-400">
+                      {formatDistanceToNow(new Date(conversation.updated_at), {
+                        addSuffix: true,
+                      })}
+                    </div>
+                  </button>
+                  <div className="absolute top-1/2 right-2 flex -translate-y-1/2 items-center gap-1 opacity-0 transition group-focus-within:opacity-100 group-hover:opacity-100">
+                    <button
+                      type="button"
+                      onClick={() => startEditing(conversation)}
+                      title="Rename conversation"
+                      aria-label={`Rename ${conversationTitle}`}
+                      className="rounded-lg p-1.5 hover:bg-white/10 hover:text-[rgb(var(--color-primary))] focus-visible:ring-2 focus-visible:ring-[rgb(var(--color-primary))] focus-visible:outline-none"
+                    >
+                      <FiEdit2 size={14} aria-hidden="true" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => onDelete(conversation.uuid)}
+                      title="Delete conversation"
+                      aria-label={`Delete ${conversationTitle}`}
+                      className="rounded-lg p-1.5 hover:bg-white/10 hover:text-red-500 focus-visible:ring-2 focus-visible:ring-red-400 focus-visible:outline-none"
+                    >
+                      <FiTrash2 size={14} aria-hidden="true" />
+                    </button>
+                  </div>
+                </>
+              )}
+            </li>
+          );
+        })}
+      </ul>
+
+      <nav
+        aria-label="Conversation pages"
+        className="flex items-center justify-between border-t border-white/10 px-3 py-2 text-xs"
+      >
         <button
           type="button"
           disabled={!hasPrevious}
@@ -176,7 +195,7 @@ export const ConversationList = ({
         >
           Next
         </button>
-      </div>
+      </nav>
     </div>
   );
 };

@@ -56,6 +56,12 @@ describe('useProfileQuery', () => {
           { status: 401 },
         ),
       ),
+      http.post(`${baseUrl}/auth/token/refresh/`, () =>
+        HttpResponse.json(
+          { error: { code: 'unauthorized', message: 'Refresh expired.' } },
+          { status: 401 },
+        ),
+      ),
     );
 
     const { result } = renderHookWithProviders(() => useProfileQuery());

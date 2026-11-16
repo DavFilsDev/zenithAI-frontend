@@ -13,6 +13,26 @@ test.describe('chat journeys', () => {
     await expect(page).toHaveURL(/\/chat\/conversation-1$/);
   });
 
+  test('restores the session after a reload without persisting the access token', async ({
+    page,
+  }) => {
+    await mockApi(page);
+    await signIn(page);
+
+    const storage = await page.evaluate(() => ({
+      access: localStorage.getItem('accessToken'),
+      refresh: sessionStorage.getItem('refreshToken'),
+    }));
+
+    expect(storage.access).toBeNull();
+    expect(storage.refresh).toBe('refresh-token');
+
+    await page.reload();
+
+    await expect(page).toHaveURL(/\/chat$/);
+    await expect(page.getByRole('textbox', { name: 'Message' })).toBeVisible();
+  });
+
   test('keeps the draft when the stream is rate limited', async ({ page }) => {
     await mockApi(page, { stream: 'rate-limit' });
     await signIn(page);

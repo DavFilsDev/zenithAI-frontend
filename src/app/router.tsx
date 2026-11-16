@@ -2,10 +2,13 @@ import { lazy, Suspense } from 'react';
 import { Navigate, Outlet, Route, Routes } from 'react-router-dom';
 import { Spinner } from '../shared/ui/Spinner';
 import { useSessionStore } from '../shared/auth/sessionStore';
-import { ChatShell } from './ChatShell';
 
 const HomePage = lazy(() =>
   import('../features/home/pages/HomePage').then((module) => ({ default: module.HomePage })),
+);
+
+const ChatShell = lazy(() =>
+  import('./ChatShell').then((module) => ({ default: module.ChatShell })),
 );
 
 const LoginPage = lazy(() =>

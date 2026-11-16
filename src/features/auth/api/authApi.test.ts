@@ -94,7 +94,8 @@ describe('authApi', () => {
   });
 
   it('clears local state without a refresh token', async () => {
-    localStorage.setItem('accessToken', 'access-token');
+    tokenManager.setTokens('access-token', 'refresh-token');
+    sessionStorage.removeItem('refreshToken');
     userCache.write(user);
 
     await authApi.logout();

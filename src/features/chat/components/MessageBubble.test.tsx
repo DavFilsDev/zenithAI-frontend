@@ -66,4 +66,40 @@ describe('MessageBubble', () => {
     expect(screen.queryByTitle('Copy message')).not.toBeInTheDocument();
     expect(screen.queryByText(/\d{2}:\d{2}/)).not.toBeInTheDocument();
   });
+
+  it('renders GFM tables and highlights fenced code', () => {
+    const { container } = render(
+      <MessageBubble
+        message={{
+          ...assistantMessage,
+          content: '| Name | Value |\n| --- | --- |\n| one | 1 |\n\n```js\nconst value = 1;\n```',
+        }}
+      />,
+    );
+
+    expect(screen.getByRole('table')).toBeInTheDocument();
+    expect(screen.getByRole('cell', { name: 'one' })).toBeInTheDocument();
+    expect(container.querySelector('pre code.hljs')).toHaveTextContent('const value = 1;');
+  });
+
+  it('sanitizes raw HTML and neutralises unsafe link protocols', () => {
+    const { container } = render(
+      <MessageBubble
+        message={{
+          ...assistantMessage,
+          content:
+            '<script>alert(1)</script>\n\n<img src=x onerror=alert(1)>\n\n[safe](https://example.com) [unsafe](javascript:alert)',
+        }}
+      />,
+    );
+
+    expect(container.querySelector('script')).not.toBeInTheDocument();
+    expect(container.querySelector('img')).not.toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'safe' })).toHaveAttribute(
+      'href',
+      'https://example.com',
+    );
+    expect(screen.queryByRole('link', { name: 'unsafe' })).not.toBeInTheDocument();
+    expect(container.innerHTML).not.toContain('href="javascript');
+  });
 });

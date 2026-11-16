@@ -53,7 +53,7 @@ export const Input = ({
         )}
       </div>
       {error && (
-        <p id={errorId} className="text-sm text-red-400">
+        <p id={errorId} role="alert" className="text-sm text-red-400">
           {error}
         </p>
       )}

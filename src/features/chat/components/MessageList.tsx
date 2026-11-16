@@ -20,7 +20,7 @@ export const MessageList = ({ messages, isLoading, isSending }: MessageListProps
 
   if (messages.length === 0 && !isLoading) {
     return (
-      <div className="flex flex-1 items-center justify-center p-8">
+      <div role="status" className="flex flex-1 items-center justify-center p-8">
         <div className="text-center text-[rgb(var(--color-text))] opacity-60">
           <p className="mb-2 text-lg">No messages yet</p>
           <p className="text-sm">Start a conversation by sending a message below!</p>
@@ -30,15 +30,22 @@ export const MessageList = ({ messages, isLoading, isSending }: MessageListProps
   }
 
   return (
-    <div className="flex-1 space-y-4 overflow-y-auto p-4">
+    <div
+      role="log"
+      aria-label="Conversation messages"
+      aria-live="polite"
+      aria-relevant="additions text"
+      aria-busy={isSending || undefined}
+      className="flex-1 space-y-4 overflow-y-auto p-4"
+    >
       {messages.map((message) => (
         <MessageBubble key={message.uuid} message={message} />
       ))}
 
       {showTyping && (
         <div className="mb-4 flex justify-start">
-          <div className="rounded-xl bg-white/10 p-4 backdrop-blur-md">
-            <div className="flex space-x-2">
+          <div role="status" className="rounded-xl bg-white/10 p-4 backdrop-blur-md">
+            <div className="flex space-x-2" aria-hidden="true">
               <div
                 className="h-2 w-2 animate-bounce rounded-full bg-[rgb(var(--color-primary))]"
                 style={{ animationDelay: '0ms' }}
@@ -52,13 +59,18 @@ export const MessageList = ({ messages, isLoading, isSending }: MessageListProps
                 style={{ animationDelay: '300ms' }}
               />
             </div>
+            <span className="sr-only">Assistant is responding</span>
           </div>
         </div>
       )}
 
       {isLoading && (
-        <div className="flex justify-center p-4">
-          <div className="h-6 w-6 animate-spin rounded-full border-b-2 border-[rgb(var(--color-primary))]" />
+        <div role="status" className="flex justify-center p-4">
+          <div
+            aria-hidden="true"
+            className="h-6 w-6 animate-spin rounded-full border-b-2 border-[rgb(var(--color-primary))]"
+          />
+          <span className="sr-only">Loading messages</span>
         </div>
       )}
 

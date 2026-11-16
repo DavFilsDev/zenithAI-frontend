@@ -3,6 +3,7 @@ import { cleanup } from '@testing-library/react';
 import { afterAll, afterEach, beforeAll, vi } from 'vitest';
 import { server } from './msw/node';
 import api from '../shared/api/apiClient';
+import { tokenManager } from '../shared/api/tokenManager';
 import { useSessionStore } from '../shared/auth/sessionStore';
 import { useChatUiStore } from '../features/chat/model/chatUiStore';
 
@@ -31,6 +32,7 @@ afterEach(() => {
   server.resetHandlers();
   localStorage.clear();
   sessionStorage.clear();
+  tokenManager.clearTokens();
   useSessionStore.setState({ user: null, status: 'anonymous' });
   useChatUiStore.setState({ isSidebarOpen: true, draft: '', conversationPage: 1 });
 });

@@ -13,7 +13,7 @@ export const useProfileQuery = (enabled = true) => {
   return useQuery({
     queryKey: authKeys.profile,
     queryFn: () => authApi.getProfile(),
-    enabled: enabled && tokenManager.hasValidTokens(),
+    enabled: enabled && tokenManager.hasRefreshToken(),
     initialData: cachedUser ?? undefined,
     initialDataUpdatedAt: 0,
     staleTime: 30_000,

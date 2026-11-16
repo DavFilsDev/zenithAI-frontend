@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useSessionStore } from '../shared/auth/sessionStore';
 import { useLogout } from '../features/auth/model/useLogout';
 import { useUpdateProfile } from '../features/auth/model/useProfile';
@@ -11,6 +11,7 @@ export const ChatShell = () => {
   const logout = useLogout();
   const updateProfile = useUpdateProfile();
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const closeProfile = useCallback(() => setIsProfileOpen(false), []);
 
   return (
     <div className="flex h-screen overflow-hidden">
@@ -27,9 +28,8 @@ export const ChatShell = () => {
         <ChatPage />
       </div>
       <UserProfileModal
-        key={isProfileOpen ? 'open' : 'closed'}
         isOpen={isProfileOpen}
-        onClose={() => setIsProfileOpen(false)}
+        onClose={closeProfile}
         user={{
           email: user?.email ?? '',
           username: user?.username ?? '',

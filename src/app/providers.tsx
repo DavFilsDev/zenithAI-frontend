@@ -1,21 +1,31 @@
-import type { ReactNode } from 'react';
+import { lazy, Suspense, type ReactNode } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from 'react-hot-toast';
 import { ThemeProvider } from '../shared/ui/ThemeProvider';
-import { ApiError } from '../shared/api/apiError';
-import { ProfileBootstrap } from './ProfileBootstrap';
+import { tokenManager } from '../shared/api/tokenManager';
+import { useSessionStore } from '../shared/auth/sessionStore';
+
+const ProfileBootstrap = lazy(() =>
+  import('./ProfileBootstrap').then((module) => ({ default: module.ProfileBootstrap })),
+);
+
+const shouldRetryQuery = (failureCount: number, error: unknown): boolean => {
+  const status =
+    typeof error === 'object' && error !== null && 'status' in error ? Number(error.status) : null;
+
+  if (status !== null && [401, 403, 404, 429].includes(status)) {
+    return false;
+  }
+
+  return failureCount < 2;
+};
 
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       staleTime: 30_000,
       refetchOnWindowFocus: false,
-      retry: (failureCount, error) => {
-        if (error instanceof ApiError && [401, 403, 404, 429].includes(error.status)) {
-          return false;
-        }
-        return failureCount < 2;
-      },
+      retry: shouldRetryQuery,
     },
   },
 });
@@ -25,13 +35,20 @@ interface AppProvidersProps {
 }
 
 export const AppProviders = ({ children }: AppProvidersProps) => {
+  const status = useSessionStore((state) => state.status);
+  const shouldBootstrap = status !== 'anonymous' || tokenManager.hasRefreshToken();
+
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
-        <ProfileBootstrap>
-          {children}
-          <Toaster position="top-right" />
-        </ProfileBootstrap>
+        {shouldBootstrap ? (
+          <Suspense fallback={children}>
+            <ProfileBootstrap>{children}</ProfileBootstrap>
+          </Suspense>
+        ) : (
+          children
+        )}
+        <Toaster position="top-right" />
       </ThemeProvider>
     </QueryClientProvider>
   );

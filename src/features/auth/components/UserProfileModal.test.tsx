@@ -29,6 +29,48 @@ const renderModal = (isOpen = true) => {
 };
 
 describe('UserProfileModal', () => {
+  it('behaves as a dialog, closes on Escape, locks scroll, and restores focus', async () => {
+    const trigger = document.createElement('button');
+    trigger.textContent = 'Open profile';
+    document.body.appendChild(trigger);
+    trigger.focus();
+
+    const onClose = vi.fn();
+    const onUpdateProfile = vi.fn(() => Promise.resolve(user));
+    const { rerender } = render(
+      <UserProfileModal isOpen onClose={onClose} user={user} onUpdateProfile={onUpdateProfile} />,
+    );
+
+    expect(screen.getByRole('dialog', { name: 'Profile' })).toHaveAttribute('aria-modal', 'true');
+    const closeButton = screen.getByRole('button', { name: 'Close profile' });
+    const lastButton = screen.getByRole('button', { name: 'Update username' });
+    const userEventInstance = userEvent.setup();
+
+    expect(closeButton).toHaveFocus();
+    expect(document.body.style.overflow).toBe('hidden');
+
+    await userEventInstance.tab({ shift: true });
+    expect(lastButton).toHaveFocus();
+    await userEventInstance.tab();
+    expect(closeButton).toHaveFocus();
+
+    await userEventInstance.keyboard('{Escape}');
+    expect(onClose).toHaveBeenCalledTimes(1);
+
+    rerender(
+      <UserProfileModal
+        isOpen={false}
+        onClose={onClose}
+        user={user}
+        onUpdateProfile={onUpdateProfile}
+      />,
+    );
+
+    expect(trigger).toHaveFocus();
+    expect(document.body.style.overflow).toBe('');
+    trigger.remove();
+  });
+
   it('renders nothing when closed and closes from both close controls', async () => {
     const { onClose } = renderModal(false);
     expect(screen.queryByText('Profile')).not.toBeInTheDocument();
@@ -57,7 +99,7 @@ describe('UserProfileModal', () => {
     );
     const userEventInstance = userEvent.setup();
 
-    await userEventInstance.click(screen.getAllByRole('button', { name: 'Update' })[0]!);
+    await userEventInstance.click(screen.getByRole('button', { name: 'Update email' }));
     const emailInput = screen.getByLabelText('Email');
     await userEventInstance.clear(emailInput);
     await userEventInstance.type(emailInput, 'new@example.com');
@@ -79,14 +121,14 @@ describe('UserProfileModal', () => {
     const { onUpdateProfile } = renderModal();
     const userEventInstance = userEvent.setup();
 
-    await userEventInstance.click(screen.getAllByRole('button', { name: 'Update' })[1]!);
+    await userEventInstance.click(screen.getByRole('button', { name: 'Update username' }));
     await userEventInstance.type(screen.getByLabelText('Username'), 'grace');
     await userEventInstance.click(screen.getByRole('button', { name: 'Cancel' }));
 
     expect(screen.queryByLabelText('Username')).not.toBeInTheDocument();
     expect(screen.getByText('ada')).toBeInTheDocument();
 
-    await userEventInstance.click(screen.getAllByRole('button', { name: 'Update' })[1]!);
+    await userEventInstance.click(screen.getByRole('button', { name: 'Update username' }));
     await userEventInstance.clear(screen.getByLabelText('Username'));
     await userEventInstance.type(screen.getByLabelText('Username'), 'grace');
     await userEventInstance.click(screen.getByRole('button', { name: 'Save' }));
@@ -104,7 +146,7 @@ describe('UserProfileModal', () => {
     onUpdateProfile.mockRejectedValueOnce(
       new ApiError('Email unavailable', 400, { details: { email: ['Already used'] } }),
     );
-    await userEventInstance.click(screen.getAllByRole('button', { name: 'Update' })[0]!);
+    await userEventInstance.click(screen.getByRole('button', { name: 'Update email' }));
     await userEventInstance.click(screen.getByRole('button', { name: 'Save' }));
     expect(await screen.findByText('Already used')).toBeInTheDocument();
 
@@ -112,13 +154,13 @@ describe('UserProfileModal', () => {
     expect(screen.queryByText('Already used')).not.toBeInTheDocument();
 
     onUpdateProfile.mockRejectedValueOnce(new ApiError('Server unavailable', 500));
-    await userEventInstance.click(screen.getAllByRole('button', { name: 'Update' })[1]!);
+    await userEventInstance.click(screen.getByRole('button', { name: 'Update username' }));
     await userEventInstance.click(screen.getByRole('button', { name: 'Save' }));
     expect(await screen.findByText('Server unavailable')).toBeInTheDocument();
 
     await userEventInstance.click(screen.getByRole('button', { name: 'Cancel' }));
     onUpdateProfile.mockRejectedValueOnce(new Error('boom'));
-    await userEventInstance.click(screen.getAllByRole('button', { name: 'Update' })[1]!);
+    await userEventInstance.click(screen.getByRole('button', { name: 'Update username' }));
     await userEventInstance.click(screen.getByRole('button', { name: 'Save' }));
     expect(await screen.findByText('Failed to update username.')).toBeInTheDocument();
   });
