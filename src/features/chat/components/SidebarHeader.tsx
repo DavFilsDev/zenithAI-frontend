@@ -17,10 +17,12 @@ export const SidebarHeader = ({ isOpen, onToggle }: SidebarHeaderProps) => {
 
       <div className="relative">
         <button
+          type="button"
           onClick={onToggle}
           onMouseEnter={() => setShowTooltip(true)}
           onMouseLeave={() => setShowTooltip(false)}
           aria-label={isOpen ? 'Collapse sidebar' : 'Expand sidebar'}
+          aria-expanded={isOpen}
           className="rounded-lg p-2 transition-all duration-200 hover:bg-white/10"
         >
           <FiSidebar

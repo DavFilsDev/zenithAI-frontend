@@ -87,7 +87,9 @@ export const Sidebar = ({ user, onLogout, onOpenProfile }: SidebarProps) => {
 
   const newChatButton = (expanded: boolean) => (
     <button
+      type="button"
       onClick={handleNewChat}
+      aria-label="New chat"
       className={`group relative flex w-full items-center justify-center gap-2 overflow-hidden rounded-xl border-2 border-[rgb(var(--color-primary))] bg-[rgb(var(--color-primary))/12] py-2 text-[rgb(var(--color-primary))] backdrop-blur-sm transition-all duration-300 ease-out hover:scale-[1.02] hover:bg-[rgb(var(--color-primary))/20] hover:shadow-xl hover:shadow-[rgb(var(--color-primary))/30] active:scale-[0.98] ${expanded ? 'px-1 font-semibold' : 'px-2'} `}
       title="New Chat"
     >
@@ -112,10 +114,12 @@ export const Sidebar = ({ user, onLogout, onOpenProfile }: SidebarProps) => {
 
         <div className="relative mx-auto">
           <button
+            type="button"
             onClick={toggleSidebar}
             onMouseEnter={() => setShowTooltip(true)}
             onMouseLeave={() => setShowTooltip(false)}
             aria-label="Expand sidebar"
+            aria-expanded={false}
             className="mx-auto mt-2 rounded-lg p-2 transition-all duration-200 hover:bg-white/10"
           >
             <FiSidebar size={20} className="rotate-180" />

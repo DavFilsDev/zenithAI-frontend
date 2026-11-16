@@ -8,7 +8,10 @@ export const ThemeToggle = () => {
 
   return (
     <button
+      type="button"
       onClick={toggleTheme}
+      aria-label={`Switch to ${isDark ? 'light' : 'dark'} theme`}
+      aria-pressed={isDark}
       className="relative flex h-9 w-16 items-center justify-between rounded-full border border-gray-400 bg-red-200 p-1 backdrop-blur-md transition-all duration-300 dark:border-white/10 dark:bg-white/5"
     >
       <div
