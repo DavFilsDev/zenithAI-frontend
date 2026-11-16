@@ -65,8 +65,8 @@ export const RegisterPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[rgb(var(--color-bg))]">
-      <div className="max-w-md w-full p-8 space-y-6 bg-white/10 dark:bg-white/5 backdrop-blur-md border border-white/20 dark:border-white/10 rounded-2xl shadow-xl">
+    <div className="flex min-h-screen items-center justify-center bg-[rgb(var(--color-bg))]">
+      <div className="w-full max-w-md space-y-6 rounded-2xl border border-white/20 bg-white/10 p-8 shadow-xl backdrop-blur-md dark:border-white/10 dark:bg-white/5">
         <CardHeader phrase="Create your account and join the most advanced AI coding platform!" />
 
         <form
@@ -137,20 +137,11 @@ export const RegisterPage = () => {
             Sign Up
           </Button>
 
-          <p className="text-center text-sm opacity-70 mt-4">
+          <p className="mt-4 text-center text-sm opacity-70">
             Already have an account?{' '}
             <Link
               to="/login"
-              className="
-                font-medium
-                text-[rgb(var(--color-primary))]
-                relative
-                after:absolute after:left-0 after:-bottom-0.5
-                after:h-[1px] after:w-0
-                after:bg-[rgb(var(--color-primary))]
-                after:transition-all after:duration-300
-                hover:after:w-full
-              "
+              className="relative font-medium text-[rgb(var(--color-primary))] after:absolute after:-bottom-0.5 after:left-0 after:h-[1px] after:w-0 after:bg-[rgb(var(--color-primary))] after:transition-all after:duration-300 hover:after:w-full"
             >
               Login here
             </Link>

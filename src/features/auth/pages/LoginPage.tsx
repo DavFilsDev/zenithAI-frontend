@@ -45,8 +45,8 @@ export const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[rgb(var(--color-bg))] text-[rgb(var(--color-text))] px-4">
-      <div className="max-w-md w-full p-8 space-y-6 bg-white/10 dark:bg-white/5 backdrop-blur-md border border-white/20 dark:border-white/10 rounded-2xl shadow-xl">
+    <div className="flex min-h-screen items-center justify-center bg-[rgb(var(--color-bg))] px-4 text-[rgb(var(--color-text))]">
+      <div className="w-full max-w-md space-y-6 rounded-2xl border border-white/20 bg-white/10 p-8 shadow-xl backdrop-blur-md dark:border-white/10 dark:bg-white/5">
         <CardHeader phrase="Welcome back to your smart coding companion!" />
 
         <form
@@ -85,16 +85,7 @@ export const LoginPage = () => {
             Don’t have an account?{' '}
             <Link
               to="/register"
-              className="
-                font-medium
-                text-[rgb(var(--color-primary))]
-                relative
-                after:absolute after:left-0 after:-bottom-0.5
-                after:h-[1px] after:w-0
-                after:bg-[rgb(var(--color-primary))]
-                after:transition-all after:duration-300
-                hover:after:w-full
-              "
+              className="relative font-medium text-[rgb(var(--color-primary))] after:absolute after:-bottom-0.5 after:left-0 after:h-[1px] after:w-0 after:bg-[rgb(var(--color-primary))] after:transition-all after:duration-300 hover:after:w-full"
             >
               Create one
             </Link>
