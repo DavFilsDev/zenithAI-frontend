@@ -239,16 +239,16 @@ Make the strict settings real, and add the tests that were never there.
 
 ### P4 — Security and accessibility
 
-- [ ] **P4.1** Keep raw HTML off, add `rehype-sanitize`, and filter link protocols, so the markdown path stays safe if raw HTML is ever enabled. — _S_ — `rehype-sanitize` is in the pipeline and a `javascript:` link is neutralised. — Depends on: —
-- [ ] **P4.2** Add `remark-gfm` and a syntax highlighter, and map the `code` and `pre` components. — _M_ — a table renders as a table and a fenced block is highlighted. — Depends on: —
-- [ ] **P4.3** Move the access token to memory and the refresh token to `sessionStorage`, following section 4 below. — _M_ — no token is readable from `localStorage`, and a reload inside the tab keeps the session while the tab closing ends it. — Depends on: P1.2.
-- [ ] **P4.4** Add a Content Security Policy, as a `<meta>` tag for the static hosts and a real header where the host allows it. — _M_ — inline script execution is blocked in the deployed app, and the streaming path still works. — Depends on: —
-- [ ] **P4.5** Make the whole app keyboard reachable: the conversation rows become buttons, the dropdowns take `aria-expanded` and close on `Escape`, every icon-only control gets an accessible name. — _M_ — the application is fully navigable with `Tab` alone, including chat history. — Depends on: —
-- [ ] **P4.6** Give the modal real dialog semantics: `role="dialog"`, `aria-modal`, a labelled title, a focus trap, `Escape` to close, focus restored to the trigger, and a scroll lock. Mount it once. — _M_ — focus never escapes the modal, and it returns to the button that opened it. — Depends on: —
-- [ ] **P4.7** Label every field, and link its error with `aria-describedby`; announce errors and the loading states with `aria-live`. — _M_ — a screen reader announces a validation error and the streaming answer as they arrive. — Depends on: —
-- [ ] **P4.8** Respect `prefers-reduced-motion` and add a route-level `Suspense` and an `ErrorBoundary`. — _M_ — animation is off under reduced motion, and a render crash shows a recoverable screen instead of a blank one. — Depends on: —
-- [ ] **P4.9** Fix the broken links: add a `*` catch-all, correct the swapped `/privacy` and `/terms` labels, drop the `<a href>` router navigation, and add a favicon. — _S_ — no link in the app leads to a dead route, and a full page load no longer happens on internal navigation. — Depends on: —
-- [ ] **P4.10** Lazy-load every route, and bring Lighthouse to 90 or better on performance, accessibility and best practices. — _M_ — the initial bundle carries the router only, and the Lighthouse scores are at or above 90. — Depends on: P2.8, P4.5.
+- [x] **P4.1** Keep raw HTML off, add `rehype-sanitize`, and filter link protocols, so the markdown path stays safe if raw HTML is ever enabled. — _S_ — `rehype-sanitize` is in the pipeline and a `javascript:` link is neutralised. — Depends on: —
+- [x] **P4.2** Add `remark-gfm` and a syntax highlighter, and map the `code` and `pre` components. — _M_ — a table renders as a table and a fenced block is highlighted. — Depends on: —
+- [x] **P4.3** Move the access token to memory and the refresh token to `sessionStorage`, following section 4 below. — _M_ — no token is readable from `localStorage`, and a reload inside the tab keeps the session while the tab closing ends it. — Depends on: P1.2.
+- [x] **P4.4** Add a Content Security Policy, as a `<meta>` tag for the static hosts and a real header where the host allows it. — _M_ — inline script execution is blocked in the deployed app, and the streaming path still works. — Depends on: —
+- [x] **P4.5** Make the whole app keyboard reachable: the conversation rows become buttons, the dropdowns take `aria-expanded` and close on `Escape`, every icon-only control gets an accessible name. — _M_ — the application is fully navigable with `Tab` alone, including chat history. — Depends on: —
+- [x] **P4.6** Give the modal real dialog semantics: `role="dialog"`, `aria-modal`, a labelled title, a focus trap, `Escape` to close, focus restored to the trigger, and a scroll lock. Mount it once. — _M_ — focus never escapes the modal, and it returns to the button that opened it. — Depends on: —
+- [x] **P4.7** Label every field, and link its error with `aria-describedby`; announce errors and the loading states with `aria-live`. — _M_ — a screen reader announces a validation error and the streaming answer as they arrive. — Depends on: —
+- [x] **P4.8** Respect `prefers-reduced-motion` and add a route-level `Suspense` and an `ErrorBoundary`. — _M_ — animation is off under reduced motion, and a render crash shows a recoverable screen instead of a blank one. — Depends on: —
+- [x] **P4.9** Fix the broken links: add a `*` catch-all, correct the swapped `/privacy` and `/terms` labels, drop the `<a href>` router navigation, and add a favicon. — _S_ — no link in the app leads to a dead route, and a full page load no longer happens on internal navigation. — Depends on: —
+- [x] **P4.10** Lazy-load every route, and bring Lighthouse to 90 or better on performance, accessibility and best practices. — _M_ — the initial bundle carries the router only, and the Lighthouse scores are at or above 90. — Depends on: P2.8, P4.5.
 
 ### P5 — Continuous integration, free deployment, showcase
 
