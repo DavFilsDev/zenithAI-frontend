@@ -21,12 +21,12 @@ describe('HomePage', () => {
 
   it('renders anonymous actions and animates the background and copy', () => {
     vi.useFakeTimers();
-    const { unmount } = renderHomePage();
+    const { container, unmount } = renderHomePage();
 
     expect(screen.getByRole('link', { name: 'Login' })).toHaveAttribute('href', '/login');
     expect(screen.getByRole('link', { name: 'Register' })).toHaveAttribute('href', '/register');
     expect(screen.getByRole('link', { name: 'Get Started' })).toHaveAttribute('href', '/login');
-    expect(screen.getByAltText('background')).toBeInTheDocument();
+    expect(container.querySelector('img')).toHaveAttribute('alt', '');
 
     fireEvent.mouseMove(window, { clientX: 512, clientY: 384 });
     act(() => {
