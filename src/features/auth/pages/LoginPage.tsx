@@ -77,7 +77,7 @@ export const LoginPage = () => {
             error={errors.password?.message}
           />
 
-          <Button type="submit" loading={login.isPending}>
+          <Button type="submit" loading={login.isPending} fullWidth>
             Sign In
           </Button>
 
