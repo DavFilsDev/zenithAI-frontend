@@ -1,5 +1,7 @@
 # Zenith AI — Frontend
 
+[![CI](https://github.com/DavFilsDev/zenithAI_react-typescript-frontend/actions/workflows/ci.yml/badge.svg)](https://github.com/DavFilsDev/zenithAI_react-typescript-frontend/actions/workflows/ci.yml)
+
 React frontend for Zenith AI: a free, open-to-everyone AI chat application with no credits, no premium tier, and no payment.
 
 Target infrastructure cost: **0 €**. Only free technologies and free services are used.
@@ -10,7 +12,7 @@ Target infrastructure cost: **0 €**. Only free technologies and free services 
 
 ## Status
 
-The application is functional but mid-refactor. It is honest about the gap between what it does and what the contract describes, and the gap is tracked rather than hidden.
+The application is functional and hardened through the security and accessibility work. It is honest about the gap between what it does and what the contract describes, and the gap is tracked rather than hidden.
 
 **Implemented today:**
 
@@ -19,17 +21,23 @@ The application is functional but mid-refactor. It is honest about the gap betwe
 - Conversation creation, list, rename, deletion and pagination
 - Streaming SSE answers rendered token by token
 - Profile editing
-- Markdown rendering of assistant answers
+- GFM tables, sanitized markdown and highlighted code blocks
+- Access token in memory, refresh token in `sessionStorage`, and a CSP
+- Keyboard navigation, dialog focus handling, live regions and reduced motion
+- Backend health indicator with a cold-start message
+- Privacy and terms pages
 - Dark and light theme, persisted
 - Responsive layout with a collapsible sidebar
 - Vitest, Testing Library, MSW and Playwright coverage for the main flows
+- GitHub Actions CI and Netlify deployment configuration
 
-**Not yet implemented, and documented as such:**
+**Still pending:**
 
-- **GFM and syntax highlighting.** Tables render as raw text and fenced code is not highlighted. Fixed by P4.2.
-- **Full accessibility.** Keyboard access, dialog focus handling and reduced-motion coverage are phase P4 work.
-- **No continuous integration and no deployed instance.** See the roadmap below.
-- **No `/privacy` or `/terms` pages.** The catch-all route redirects both to `/`.
+- **Netlify site connection and production URL.** The repository is configured in
+  `netlify.toml`; the URL is added after the first deploy.
+- **A showcase recording from the deployed instance.** Local screenshots,
+  recording and technical decisions are in the showcase section below; they are
+  refreshed after the first deploy.
 
 ## Stack
 
@@ -43,12 +51,12 @@ The application is functional but mid-refactor. It is honest about the gap betwe
 | UI state      | Zustand for the session and chat UI, a React context for the theme |
 | HTTP client   | Axios for JSON, `fetch` for the SSE stream                         |
 | Forms         | React Hook Form                                                    |
-| Markdown      | react-markdown                                                     |
+| Markdown      | react-markdown, remark-gfm, rehype-sanitize, rehype-highlight      |
 | Notifications | react-hot-toast                                                    |
 | Icons         | react-icons and lucide-react, both in use                          |
 | Testing       | Vitest, Testing Library, MSW and Playwright                        |
 
-Not installed, and therefore not used: Prism or any syntax highlighter, CSS Modules, any WebSocket library.
+Not installed, and therefore not used: Prism, CSS Modules, any WebSocket library.
 
 ## Requirements
 
@@ -88,7 +96,7 @@ The frontend is on <http://localhost:5173>, the backend on <http://localhost:800
 
 Only `VITE_API_URL` affects where requests go. All three are validated at startup with `zod`: a missing or malformed value stops the app with a message naming the variable. `VITE_APP_NAME` sets the document title and `VITE_DEFAULT_THEME` sets the theme applied before the first paint; a theme saved in `localStorage` still wins over the default.
 
-On the free static hosts, `VITE_*` values are inlined at build time, so a different `VITE_API_URL` means a different build.
+On Netlify, `VITE_*` values are inlined at build time, so a different `VITE_API_URL` means a different build. Set all three variables in **Site configuration → Environment variables** for the production context, and set them again for deploy previews if the preview should use a different backend.
 
 ## Scripts
 
@@ -124,9 +132,58 @@ npm run test:e2e
 npm run build
 ```
 
-`type-check` and `build` share the same `tsc -b` gate with `strict`, `noUncheckedIndexedAccess` and `exactOptionalPropertyTypes`. `lint` runs the flat ESLint config with type-aware `typescript-eslint` rules, including `no-floating-promises` and `no-misused-promises`, plus the `jsx-a11y` recommended set, and `--max-warnings 0`. `test:coverage` enforces the 80% threshold on `features/` and `shared/api/`. All gates pass on the current tree; `build` still reports the pre-existing >500 kB chunk warning.
+`type-check` and `build` share the same `tsc -b` gate with `strict`, `noUncheckedIndexedAccess` and `exactOptionalPropertyTypes`. `lint` runs the flat ESLint config with type-aware `typescript-eslint` rules, including `no-floating-promises` and `no-misused-promises`, plus the `jsx-a11y` recommended set, and `--max-warnings 0`. `test:coverage` enforces the 80% threshold on `features/` and `shared/api/`. All gates pass on the current tree. Lighthouse on the production preview scores 95 performance, 100 accessibility and 100 best practices.
 
 `lint-staged` runs ESLint and `tsc -b` on staged TS/TSX files, and Prettier on the rest, so a commit cannot carry a type or lint error.
+
+## Deployment (Netlify)
+
+The frontend is a static single-page application. [`netlify.toml`](netlify.toml) sets the build command, the publish directory, the Node version, and the SPA rewrite:
+
+| Setting       | Value                                                     |
+| ------------- | --------------------------------------------------------- |
+| Build command | `npm run build`                                           |
+| Publish       | `dist`                                                    |
+| Node          | `22`                                                      |
+| SPA rewrite   | `/*` → `/index.html` with status `200`                    |
+| Security      | [`public/_headers`](public/_headers), copied into `dist/` |
+
+1. Create a Netlify site from this repository.
+2. Set `VITE_API_URL`, `VITE_APP_NAME` and `VITE_DEFAULT_THEME` in **Site configuration → Environment variables**. Set them for production and, if needed, for deploy previews.
+3. Deploy. The first production build bakes in the production API URL.
+4. Open a deep link such as `/chat` to confirm the rewrite returns the app instead of a 404.
+
+The production API must use HTTPS: the static `_headers` policy allows `connect-src 'self' https:`. The Vite-generated meta policy uses the exact API origin for local and preview builds.
+
+Production URL: _pending the first Netlify deploy._
+
+## Continuous integration
+
+[`.github/workflows/ci.yml`](.github/workflows/ci.yml) runs on pull requests and on pushes to `main`:
+
+- **Quality** — `format:check`, `lint`, `type-check`, `test:coverage` and `build`
+- **Playwright** — installs Chromium and runs the browser journeys, uploading the report when a journey fails
+
+Enable the workflow as a required status check in the branch protection rules so a pull request with a failing gate cannot be merged.
+
+## Showcase
+
+![Zenith AI landing page](docs/assets/home.png)
+
+![Zenith AI chat with a streamed answer](docs/assets/chat.png)
+
+![A streamed answer arriving token by token](docs/assets/streamed-answer.gif)
+
+The screenshots and recording are generated from the local application with a mocked API. The recording uses the same SSE event shape the Playwright journey exercises.
+
+### Technical decisions
+
+- **Access in memory, refresh in `sessionStorage`.** The access token never touches persistent storage; the refresh token survives a reload and dies with the tab.
+- **Sanitized markdown.** Assistant answers pass through `rehype-sanitize` before highlighting, and unsafe link protocols are dropped.
+- **CSP in two places.** A meta tag covers static hosts that cannot set headers; `_headers` sets the real policy where Netlify serves the file.
+- **Server state in TanStack Query, streaming in one adapter.** The SSE reader appends into the query cache, so a re-render cannot lose a fragment.
+- **Free-tier UX is explicit.** The health indicator says when the backend is starting, rate limits say when to retry, and nothing offers a purchase.
+- **Startup cost is bounded.** Routes are lazy, the auth bootstrap is deferred until a session exists, and the background is a responsive WebP pair.
 
 ## Project structure
 
@@ -139,7 +196,9 @@ src/
 ├── features/
 │   ├── auth/        api, model, pages, components
 │   ├── chat/        api, model, pages, components
-│   └── home/        pages, components
+│   ├── home/        pages, components
+│   ├── legal/       privacy and terms pages
+│   └── status/      health query and service indicator
 ├── shared/
 │   ├── api/         client, interceptor, errors, env, tokens, generated types
 │   ├── auth/        session store and useSession
@@ -147,16 +206,20 @@ src/
 │   ├── hooks/       useOnClickOutside
 │   └── lib/         logger, parseRetryAfter
 └── test/            MSW server, generated handlers, render helpers
+public/              _headers, favicon, background images
+e2e/                 Playwright journeys and the browser API mock
+docs/                architecture, contract, roadmap and showcase assets
+.github/workflows/   CI pipeline
+netlify.toml         build, publish and SPA rewrite
 ```
 
-Unit tests sit next to their subject. Shared test support is in `src/test/`, and browser journeys are in `e2e/` with their API mock in `e2e/support/`. There is no `public/`, `src/utils/` or `src/styles/`. The full tree and the layer rules are in [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
+Unit tests sit next to their subject. Shared test support is in `src/test/`, and browser journeys are in `e2e/` with their API mock in `e2e/support/`. The full tree and the layer rules are in [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
 
 ## Known issues
 
-Each of these is a defect found during the audit, tracked in [`docs/IMPROVEMENT_PLAN.md`](docs/IMPROVEMENT_PLAN.md).
-
-- Assistant answers render without GFM support and without syntax highlighting, so a markdown table appears as raw text. Fixed by P4.2.
-- `/privacy` and `/terms` on the landing page have no pages; the catch-all route redirects them to `/`. Fixed by P4.9.
+- The Netlify site is not connected yet, so the production URL is still pending.
+- `npm audit` reports 32 advisories (8 low, 12 moderate, 12 high) from the current dependency tree.
+- The static `_headers` CSP allows `connect-src 'self' https:`, so the production API must be served over HTTPS.
 
 ## Status & Roadmap
 
