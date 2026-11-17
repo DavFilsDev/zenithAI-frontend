@@ -1,6 +1,7 @@
 import type { components } from './api.generated';
 
 export type User = components['schemas']['User'];
+export type Health = components['schemas']['Health'];
 export type UpdateProfilePayload = components['schemas']['PatchedUserRequest'];
 export type LoginCredentials = components['schemas']['TokenObtainPairRequest'];
 export type RegisterCredentials = components['schemas']['RegisterRequest'];

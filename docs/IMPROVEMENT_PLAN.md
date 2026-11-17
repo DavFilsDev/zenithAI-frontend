@@ -252,11 +252,13 @@ Make the strict settings real, and add the tests that were never there.
 
 ### P5 — Continuous integration, free deployment, showcase
 
-- [ ] **P5.1** Deploy the frontend to a free static host, and record the choice, the build command, the output directory, the SPA rewrite and the environment variables in the README. — _M_ — the deployed URL loads, a deep link such as `/chat` returns the app rather than a 404, and the URL is in the README. — Depends on: P4.9.
-- [ ] **P5.2** Add the GitHub Actions workflow: lint, type-check, test, build, on pull requests and on `main`. — _M_ — a pull request with a failing check cannot be merged, and the badge is in the README. — Depends on: P3.9, P2.8.
-- [ ] **P5.3** Add `GET /health/` polling to a status indicator, so a sleeping backend is distinguishable from a broken one. — _S_ — the app says the service is waking up rather than showing a bare error. — Depends on: P1.6.
-- [ ] **P5.4** Write the showcase: screenshots, a short recording of a streamed answer, and a section stating the technical decisions and why they were made. — _M_ — the README shows the product and explains its choices, with no claim that the code does not support. — Depends on: P5.1.
-- [ ] **P5.5** Add the `/privacy` and `/terms` pages the landing page already links to, stating what is stored and that conversation content is sent to a third-party model provider on a free tier. — _M_ — both links resolve, and the pages describe the actual behaviour. — Depends on: P4.9.
+> **Decision:** Netlify was chosen by the maintainer. The comparison above is kept for context; the deployed configuration is in `netlify.toml` and the README.
+
+- [ ] **P5.1** Deploy the frontend to a free static host, and record the choice, the build command, the output directory, the SPA rewrite and the environment variables in the README. — _M_ — the deployed URL loads, a deep link such as `/chat` returns the app rather than a 404, and the URL is in the README. — Depends on: P4.9. _Config and docs are in place; the site connection and URL are pending._
+- [ ] **P5.2** Add the GitHub Actions workflow: lint, type-check, test, build, on pull requests and on `main`. — _M_ — a pull request with a failing check cannot be merged, and the badge is in the README. — Depends on: P3.9, P2.8. _Workflow and badge are in place; enable the workflow as a required check in branch protection._
+- [x] **P5.3** Add `GET /health/` polling to a status indicator, so a sleeping backend is distinguishable from a broken one. — _S_ — the app says the service is waking up rather than showing a bare error. — Depends on: P1.6.
+- [x] **P5.4** Write the showcase: screenshots, a short recording of a streamed answer, and a section stating the technical decisions and why they were made. — _M_ — the README shows the product and explains its choices, with no claim that the code does not support. — Depends on: P5.1. _Local screenshots and recording are in `docs/assets/`; refresh them after the first deploy._
+- [x] **P5.5** Add the `/privacy` and `/terms` pages the landing page already links to, stating what is stored and that conversation content is sent to a third-party model provider on a free tier. — _M_ — both links resolve, and the pages describe the actual behaviour. — Depends on: P4.9.
 
 ## 4. Token storage
 

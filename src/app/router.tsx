@@ -21,6 +21,18 @@ const RegisterPage = lazy(() =>
   })),
 );
 
+const PrivacyPage = lazy(() =>
+  import('../features/legal/pages/PrivacyPage').then((module) => ({
+    default: module.PrivacyPage,
+  })),
+);
+
+const TermsPage = lazy(() =>
+  import('../features/legal/pages/TermsPage').then((module) => ({
+    default: module.TermsPage,
+  })),
+);
+
 const RequireAuth = () => {
   const status = useSessionStore((state) => state.status);
 
@@ -54,6 +66,8 @@ export const AppRoutes = () => {
     <Suspense fallback={<Spinner />}>
       <Routes>
         <Route path="/" element={<HomePage />} />
+        <Route path="/privacy" element={<PrivacyPage />} />
+        <Route path="/terms" element={<TermsPage />} />
         <Route element={<RedirectIfAuthenticated />}>
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />

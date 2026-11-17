@@ -9,6 +9,12 @@ const ProfileBootstrap = lazy(() =>
   import('./ProfileBootstrap').then((module) => ({ default: module.ProfileBootstrap })),
 );
 
+const ServiceStatus = lazy(() =>
+  import('../features/status/components/ServiceStatus').then((module) => ({
+    default: module.ServiceStatus,
+  })),
+);
+
 const shouldRetryQuery = (failureCount: number, error: unknown): boolean => {
   const status =
     typeof error === 'object' && error !== null && 'status' in error ? Number(error.status) : null;
@@ -49,6 +55,9 @@ export const AppProviders = ({ children }: AppProvidersProps) => {
           children
         )}
         <Toaster position="top-right" />
+        <Suspense fallback={null}>
+          <ServiceStatus />
+        </Suspense>
       </ThemeProvider>
     </QueryClientProvider>
   );

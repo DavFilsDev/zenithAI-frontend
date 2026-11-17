@@ -83,6 +83,11 @@ export const mockApi = async (page: Page, options: MockApiOptions = {}): Promise
       return;
     }
 
+    if (method === 'GET' && scope === 'health') {
+      await json(route, { status: 'ok', database: 'ok' });
+      return;
+    }
+
     if (method === 'POST' && scope === 'auth' && resource === 'token' && uuid === 'refresh') {
       await json(route, { access: 'access-token', refresh: 'refresh-token' });
       return;
