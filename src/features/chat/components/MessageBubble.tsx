@@ -73,7 +73,7 @@ export const MessageBubble = ({ message }: MessageBubbleProps) => {
   };
 
   return (
-    <div className={`flex ${isUser ? 'justify-end' : 'justify-start'} mb-4`}>
+    <div className={`flex ${isUser ? 'justify-end' : 'justify-start'}`}>
       <div className="group max-w-[70%]">
         <div
           className={`rounded-xl p-4 ${

@@ -21,8 +21,8 @@ export const ChatWindow = ({
 }: ChatWindowProps) => {
   return (
     <div className="flex h-full flex-1 flex-col bg-[rgb(var(--color-bg))]">
-      <div className="border-b border-white/10 bg-white/10 px-1 py-4 backdrop-blur-md dark:bg-white/5">
-        <div className="mx-auto w-full max-w-3xl">
+      <div className="border-b border-white/10 bg-white/10 py-4 backdrop-blur-md dark:bg-white/5">
+        <div className="mx-auto w-full max-w-4xl px-4">
           <h2 className="truncate font-semibold text-[rgb(var(--color-text))]">{title}</h2>
         </div>
       </div>
