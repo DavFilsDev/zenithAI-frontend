@@ -17,9 +17,9 @@
 | 3         | Chat                  |      9 |      9 | Done      |
 | 4         | Auth                  |      3 |      3 | In review |
 | 5         | Landing               |      5 |      5 | In review |
-| 6         | Legal and error pages |      4 |      0 | Planned   |
+| 6         | Legal and error pages |      4 |      4 | In review |
 | 7         | Hardening             |     10 |      0 | Planned   |
-| **Total** |                       | **50** | **36** |           |
+| **Total** |                       | **50** | **40** |           |
 
 ---
 
@@ -572,7 +572,7 @@
 
 ### Tasks
 
-- [ ] **P6-T01 Build the legal layout with table of contents**
+- [x] **P6-T01 Build the legal layout with table of contents**
   - **Design rules:** Design.md 9.4, 11.
   - **Files:** `src/features/legal/components/LegalLayout.tsx`, `src/features/legal/pages/PrivacyPage.tsx`, `src/features/legal/pages/TermsPage.tsx`.
   - **Do:**
@@ -584,7 +584,7 @@
   - **Depends on:** P5-T01.
   - **Risk:** Medium.
 
-- [ ] **P6-T02 Redesign the error boundary**
+- [x] **P6-T02 Redesign the error boundary**
   - **Design rules:** Design.md 2.1, 9.6, 11.
   - **Files:** `src/app/ErrorBoundary.tsx`.
   - **Do:**
@@ -595,7 +595,7 @@
   - **Depends on:** P2-T01.
   - **Risk:** Low.
 
-- [ ] **P6-T03 Add a designed 404 page**
+- [x] **P6-T03 Add a designed 404 page**
   - **Design rules:** Design.md 9.6, 11.
   - **Files:** `src/app/NotFoundPage.tsx` (to be created), `src/app/router.tsx`.
   - **Do:**
@@ -606,7 +606,7 @@
   - **Depends on:** P6-T02.
   - **Risk:** Low.
 
-- [ ] **P6-T04 Update legal and 404 tests**
+- [x] **P6-T04 Update legal and 404 tests**
   - **Design rules:** Design.md 11, 15.
   - **Files:** `src/features/legal/pages/legalPages.test.tsx`, `src/app/NotFoundPage.test.tsx` (to be created), `e2e/legal.spec.ts`.
   - **Do:**
@@ -619,14 +619,14 @@
 
 ### Phase 6 exit checklist
 
-- [ ] `npm run format:check`
-- [ ] `npm run lint`
-- [ ] `npm run type-check`
-- [ ] `npm run test`
-- [ ] `npm run test:e2e`
-- [ ] `npm run build`
+- [x] `npm run format:check`
+- [x] `npm run lint`
+- [x] `npm run type-check`
+- [x] `npm run test`
+- [x] `npm run test:e2e`
+- [x] `npm run build`
 - [ ] Screenshot review at 390px and 1280px, dark and light
-- [ ] `rg 'backdrop-blur|rounded-2xl|shadow-xl|shadow-2xl|bg-white/|text-gray|dark:' src/features/legal src/app/ErrorBoundary.tsx src/app/NotFoundPage.tsx` reviewed
+- [x] `grep -rnE 'backdrop-blur|rounded-2xl|shadow-xl|shadow-2xl|bg-white/|text-gray|dark:' src/features/legal src/app/ErrorBoundary.tsx src/app/NotFoundPage.tsx` reviewed
 
 ---
 
