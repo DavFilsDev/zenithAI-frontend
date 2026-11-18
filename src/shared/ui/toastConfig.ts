@@ -1,58 +1,35 @@
+import type { CSSProperties } from 'react';
 import type { ToastOptions } from 'react-hot-toast';
 
 export type ToastSeverity = 'success' | 'error' | 'loading' | 'rateLimit';
 
+const baseStyle: CSSProperties = {
+  background: 'var(--color-surface)',
+  color: 'var(--color-text)',
+  border: '1px solid var(--color-border)',
+  borderRadius: 'var(--radius)',
+  padding: '12px 16px',
+  fontSize: 'var(--text-small)',
+  lineHeight: 'var(--text-small--line-height)',
+  maxWidth: '420px',
+};
+
 export const toastConfig: Record<ToastSeverity, ToastOptions> = {
   success: {
     duration: 3000,
-    style: {
-      background: 'rgba(34, 197, 94, 0.1)',
-      color: 'white',
-      border: '1px solid rgba(34, 197, 94, 0.3)',
-      backdropFilter: 'blur(12px)',
-      borderRadius: '12px',
-      padding: '12px 16px',
-      whiteSpace: 'nowrap',
-      minWidth: '300px',
-      maxWidth: '500px',
-    },
-    iconTheme: {
-      primary: '#22c55e',
-      secondary: 'white',
-    },
+    style: baseStyle,
   },
   error: {
     duration: 4000,
-    style: {
-      background: 'rgba(239, 68, 68, 0.1)',
-      color: 'white',
-      border: '1px solid rgba(239, 68, 68, 0.3)',
-      backdropFilter: 'blur(12px)',
-      borderRadius: '12px',
-      padding: '12px 16px',
-      whiteSpace: 'nowrap',
-      minWidth: '300px',
-      maxWidth: '500px',
-    },
-    iconTheme: {
-      primary: '#ef4444',
-      secondary: 'white',
-    },
+    style: baseStyle,
   },
   loading: {
     duration: Infinity,
-    style: {
-      background: 'rgba(59, 130, 246, 0.1)',
-      color: 'white',
-      border: '1px solid rgba(59, 130, 246, 0.3)',
-      backdropFilter: 'blur(12px)',
-      borderRadius: '12px',
-      padding: '12px 16px',
-      whiteSpace: 'nowrap',
-    },
+    style: baseStyle,
   },
   rateLimit: {
     duration: 8000,
+    style: baseStyle,
   },
 };
 
