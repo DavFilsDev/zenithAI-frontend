@@ -9,17 +9,17 @@
 
 ## 1. Progress Overview
 
-| Phase     | Name                  |  Tasks |  Done | Status  |
-| --------- | --------------------- | -----: | ----: | ------- |
-| 0         | Cleanup               |      7 |     0 | Planned |
-| 1         | Foundation            |      5 |     0 | Planned |
-| 2         | Primitives            |      7 |     0 | Planned |
-| 3         | Chat                  |      9 |     0 | Planned |
-| 4         | Auth                  |      3 |     0 | Planned |
-| 5         | Landing               |      5 |     0 | Planned |
-| 6         | Legal and error pages |      4 |     0 | Planned |
-| 7         | Hardening             |     10 |     0 | Planned |
-| **Total** |                       | **50** | **0** |         |
+| Phase     | Name                  |  Tasks |  Done | Status      |
+| --------- | --------------------- | -----: | ----: | ----------- |
+| 0         | Cleanup               |      7 |     1 | In progress |
+| 1         | Foundation            |      5 |     0 | Planned     |
+| 2         | Primitives            |      7 |     0 | Planned     |
+| 3         | Chat                  |      9 |     0 | Planned     |
+| 4         | Auth                  |      3 |     0 | Planned     |
+| 5         | Landing               |      5 |     0 | Planned     |
+| 6         | Legal and error pages |      4 |     0 | Planned     |
+| 7         | Hardening             |     10 |     0 | Planned     |
+| **Total** |                       | **50** | **1** |             |
 
 ---
 
@@ -45,7 +45,7 @@
 
 ### Tasks
 
-- [ ] **P0-T01 Fix undefined token and motion class**
+- [x] **P0-T01 Fix undefined token and motion class**
   - **Design rules:** Design.md 3.1, 3.6, 8, 10.3, 14 (Phase 0).
   - **Files:** `src/index.css`, `src/features/status/components/ServiceStatus.tsx`, `src/features/chat/components/SettingsDropdown.tsx`.
   - **Do:**
