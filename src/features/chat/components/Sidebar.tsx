@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { Plus } from 'lucide-react';
 import { useTheme } from '../../../shared/ui/useTheme';
 import { notify } from '../../../shared/ui/notify';
@@ -21,12 +21,20 @@ interface SidebarProps {
   onOpenProfile: () => void;
 }
 
+const SIDEBAR_ID = 'app-sidebar';
+const SIDEBAR_TRIGGER_ID = 'sidebar-trigger';
+
+const isDesktopViewport = () => window.matchMedia('(min-width: 1024px)').matches;
+
 export const Sidebar = ({ user, onLogout, onOpenProfile }: SidebarProps) => {
   const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
+  const location = useLocation();
   const { uuid: activeUuid } = useParams<{ uuid: string }>();
-  const isSidebarOpen = useChatUiStore((state) => state.isSidebarOpen);
-  const toggleSidebar = useChatUiStore((state) => state.toggleSidebar);
+  const isDesktopSidebarExpanded = useChatUiStore((state) => state.isDesktopSidebarExpanded);
+  const isMobileDrawerOpen = useChatUiStore((state) => state.isMobileDrawerOpen);
+  const toggleDesktopSidebar = useChatUiStore((state) => state.toggleDesktopSidebar);
+  const closeMobileDrawer = useChatUiStore((state) => state.closeMobileDrawer);
   const setDraft = useChatUiStore((state) => state.setDraft);
   const conversationPage = useChatUiStore((state) => state.conversationPage);
   const setConversationPage = useChatUiStore((state) => state.setConversationPage);
@@ -37,10 +45,12 @@ export const Sidebar = ({ user, onLogout, onOpenProfile }: SidebarProps) => {
   const handleNewChat = () => {
     setDraft('');
     setConversationPage(1);
+    closeMobileDrawer();
     void navigate('/chat');
   };
 
   const handleSelect = (uuid: string) => {
+    closeMobileDrawer();
     void navigate(`/chat/${uuid}`);
   };
 
@@ -73,100 +83,139 @@ export const Sidebar = ({ user, onLogout, onOpenProfile }: SidebarProps) => {
   };
 
   useEffect(() => {
+    closeMobileDrawer();
+  }, [location.pathname, closeMobileDrawer]);
+
+  useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'b') {
         event.preventDefault();
-        toggleSidebar();
+        if (isDesktopViewport()) {
+          toggleDesktopSidebar();
+        } else {
+          useChatUiStore.setState((state) => ({
+            isMobileDrawerOpen: !state.isMobileDrawerOpen,
+          }));
+        }
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [toggleSidebar]);
+  }, [toggleDesktopSidebar]);
+
+  useEffect(() => {
+    if (!isMobileDrawerOpen) {
+      return;
+    }
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        closeMobileDrawer();
+        document.getElementById(SIDEBAR_TRIGGER_ID)?.focus();
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [isMobileDrawerOpen, closeMobileDrawer]);
+
+  const closeDrawerWithFocusReturn = () => {
+    closeMobileDrawer();
+    document.getElementById(SIDEBAR_TRIGGER_ID)?.focus();
+  };
 
   const newChatButton = (expanded: boolean) => (
     <button
       type="button"
       onClick={handleNewChat}
       aria-label="New chat"
-      className={`group relative flex w-full items-center justify-center gap-2 overflow-hidden rounded-xl border-2 border-accent bg-accent/10 py-2 text-accent-text backdrop-blur-sm transition-all duration-300 ease-out hover:scale-[1.02] hover:bg-accent/20 hover:shadow-xl hover:shadow-accent/30 active:scale-[0.98] ${expanded ? 'px-1 font-semibold' : 'px-2'} `}
-      title="New Chat"
+      title="New chat"
+      className={`flex w-full items-center justify-center gap-2 rounded-[var(--radius)] border border-border bg-surface py-2 text-ui text-text transition-colors duration-fast hover:bg-hover ${expanded ? 'px-3' : 'px-2'}`}
     >
-      <div className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-accent/25 to-transparent transition-transform duration-1000 group-hover:translate-x-full" />
-      <span className="absolute top-1.5 right-1.5 h-1.5 w-1.5 animate-pulse rounded-full bg-green-400" />
-      <Plus
-        size={20}
-        strokeWidth={1.5}
-        className="transition-all duration-300 group-hover:scale-110 group-hover:rotate-90"
-      />
-      {expanded && <span className="text-sm font-bold tracking-wide">New Chat</span>}
+      <Plus size={20} strokeWidth={1.5} aria-hidden="true" />
+      {expanded && <span>New chat</span>}
     </button>
   );
 
-  if (!isSidebarOpen) {
-    return (
-      <aside
-        aria-label="Sidebar"
-        className="flex h-dvh w-16 shrink-0 flex-col border-r border-white/10 bg-canvas text-text"
-      >
-        <SidebarHeader isOpen={false} onToggle={toggleSidebar} compact />
-
-        <div className="p-3">{newChatButton(false)}</div>
-
-        <div className="flex-1" />
-
-        <div className="space-y-3 border-t border-white/10 p-3">
-          <SettingsDropdown
-            theme={theme}
-            onToggleTheme={toggleTheme}
-            onLogout={onLogout}
-            variant="icon"
-          />
-          <UserButton variant="icon" onClick={onOpenProfile} />
-        </div>
-      </aside>
-    );
-  }
-
-  return (
-    <aside
-      aria-label="Sidebar"
-      className="flex h-dvh w-64 shrink-0 flex-col border-r border-white/10 bg-canvas text-text"
-    >
-      <SidebarHeader isOpen={isSidebarOpen} onToggle={toggleSidebar} />
-
-      <div className="p-4">{newChatButton(true)}</div>
-
-      <ConversationList
-        conversations={conversationsQuery.data?.results ?? []}
-        activeUuid={activeUuid}
-        isLoading={conversationsQuery.isLoading}
-        page={conversationPage}
-        hasNext={Boolean(conversationsQuery.data?.next)}
-        hasPrevious={Boolean(conversationsQuery.data?.previous)}
-        onSelect={handleSelect}
-        onDelete={(uuid) => {
-          void handleDelete(uuid);
-        }}
-        onRename={(uuid, title) => {
-          void handleRename(uuid, title);
-        }}
-        onPageChange={setConversationPage}
+  const sidebarBody = (expanded: boolean, onToggle: () => void) => (
+    <>
+      <SidebarHeader
+        isOpen={expanded}
+        onToggle={onToggle}
+        compact={!expanded}
+        controlsId={SIDEBAR_ID}
       />
 
-      <div className="space-y-2 border-t border-white/10 p-4">
+      <div className={expanded ? 'p-4' : 'p-3'}>{newChatButton(expanded)}</div>
+
+      {expanded ? (
+        <ConversationList
+          conversations={conversationsQuery.data?.results ?? []}
+          activeUuid={activeUuid}
+          isLoading={conversationsQuery.isLoading}
+          page={conversationPage}
+          hasNext={Boolean(conversationsQuery.data?.next)}
+          hasPrevious={Boolean(conversationsQuery.data?.previous)}
+          onSelect={handleSelect}
+          onDelete={(uuid) => {
+            void handleDelete(uuid);
+          }}
+          onRename={(uuid, title) => {
+            void handleRename(uuid, title);
+          }}
+          onPageChange={setConversationPage}
+        />
+      ) : (
+        <div className="flex-1" />
+      )}
+
+      <div
+        className={`border-t border-border-subtle ${expanded ? 'space-y-2 p-4' : 'space-y-3 p-3'}`}
+      >
         <SettingsDropdown
           theme={theme}
           onToggleTheme={toggleTheme}
           onLogout={onLogout}
-          variant="full"
+          variant={expanded ? 'full' : 'icon'}
         />
         <UserButton
           username={user?.username || user?.email?.split('@')[0]}
           onClick={onOpenProfile}
-          variant="full"
+          variant={expanded ? 'full' : 'icon'}
         />
       </div>
-    </aside>
+    </>
+  );
+
+  return (
+    <>
+      <aside
+        id={SIDEBAR_ID}
+        aria-label="Sidebar"
+        className={`hidden h-dvh shrink-0 flex-col border-r border-border-subtle bg-surface text-text lg:flex ${isDesktopSidebarExpanded ? 'w-[280px]' : 'w-14'}`}
+      >
+        {sidebarBody(isDesktopSidebarExpanded, toggleDesktopSidebar)}
+      </aside>
+
+      {isMobileDrawerOpen ? (
+        <div className="fixed inset-0 z-[var(--z-index-scrim)] lg:hidden">
+          <button
+            type="button"
+            aria-label="Close sidebar"
+            className="absolute inset-0 animate-fade-in"
+            style={{ backgroundColor: 'rgb(0 0 0 / 0.5)' }}
+            onClick={closeDrawerWithFocusReturn}
+          />
+          <aside
+            aria-label="Sidebar"
+            className="relative flex h-dvh w-[min(320px,85vw)] animate-drawer flex-col border-r border-border-subtle bg-surface text-text"
+          >
+            {sidebarBody(true, closeDrawerWithFocusReturn)}
+          </aside>
+        </div>
+      ) : null}
+    </>
   );
 };
