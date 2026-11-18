@@ -94,16 +94,15 @@ describe('Sidebar', () => {
     await user.click(screen.getByRole('button', { name: 'Previous' }));
     expect(await screen.findByText('Page 1')).toBeInTheDocument();
 
-    await user.click(screen.getByRole('button', { name: 'Settings' }));
-    await user.click(screen.getByRole('button', { name: 'Light Mode' }));
-    await user.click(screen.getByRole('button', { name: 'Settings' }));
-    expect(screen.getByRole('button', { name: 'Dark Mode' })).toBeInTheDocument();
-    await user.click(screen.getByRole('button', { name: 'Logout' }));
+    await user.click(screen.getByRole('switch', { name: 'Dark theme' }));
+    await user.click(screen.getByRole('button', { name: 'User menu' }));
+    await user.click(screen.getByRole('menuitem', { name: 'Log out' }));
     expect(onLogout).toHaveBeenCalled();
 
     await user.click(screen.getByRole('button', { name: 'Collapse sidebar' }));
     expect(screen.getByRole('button', { name: 'Expand sidebar' })).toBeInTheDocument();
-    await user.click(screen.getByTitle('Profile'));
+    await user.click(screen.getByRole('button', { name: 'User menu for ada' }));
+    await user.click(screen.getByRole('menuitem', { name: 'Profile' }));
     expect(onOpenProfile).toHaveBeenCalled();
 
     fireEvent.keyDown(window, { key: 'b', ctrlKey: true });
