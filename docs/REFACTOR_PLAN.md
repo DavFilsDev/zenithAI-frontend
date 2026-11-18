@@ -14,12 +14,12 @@
 | 0         | Cleanup               |      7 |      7 | In review   |
 | 1         | Foundation            |      5 |      5 | In review   |
 | 2         | Primitives            |      7 |      7 | Done        |
-| 3         | Chat                  |      9 |      4 | In progress |
+| 3         | Chat                  |      9 |      5 | In progress |
 | 4         | Auth                  |      3 |      0 | Planned     |
 | 5         | Landing               |      5 |      0 | Planned     |
 | 6         | Legal and error pages |      4 |      0 | Planned     |
 | 7         | Hardening             |     10 |      0 | Planned     |
-| **Total** |                       | **50** | **23** |             |
+| **Total** |                       | **50** | **24** |             |
 
 ---
 
@@ -363,7 +363,7 @@
   - **Depends on:** P3-T03.
   - **Risk:** Medium.
 
-- [ ] **P3-T05 Add composer stop, streaming caret, and completion announcement**
+- [x] **P3-T05 Add composer stop, streaming caret, and completion announcement**
   - **Design rules:** Design.md 2.2, 8 (Streaming, Composer), 10.2, 11.
   - **Files:** `src/features/chat/components/Composer.tsx`, `src/features/chat/pages/ChatPage.tsx`, `src/features/chat/components/MessageList.tsx`, `src/features/chat/components/Composer.test.tsx` (to be created).
   - **Do:**

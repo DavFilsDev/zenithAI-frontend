@@ -8,6 +8,7 @@ interface ChatWindowProps {
   title: string;
   messages: Message[];
   onSendMessage: (message: string) => void;
+  onStop: () => void;
   isLoading?: boolean;
   isSending?: boolean;
   disabled?: boolean;
@@ -17,6 +18,7 @@ export const ChatWindow = ({
   title,
   messages,
   onSendMessage,
+  onStop,
   isLoading = false,
   isSending = false,
   disabled = false,
@@ -55,7 +57,12 @@ export const ChatWindow = ({
         style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
       >
         <div className="mx-auto w-full max-w-[720px] px-4 py-3 sm:px-6">
-          <Composer onSendMessage={onSendMessage} disabled={disabled || isSending} />
+          <Composer
+            onSendMessage={onSendMessage}
+            onStop={onStop}
+            isStreaming={isSending}
+            disabled={disabled}
+          />
         </div>
       </div>
     </div>

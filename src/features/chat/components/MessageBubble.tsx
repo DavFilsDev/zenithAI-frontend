@@ -9,6 +9,7 @@ import type { Message } from '../api/types';
 
 interface MessageBubbleProps {
   message: Message;
+  isStreaming?: boolean;
 }
 
 const safeUrlTransform = (url: string): string => {
@@ -122,16 +123,24 @@ const markdownComponents: Components = {
   },
 };
 
-export const MessageBubble = ({ message }: MessageBubbleProps) => {
+export const MessageBubble = ({ message, isStreaming = false }: MessageBubbleProps) => {
   const isUser = message.role === 'user';
-  const isTyping = !isUser && message.content === '';
+  const isPending = !isUser && message.content === '' && isStreaming;
 
   const timestamp = new Date(message.created_at).toLocaleTimeString([], {
     hour: '2-digit',
     minute: '2-digit',
   });
 
-  const meta = !isTyping ? (
+  const streamingCaret = isStreaming ? (
+    <span
+      aria-hidden="true"
+      data-testid="streaming-caret"
+      className="ml-1 inline-block h-[1em] w-[2px] animate-caret bg-accent align-[-0.15em]"
+    />
+  ) : null;
+
+  const meta = !isPending ? (
     <div className="flex items-center gap-2">
       <time
         dateTime={message.created_at}
@@ -170,29 +179,25 @@ export const MessageBubble = ({ message }: MessageBubbleProps) => {
 
   return (
     <article className="group flex w-full flex-col gap-2">
-      {isTyping ? (
-        <div className="flex space-x-2 py-1" aria-label="Assistant is responding">
-          <div className="h-2 w-2 animate-bounce rounded-full bg-accent" />
-          <div
-            className="h-2 w-2 animate-bounce rounded-full bg-accent"
-            style={{ animationDelay: '150ms' }}
-          />
-          <div
-            className="h-2 w-2 animate-bounce rounded-full bg-accent"
-            style={{ animationDelay: '300ms' }}
-          />
+      {isPending ? (
+        <div className="py-1" aria-label="Assistant is responding">
+          {streamingCaret}
+          <span className="sr-only">Assistant is responding</span>
         </div>
       ) : (
-        <div className="prose max-w-none">
-          <ReactMarkdown
-            remarkPlugins={[remarkGfm]}
-            rehypePlugins={[rehypeSanitize, rehypeHighlight]}
-            urlTransform={safeUrlTransform}
-            components={markdownComponents}
-          >
-            {message.content}
-          </ReactMarkdown>
-        </div>
+        <>
+          <div className="prose max-w-none">
+            <ReactMarkdown
+              remarkPlugins={[remarkGfm]}
+              rehypePlugins={[rehypeSanitize, rehypeHighlight]}
+              urlTransform={safeUrlTransform}
+              components={markdownComponents}
+            >
+              {message.content}
+            </ReactMarkdown>
+          </div>
+          {streamingCaret}
+        </>
       )}
       {meta}
     </article>

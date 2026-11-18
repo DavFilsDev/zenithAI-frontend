@@ -24,6 +24,22 @@ export const ChatPage = () => {
     activeUuidRef.current = uuid;
   }, [uuid, abort]);
 
+  useEffect(() => {
+    if (!isSending) {
+      return;
+    }
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        abort();
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [isSending, abort]);
+
   const handleSend = (content: string) => {
     void send({ conversationUuid: uuid, content });
   };
@@ -55,7 +71,12 @@ export const ChatPage = () => {
             <p className="mb-6 text-body text-text-secondary">
               Ask anything about your code — debugging, optimization, best practices
             </p>
-            <Composer onSendMessage={handleSend} disabled={isSending} />
+            <Composer
+              onSendMessage={handleSend}
+              onStop={abort}
+              isStreaming={isSending}
+              disabled={false}
+            />
           </div>
         </div>
       </div>
@@ -67,9 +88,10 @@ export const ChatPage = () => {
       title={conversation?.title ?? 'Conversation'}
       messages={messages}
       onSendMessage={handleSend}
+      onStop={abort}
       isLoading={isLoading}
       isSending={isSending}
-      disabled={isSending}
+      disabled={false}
     />
   );
 };

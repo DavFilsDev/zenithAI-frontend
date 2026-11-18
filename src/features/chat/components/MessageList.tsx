@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { Message } from '../api/types';
 import { MessageBubble } from './MessageBubble';
 
@@ -10,10 +10,33 @@ interface MessageListProps {
 
 export const MessageList = ({ messages, isLoading, isSending }: MessageListProps) => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const wasSendingRef = useRef(false);
+  const [completionAnnouncement, setCompletionAnnouncement] = useState('');
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: isSending ? 'auto' : 'smooth' });
   }, [messages, isSending]);
+
+  useEffect(() => {
+    const wasSending = wasSendingRef.current;
+    wasSendingRef.current = Boolean(isSending);
+
+    if (wasSending && !isSending) {
+      const lastMessage = messages[messages.length - 1];
+      if (
+        lastMessage?.role === 'assistant' &&
+        lastMessage.content.trim() !== '' &&
+        !lastMessage.uuid.startsWith('temp-')
+      ) {
+        queueMicrotask(() => setCompletionAnnouncement('Response complete'));
+        return;
+      }
+    }
+
+    if (isSending) {
+      queueMicrotask(() => setCompletionAnnouncement(''));
+    }
+  }, [isSending, messages]);
 
   if (messages.length === 0 && !isLoading) {
     return (
@@ -26,18 +49,27 @@ export const MessageList = ({ messages, isLoading, isSending }: MessageListProps
     );
   }
 
+  const streamingUuid =
+    isSending && messages[messages.length - 1]?.role === 'assistant'
+      ? messages[messages.length - 1]?.uuid
+      : undefined;
+
   return (
     <div
       role="log"
       aria-label="Conversation messages"
-      aria-live={isSending ? 'off' : 'polite'}
+      aria-live="off"
       aria-relevant="additions text"
       aria-busy={isSending || undefined}
       className="h-full overflow-y-auto"
     >
       <div className="mx-auto w-full max-w-[720px] space-y-8 px-4 py-4 sm:px-6">
         {messages.map((message) => (
-          <MessageBubble key={message.uuid} message={message} />
+          <MessageBubble
+            key={message.uuid}
+            message={message}
+            isStreaming={message.uuid === streamingUuid}
+          />
         ))}
 
         {isLoading && (
@@ -51,6 +83,9 @@ export const MessageList = ({ messages, isLoading, isSending }: MessageListProps
         )}
 
         <div ref={messagesEndRef} />
+      </div>
+      <div role="status" aria-live="polite" aria-atomic="true" className="sr-only">
+        {completionAnnouncement}
       </div>
     </div>
   );
