@@ -506,6 +506,17 @@
   }
 }
 
+@keyframes landingHeroEnter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @keyframes landingPreview {
   from {
     opacity: 0;
@@ -517,6 +528,35 @@
   }
 }
 
+[data-hero-item] {
+  animation: landingHeroEnter var(--duration-slow) var(--ease-out) both;
+  animation-delay: calc(var(--i, 0) * 80ms);
+}
+
+[data-reveal]:not([data-revealed]) {
+  opacity: 0;
+  transform: translateY(16px);
+}
+
+[data-reveal][data-revealed] {
+  animation: landingReveal var(--duration-slow) var(--ease-out) both;
+  animation-delay: calc(var(--i, 0) * 60ms);
+}
+
+[data-preview-step] {
+  opacity: 0;
+  animation: landingPreview var(--duration-base) var(--ease-out) both;
+  animation-delay: var(--preview-delay, 0ms);
+}
+
+[data-preview-caret] {
+  opacity: 0;
+  animation:
+    landingPreview var(--duration-fast) var(--ease-out) both,
+    caretBlink 1s steps(1) 1;
+  animation-delay: var(--preview-delay, 0ms), calc(var(--preview-delay, 0ms) + 160ms);
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -525,5 +565,14 @@
     animation-iteration-count: 1 !important;
     scroll-behavior: auto !important;
     transition-duration: 0.01ms !important;
+  }
+
+  [data-hero-item],
+  [data-reveal]:not([data-revealed]),
+  [data-reveal][data-revealed],
+  [data-preview-step],
+  [data-preview-caret] {
+    opacity: 1;
+    transform: none;
   }
 }

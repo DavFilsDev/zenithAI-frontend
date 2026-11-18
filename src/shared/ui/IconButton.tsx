@@ -9,7 +9,7 @@ import {
   useRef,
   useState,
 } from 'react';
-import type { ButtonVariant } from './Button';
+import type { ButtonVariant } from './buttonStyles';
 
 const TOOLTIP_DELAY_MS = 400;
 
