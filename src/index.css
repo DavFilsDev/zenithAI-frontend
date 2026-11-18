@@ -44,8 +44,11 @@
   --color-accent-subtle: rgb(214 48 58 / 0.12);
   --color-on-accent: #ffffff;
   --color-success: #3fb68b;
+  --color-success-subtle: rgb(63 182 139 / 0.12);
   --color-warning: #d9a441;
+  --color-warning-subtle: rgb(217 164 65 / 0.12);
   --color-danger: #ff7a59;
+  --color-danger-subtle: rgb(255 122 89 / 0.12);
 
   --font-sans: 'Geist Variable', ui-sans-serif, system-ui, sans-serif;
   --font-mono: 'Geist Mono Variable', ui-monospace, 'SF Mono', Menlo, monospace;
@@ -150,8 +153,11 @@
   --color-accent-subtle: rgb(196 34 45 / 0.08);
   --color-on-accent: #ffffff;
   --color-success: #1f8a66;
+  --color-success-subtle: rgb(31 138 102 / 0.12);
   --color-warning: #9a6700;
+  --color-warning-subtle: rgb(154 103 0 / 0.12);
   --color-danger: #c2410c;
+  --color-danger-subtle: rgb(194 65 12 / 0.12);
 
   --shadow-float: 0 8px 24px rgb(0 0 0 / 0.08);
 }
