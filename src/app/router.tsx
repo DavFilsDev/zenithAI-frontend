@@ -33,6 +33,10 @@ const TermsPage = lazy(() =>
   })),
 );
 
+const NotFoundPage = lazy(() =>
+  import('./NotFoundPage').then((module) => ({ default: module.NotFoundPage })),
+);
+
 const RequireAuth = () => {
   const status = useSessionStore((state) => state.status);
 
@@ -75,7 +79,7 @@ export const AppRoutes = () => {
         <Route element={<RequireAuth />}>
           <Route path="/chat/:uuid?" element={<ChatShell />} />
         </Route>
-        <Route path="*" element={<Navigate to="/" replace />} />
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </Suspense>
   );
