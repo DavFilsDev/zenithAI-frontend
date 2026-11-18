@@ -9,17 +9,17 @@
 
 ## 1. Progress Overview
 
-| Phase     | Name                  |  Tasks |   Done | Status      |
-| --------- | --------------------- | -----: | -----: | ----------- |
-| 0         | Cleanup               |      7 |      7 | In review   |
-| 1         | Foundation            |      5 |      5 | In review   |
-| 2         | Primitives            |      7 |      6 | In progress |
-| 3         | Chat                  |      9 |      0 | Planned     |
-| 4         | Auth                  |      3 |      0 | Planned     |
-| 5         | Landing               |      5 |      0 | Planned     |
-| 6         | Legal and error pages |      4 |      0 | Planned     |
-| 7         | Hardening             |     10 |      0 | Planned     |
-| **Total** |                       | **50** | **18** |             |
+| Phase     | Name                  |  Tasks |   Done | Status    |
+| --------- | --------------------- | -----: | -----: | --------- |
+| 0         | Cleanup               |      7 |      7 | In review |
+| 1         | Foundation            |      5 |      5 | In review |
+| 2         | Primitives            |      7 |      7 | Done      |
+| 3         | Chat                  |      9 |      0 | Planned   |
+| 4         | Auth                  |      3 |      0 | Planned   |
+| 5         | Landing               |      5 |      0 | Planned   |
+| 6         | Legal and error pages |      4 |      0 | Planned   |
+| 7         | Hardening             |     10 |      0 | Planned   |
+| **Total** |                       | **50** | **19** |           |
 
 ---
 
@@ -283,7 +283,7 @@
   - **Depends on:** P1-T01.
   - **Risk:** Medium.
 
-- [ ] **P2-T07 Delete decorative home components and unused background assets**
+- [x] **P2-T07 Delete decorative home components and unused background assets**
   - **Design rules:** Design.md 2.1, 2.2, 9.1, 14 (Phase 2).
   - **Files:** `src/features/home/components/GlassButton.tsx` (delete), `src/features/home/components/AnimatedBackground.tsx` (delete), `src/features/home/components/Typewriter.tsx` (delete), `src/features/home/pages/HomePage.tsx`, `src/assets/code-bg.webp` (delete), `src/assets/code-bg-768.webp` (delete).
   - **Do:**
