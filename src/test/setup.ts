@@ -11,7 +11,7 @@ beforeAll(() => {
   Object.defineProperty(window, 'matchMedia', {
     writable: true,
     value: vi.fn().mockImplementation((query: string) => ({
-      matches: false,
+      matches: query === '(min-width: 1024px)',
       media: query,
       onchange: null,
       addListener: vi.fn(),
@@ -34,7 +34,12 @@ afterEach(() => {
   sessionStorage.clear();
   tokenManager.clearTokens();
   useSessionStore.setState({ user: null, status: 'anonymous' });
-  useChatUiStore.setState({ isSidebarOpen: true, draft: '', conversationPage: 1 });
+  useChatUiStore.setState({
+    isDesktopSidebarExpanded: true,
+    isMobileDrawerOpen: false,
+    draft: '',
+    conversationPage: 1,
+  });
 });
 
 afterAll(() => {

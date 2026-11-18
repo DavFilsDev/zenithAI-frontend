@@ -72,7 +72,7 @@ describe('Sidebar', () => {
     });
 
     useChatUiStore.getState().setDraft('draft text');
-    await user.click(screen.getByTitle('New Chat'));
+    await user.click(screen.getByRole('button', { name: 'New chat' }));
     await waitFor(() => {
       expect(screen.getByLabelText('location')).toHaveTextContent('/chat');
     });
