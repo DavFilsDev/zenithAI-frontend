@@ -133,7 +133,7 @@ export const RegisterPage = () => {
             error={errors.password2?.message}
           />
 
-          <Button type="submit" loading={registerUser.isPending}>
+          <Button type="submit" loading={registerUser.isPending} fullWidth>
             Sign Up
           </Button>
 
