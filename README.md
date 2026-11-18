@@ -133,7 +133,9 @@ npm run test:e2e
 npm run build
 ```
 
-`type-check` and `build` share the same `tsc -b` gate with `strict`, `noUncheckedIndexedAccess` and `exactOptionalPropertyTypes`. `lint` runs the flat ESLint config with type-aware `typescript-eslint` rules, including `no-floating-promises` and `no-misused-promises`, plus the `jsx-a11y` recommended set, and `--max-warnings 0`. `test:coverage` enforces the 80% threshold on `features/` and `shared/api/`. `check:design` enforces the Design.md banned-pattern guard in source files. Accessibility and responsive behavior are covered by lint rules, component tests, and Playwright journeys; axe, visual regression, and responsive-width audits are planned in hardening.
+`type-check` and `build` share the same `tsc -b` gate with `strict`, `noUncheckedIndexedAccess` and `exactOptionalPropertyTypes`. `lint` runs the flat ESLint config with type-aware `typescript-eslint` rules, including `no-floating-promises` and `no-misused-promises`, plus the `jsx-a11y` recommended set, and `--max-warnings 0`. `test:coverage` enforces the 80% threshold on `features/` and `shared/api/`. `check:design` enforces the Design.md banned-pattern guard in source files. Accessibility, visual consistency, and responsive behavior are covered by lint rules, component tests, and Playwright suites using axe, screenshot baselines, and width assertions.
+
+Visual baselines live in `e2e/visual.spec.ts-snapshots/`. Review changed images deliberately, then regenerate them with `npx playwright test e2e/visual.spec.ts --update-snapshots` and commit the result in the same change as the visual decision.
 
 `lint-staged` runs ESLint and `tsc -b` on staged TS/TSX files, and Prettier on the rest, so a commit cannot carry a type or lint error.
 
