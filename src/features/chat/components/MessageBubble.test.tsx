@@ -60,9 +60,11 @@ describe('MessageBubble', () => {
     });
   });
 
-  it('renders a typing indicator without copy or timestamp controls', () => {
-    render(<MessageBubble message={{ ...assistantMessage, content: '' }} />);
+  it('renders a streaming pending indicator without copy or timestamp controls', () => {
+    render(<MessageBubble message={{ ...assistantMessage, content: '' }} isStreaming />);
 
+    expect(screen.getByLabelText('Assistant is responding')).toBeInTheDocument();
+    expect(screen.getByTestId('streaming-caret')).toBeInTheDocument();
     expect(screen.queryByTitle('Copy message')).not.toBeInTheDocument();
     expect(screen.queryByText(/\d{2}:\d{2}/)).not.toBeInTheDocument();
   });
