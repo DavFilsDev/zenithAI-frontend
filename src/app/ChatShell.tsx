@@ -6,6 +6,7 @@ import { SkipLink } from '../shared/ui/SkipLink';
 import { UserProfileModal } from '../features/auth/components/UserProfileModal';
 import { Sidebar } from '../features/chat/components/Sidebar';
 import { ChatPage } from '../features/chat/pages/ChatPage';
+import { ServiceStatus } from '../features/status/components/ServiceStatus';
 
 export const ChatShell = () => {
   const user = useSessionStore((state) => state.user);
@@ -17,6 +18,7 @@ export const ChatShell = () => {
   return (
     <div className="flex h-dvh overflow-hidden bg-canvas text-text">
       <SkipLink />
+      <ServiceStatus />
       <Sidebar
         user={user}
         onLogout={() => {
