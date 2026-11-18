@@ -1,3 +1,4 @@
+import AxeBuilder from '@axe-core/playwright';
 import { expect, type Page, type Route } from '@playwright/test';
 
 const apiUrl = 'http://127.0.0.1:8000/api/v1';
@@ -10,14 +11,14 @@ const corsHeaders = {
   'access-control-expose-headers': 'retry-after',
 };
 
-interface Message {
+export interface Message {
   uuid: string;
   role: 'user' | 'assistant';
   content: string;
   created_at: string;
 }
 
-interface Conversation {
+export interface Conversation {
   uuid: string;
   title: string;
   created_at: string;
@@ -26,7 +27,9 @@ interface Conversation {
 }
 
 interface MockApiOptions {
-  stream?: 'success' | 'rate-limit';
+  stream?: 'success' | 'rate-limit' | 'hold';
+  conversation?: Conversation | null;
+  messages?: Message[];
 }
 
 const user = {
@@ -69,8 +72,8 @@ const successfulStream = [
 
 export const mockApi = async (page: Page, options: MockApiOptions = {}): Promise<void> => {
   const streamMode = options.stream ?? 'success';
-  let conversation: Conversation | null = null;
-  let messages: Message[] = [];
+  let conversation: Conversation | null = options.conversation ?? null;
+  let messages: Message[] = options.messages ?? [];
 
   await page.route(`${apiUrl}/**`, async (route) => {
     const request = route.request();
@@ -191,6 +194,10 @@ export const mockApi = async (page: Page, options: MockApiOptions = {}): Promise
           ];
           conversation = { ...current, updated_at: createdAt, message_count: messages.length };
 
+          if (streamMode === 'hold') {
+            return;
+          }
+
           await route.fulfill({
             status: 200,
             headers: {
@@ -219,4 +226,87 @@ export const signIn = async (page: Page): Promise<void> => {
   await page.getByRole('textbox', { name: 'Password' }).fill('secret123');
   await page.getByRole('button', { name: 'Sign in' }).click();
   await expect(page).toHaveURL(/\/chat(?:\/.*)?$/);
+};
+
+export const seededConversation: Conversation = {
+  uuid: 'conversation-1',
+  title: 'Code sample',
+  created_at: createdAt,
+  updated_at: createdAt,
+  message_count: 2,
+};
+
+export const seededMessages: Message[] = [
+  {
+    uuid: 'message-1',
+    role: 'user',
+    content: 'Show me a TypeScript example.',
+    created_at: createdAt,
+  },
+  {
+    uuid: 'message-2',
+    role: 'assistant',
+    content:
+      'Here is an example:\n\n```ts\nconst greet = (name: string): string => `Hi ${name}`;\n```',
+    created_at: createdAt,
+  },
+];
+
+export const setTheme = async (page: Page, theme: 'dark' | 'light'): Promise<void> => {
+  await page.addInitScript((value) => {
+    const storage = (globalThis as unknown as { localStorage: Storage }).localStorage;
+    storage.setItem('theme', value);
+  }, theme);
+  await page.emulateMedia({ colorScheme: theme });
+};
+
+export const waitForTheme = async (page: Page, theme: 'dark' | 'light'): Promise<void> => {
+  if (theme === 'dark') {
+    await expect(page.locator('html')).toHaveClass(/\bdark\b/);
+    return;
+  }
+
+  await expect(page.locator('html')).toHaveClass(/\blight\b/);
+};
+
+export const expectNoSeriousOrCriticalAxeViolations = async (page: Page): Promise<void> => {
+  await page.evaluate(async () => {
+    const doc = (
+      globalThis as unknown as {
+        document?: {
+          getAnimations?: () => Array<{ finish?: () => void }>;
+          fonts?: { ready?: Promise<unknown> };
+        };
+      }
+    ).document;
+    const animations = doc?.getAnimations?.() ?? [];
+    for (const animation of animations) {
+      try {
+        animation.finish?.();
+      } catch {
+        // ignore
+      }
+    }
+    await doc?.fonts?.ready;
+  });
+  const results = await new AxeBuilder({ page }).analyze();
+  const violations = results.violations.filter(
+    (violation) => violation.impact === 'serious' || violation.impact === 'critical',
+  );
+  expect(violations, JSON.stringify(violations, null, 2)).toEqual([]);
+};
+
+export const openProfileModal = async (page: Page): Promise<void> => {
+  const menuButton = page.getByRole('button', { name: 'ada, user menu' }).first();
+  if (!(await menuButton.isVisible().catch(() => false))) {
+    const openSidebar = page.getByRole('button', { name: 'Open sidebar' });
+    if (await openSidebar.isVisible().catch(() => false)) {
+      await openSidebar.click();
+    }
+  }
+
+  await expect(menuButton).toBeVisible();
+  await menuButton.click();
+  await page.getByRole('menuitem', { name: 'Profile' }).click();
+  await expect(page.getByRole('dialog', { name: 'Profile' })).toBeVisible();
 };
