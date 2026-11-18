@@ -26,7 +26,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
     }
 
     return (
-      <main className="flex min-h-screen items-center justify-center bg-[rgb(var(--color-bg))] p-6 text-[rgb(var(--color-text))]">
+      <main className="flex min-h-screen items-center justify-center bg-canvas p-6 text-text">
         <div
           role="alert"
           className="w-full max-w-lg rounded-2xl border border-white/20 bg-white/10 p-8 text-center shadow-xl backdrop-blur-md dark:border-white/10 dark:bg-white/5"
@@ -38,7 +38,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
           <button
             type="button"
             onClick={() => window.location.reload()}
-            className="mt-6 rounded-xl bg-[rgb(var(--color-primary))] px-5 py-3 font-semibold text-white transition hover:opacity-90"
+            className="mt-6 rounded-xl bg-accent px-5 py-3 font-semibold text-white transition hover:opacity-90"
           >
             Reload the app
           </button>

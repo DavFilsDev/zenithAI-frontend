@@ -89,10 +89,10 @@ export const Sidebar = ({ user, onLogout, onOpenProfile }: SidebarProps) => {
       type="button"
       onClick={handleNewChat}
       aria-label="New chat"
-      className={`group relative flex w-full items-center justify-center gap-2 overflow-hidden rounded-xl border-2 border-[rgb(var(--color-primary))] bg-[rgb(var(--color-primary))/12] py-2 text-[rgb(var(--color-primary))] backdrop-blur-sm transition-all duration-300 ease-out hover:scale-[1.02] hover:bg-[rgb(var(--color-primary))/20] hover:shadow-xl hover:shadow-[rgb(var(--color-primary))/30] active:scale-[0.98] ${expanded ? 'px-1 font-semibold' : 'px-2'} `}
+      className={`group relative flex w-full items-center justify-center gap-2 overflow-hidden rounded-xl border-2 border-accent bg-accent/10 py-2 text-accent-text backdrop-blur-sm transition-all duration-300 ease-out hover:scale-[1.02] hover:bg-accent/20 hover:shadow-xl hover:shadow-accent/30 active:scale-[0.98] ${expanded ? 'px-1 font-semibold' : 'px-2'} `}
       title="New Chat"
     >
-      <div className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-[rgb(var(--color-primary))/25] to-transparent transition-transform duration-1000 group-hover:translate-x-full" />
+      <div className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-accent/25 to-transparent transition-transform duration-1000 group-hover:translate-x-full" />
       <span className="absolute top-1.5 right-1.5 h-1.5 w-1.5 animate-pulse rounded-full bg-green-400" />
       <FiPlus
         size={expanded ? 18 : 20}
@@ -104,7 +104,7 @@ export const Sidebar = ({ user, onLogout, onOpenProfile }: SidebarProps) => {
 
   if (!isSidebarOpen) {
     return (
-      <div className="flex h-screen w-16 flex-col border-r border-white/10 bg-[rgb(var(--color-bg))] text-[rgb(var(--color-text))]">
+      <div className="flex h-screen w-16 flex-col border-r border-white/10 bg-canvas text-text">
         <SidebarHeader isOpen={false} onToggle={toggleSidebar} compact />
 
         <div className="p-3">{newChatButton(false)}</div>
@@ -125,7 +125,7 @@ export const Sidebar = ({ user, onLogout, onOpenProfile }: SidebarProps) => {
   }
 
   return (
-    <div className="flex h-screen w-64 flex-col border-r border-white/10 bg-[rgb(var(--color-bg))] text-[rgb(var(--color-text))]">
+    <div className="flex h-screen w-64 flex-col border-r border-white/10 bg-canvas text-text">
       <SidebarHeader isOpen={isSidebarOpen} onToggle={toggleSidebar} />
 
       <div className="p-4">{newChatButton(true)}</div>

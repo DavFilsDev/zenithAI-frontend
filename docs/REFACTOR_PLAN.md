@@ -9,17 +9,17 @@
 
 ## 1. Progress Overview
 
-| Phase     | Name                  |  Tasks |  Done | Status    |
-| --------- | --------------------- | -----: | ----: | --------- |
-| 0         | Cleanup               |      7 |     7 | In review |
-| 1         | Foundation            |      5 |     0 | Planned   |
-| 2         | Primitives            |      7 |     0 | Planned   |
-| 3         | Chat                  |      9 |     0 | Planned   |
-| 4         | Auth                  |      3 |     0 | Planned   |
-| 5         | Landing               |      5 |     0 | Planned   |
-| 6         | Legal and error pages |      4 |     0 | Planned   |
-| 7         | Hardening             |     10 |     0 | Planned   |
-| **Total** |                       | **50** | **7** |           |
+| Phase     | Name                  |  Tasks |  Done | Status      |
+| --------- | --------------------- | -----: | ----: | ----------- |
+| 0         | Cleanup               |      7 |     7 | In review   |
+| 1         | Foundation            |      5 |     1 | In progress |
+| 2         | Primitives            |      7 |     0 | Planned     |
+| 3         | Chat                  |      9 |     0 | Planned     |
+| 4         | Auth                  |      3 |     0 | Planned     |
+| 5         | Landing               |      5 |     0 | Planned     |
+| 6         | Legal and error pages |      4 |     0 | Planned     |
+| 7         | Hardening             |     10 |     0 | Planned     |
+| **Total** |                       | **50** | **8** |             |
 
 ---
 
@@ -139,9 +139,9 @@
 
 ### Tasks
 
-- [ ] **P1-T01 Rewrite `src/index.css` with the design token system**
+- [x] **P1-T01 Rewrite `src/index.css` with the design token system**
   - **Design rules:** Design.md 2, 3.1–3.7, 4, 7 (focus ring), 10, 11, 15.
-  - **Files:** `src/index.css`.
+  - **Files:** `src/index.css`; token consumers across `src/`.
   - **Do:**
     - Replace the old `:root` RGB-triplet variables and arbitrary `rgb(var())` pattern with `@theme` tokens for dark default and `.light` overrides.
     - Add color, type scale, spacing, radius, `--shadow-float`, z-index, easing, and duration tokens from Design.md Sections 3.1–3.7 and 10.1.

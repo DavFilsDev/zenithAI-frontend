@@ -35,7 +35,7 @@ export const Input = ({
           {...props}
           aria-invalid={Boolean(error)}
           aria-describedby={error ? errorId : undefined}
-          className={`w-full rounded-xl border border-white/20 bg-white/10 px-4 py-2 pr-10 backdrop-blur-md transition-all focus:ring-2 focus:ring-[rgb(var(--color-primary))] focus:outline-none dark:border-white/10 dark:bg-white/5 ${className} `}
+          className={`w-full rounded-xl border border-white/20 bg-white/10 px-4 py-2 pr-10 backdrop-blur-md transition-all focus:ring-2 focus:ring-accent-text focus:outline-none dark:border-white/10 dark:bg-white/5 ${className} `}
         />
         {isPassword && (
           <button
@@ -45,9 +45,9 @@ export const Input = ({
             className="absolute top-1/2 right-3 -translate-y-1/2 opacity-60 transition hover:opacity-100"
           >
             {showPassword ? (
-              <EyeOff className="text-[rgb(var(--color-primary))]" size={18} />
+              <EyeOff className="text-accent-text" size={18} />
             ) : (
-              <Eye className="text-[rgb(var(--color-primary))]" size={18} />
+              <Eye className="text-accent-text" size={18} />
             )}
           </button>
         )}

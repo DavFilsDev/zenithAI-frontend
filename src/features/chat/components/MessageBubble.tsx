@@ -45,7 +45,7 @@ const markdownComponents: Components = {
 
     return (
       <code
-        className="rounded bg-white/10 px-1.5 py-0.5 font-mono text-[0.9em] text-[rgb(var(--color-primary))]"
+        className="rounded bg-white/10 px-1.5 py-0.5 font-mono text-[0.9em] text-accent-text"
         {...props}
       >
         {children}
@@ -78,7 +78,7 @@ export const MessageBubble = ({ message }: MessageBubbleProps) => {
         <div
           className={`rounded-xl p-4 ${
             isUser
-              ? 'border border-[rgb(var(--color-primary))]/20 bg-[rgb(var(--color-primary))]/10 text-[rgb(var(--color-text))] backdrop-blur-md'
+              ? 'border border-accent/20 bg-accent/10 text-text backdrop-blur-md'
               : 'border border-white/10 bg-white/10 backdrop-blur-md dark:bg-white/5'
           }`}
         >
@@ -86,13 +86,13 @@ export const MessageBubble = ({ message }: MessageBubbleProps) => {
             <p className="whitespace-pre-wrap">{message.content}</p>
           ) : isTyping ? (
             <div className="flex space-x-2 py-1" aria-label="Assistant is responding">
-              <div className="h-2 w-2 animate-bounce rounded-full bg-[rgb(var(--color-primary))]" />
+              <div className="h-2 w-2 animate-bounce rounded-full bg-accent" />
               <div
-                className="h-2 w-2 animate-bounce rounded-full bg-[rgb(var(--color-primary))]"
+                className="h-2 w-2 animate-bounce rounded-full bg-accent"
                 style={{ animationDelay: '150ms' }}
               />
               <div
-                className="h-2 w-2 animate-bounce rounded-full bg-[rgb(var(--color-primary))]"
+                className="h-2 w-2 animate-bounce rounded-full bg-accent"
                 style={{ animationDelay: '300ms' }}
               />
             </div>

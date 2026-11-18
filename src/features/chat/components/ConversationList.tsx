@@ -63,7 +63,7 @@ export const ConversationList = ({
       <div role="status" className="flex flex-1 items-center justify-center p-4">
         <div
           aria-hidden="true"
-          className="h-6 w-6 animate-spin rounded-full border-2 border-transparent border-t-[rgb(var(--color-primary))]"
+          className="h-6 w-6 animate-spin rounded-full border-2 border-transparent border-t-accent"
         />
         <span className="sr-only">Loading conversations</span>
       </div>
@@ -111,13 +111,13 @@ export const ConversationList = ({
                     aria-label="Conversation title"
                     value={title}
                     onChange={(event) => setTitle(event.target.value)}
-                    className="min-w-0 flex-1 rounded-lg border border-white/20 bg-white/10 px-2 py-1 text-sm outline-none focus:border-[rgb(var(--color-primary))]"
+                    className="min-w-0 flex-1 rounded-lg border border-white/20 bg-white/10 px-2 py-1 text-sm outline-none focus:border-accent"
                   />
                   <button
                     type="submit"
                     title="Save title"
                     aria-label="Save title"
-                    className="rounded-lg p-1.5 hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-[rgb(var(--color-primary))] focus-visible:outline-none"
+                    className="rounded-lg p-1.5 hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-accent-text focus-visible:outline-none"
                   >
                     <FiCheck size={14} aria-hidden="true" />
                   </button>
@@ -126,7 +126,7 @@ export const ConversationList = ({
                     onClick={cancelEditing}
                     title="Cancel rename"
                     aria-label="Cancel rename"
-                    className="rounded-lg p-1.5 hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-[rgb(var(--color-primary))] focus-visible:outline-none"
+                    className="rounded-lg p-1.5 hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-accent-text focus-visible:outline-none"
                   >
                     <FiX size={14} aria-hidden="true" />
                   </button>
@@ -138,7 +138,7 @@ export const ConversationList = ({
                     onClick={() => onSelect(conversation.uuid)}
                     aria-current={activeUuid === conversation.uuid ? 'page' : undefined}
                     aria-label={`Open ${conversationTitle}`}
-                    className="w-full rounded-lg text-left focus-visible:ring-2 focus-visible:ring-[rgb(var(--color-primary))] focus-visible:outline-none"
+                    className="w-full rounded-lg text-left focus-visible:ring-2 focus-visible:ring-accent-text focus-visible:outline-none"
                   >
                     <div className="truncate pr-16 font-medium">{conversationTitle}</div>
                     <div className="mt-1 text-xs text-gray-400">
@@ -153,7 +153,7 @@ export const ConversationList = ({
                       onClick={() => startEditing(conversation)}
                       title="Rename conversation"
                       aria-label={`Rename ${conversationTitle}`}
-                      className="rounded-lg p-1.5 hover:bg-white/10 hover:text-[rgb(var(--color-primary))] focus-visible:ring-2 focus-visible:ring-[rgb(var(--color-primary))] focus-visible:outline-none"
+                      className="rounded-lg p-1.5 hover:bg-white/10 hover:text-accent-text focus-visible:ring-2 focus-visible:ring-accent-text focus-visible:outline-none"
                     >
                       <FiEdit2 size={14} aria-hidden="true" />
                     </button>

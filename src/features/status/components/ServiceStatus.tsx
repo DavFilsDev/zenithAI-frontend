@@ -45,7 +45,7 @@ export const ServiceStatus = () => {
     <div
       role="status"
       aria-live="polite"
-      className="fixed top-4 left-1/2 z-50 flex max-w-[calc(100vw-2rem)] -translate-x-1/2 flex-wrap items-center justify-center gap-2 rounded-full border border-white/10 bg-[rgb(var(--color-surface))] px-4 py-2 text-center text-sm shadow-lg"
+      className="fixed top-4 left-1/2 z-50 flex max-w-[calc(100vw-2rem)] -translate-x-1/2 flex-wrap items-center justify-center gap-2 rounded-full border border-white/10 bg-surface px-4 py-2 text-center text-sm shadow-lg"
     >
       <div
         className={`pointer-events-auto flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs font-medium shadow-lg backdrop-blur-md ${pillClasses[state]}`}

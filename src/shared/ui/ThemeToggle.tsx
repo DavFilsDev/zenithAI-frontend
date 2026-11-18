@@ -16,7 +16,7 @@ export const ThemeToggle = () => {
     >
       <div
         className={`absolute top-1 left-1 flex h-7 w-7 items-center justify-center rounded-full shadow-md transition-all duration-300 ease-in-out ${
-          isDark ? 'translate-x-0 bg-[rgb(var(--color-primary))]' : 'translate-x-7 bg-yellow-400'
+          isDark ? 'translate-x-0 bg-accent' : 'translate-x-7 bg-yellow-400'
         } `}
       />
 

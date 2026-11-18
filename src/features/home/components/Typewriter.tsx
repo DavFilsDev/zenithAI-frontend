@@ -40,7 +40,7 @@ export const Typewriter = ({ text, speed = 100 }: TypewriterProps) => {
       {!prefersReducedMotion && (
         <span
           aria-hidden="true"
-          className={`ml-1 text-[rgb(var(--color-primary))] ${showCursor ? 'opacity-100' : 'opacity-0'} `}
+          className={`ml-1 text-accent-text ${showCursor ? 'opacity-100' : 'opacity-0'} `}
         >
           |
         </span>

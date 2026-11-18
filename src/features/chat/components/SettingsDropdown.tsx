@@ -107,7 +107,7 @@ export const SettingsDropdown = ({
             id={menuId}
             role="group"
             aria-label="Settings menu"
-            className="animate-slide-right absolute top-0 left-full z-50 ml-5 min-w-[160px] overflow-hidden rounded-xl border border-white/10 bg-[rgb(var(--color-bg))] shadow-2xl"
+            className="absolute top-0 left-full z-50 ml-5 min-w-[160px] animate-slide-right overflow-hidden rounded-xl border border-white/10 bg-canvas shadow-2xl"
           >
             {menuItems(true)}
           </div>
@@ -141,7 +141,7 @@ export const SettingsDropdown = ({
           id={menuId}
           role="group"
           aria-label="Settings menu"
-          className="animate-slide-up absolute right-0 bottom-full left-0 z-50 mb-2 overflow-hidden rounded-xl border border-white/10 bg-[rgb(var(--color-bg))] shadow-2xl"
+          className="absolute right-0 bottom-full left-0 z-50 mb-2 animate-slide-up overflow-hidden rounded-xl border border-white/10 bg-canvas shadow-2xl"
         >
           {menuItems(false)}
         </div>
