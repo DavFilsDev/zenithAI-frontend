@@ -14,12 +14,12 @@
 | 0         | Cleanup               |      7 |      7 | In review   |
 | 1         | Foundation            |      5 |      5 | In review   |
 | 2         | Primitives            |      7 |      7 | Done        |
-| 3         | Chat                  |      9 |      5 | In progress |
+| 3         | Chat                  |      9 |      6 | In progress |
 | 4         | Auth                  |      3 |      0 | Planned     |
 | 5         | Landing               |      5 |      0 | Planned     |
 | 6         | Legal and error pages |      4 |      0 | Planned     |
 | 7         | Hardening             |     10 |      0 | Planned     |
-| **Total** |                       | **50** | **24** |             |
+| **Total** |                       | **50** | **25** |             |
 
 ---
 
@@ -375,7 +375,7 @@
   - **Depends on:** P3-T03, P3-T04.
   - **Risk:** High. The streaming state machine and announcements must not regress.
 
-- [ ] **P3-T06 Replace the empty chat state**
+- [x] **P3-T06 Replace the empty chat state**
   - **Design rules:** Design.md 8 (Empty state), 9.3, 11.
   - **Files:** `src/features/chat/pages/ChatPage.tsx`, `src/features/chat/components/ChatEmptyState.tsx` (to be created).
   - **Do:**

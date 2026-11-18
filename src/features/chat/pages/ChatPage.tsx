@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import { useChatUiStore } from '../model/chatUiStore';
 import { useConversation, useMessages } from '../model/useConversation';
 import { useSendMessage } from '../model/useSendMessage';
+import { ChatEmptyState } from '../components/ChatEmptyState';
 import { ChatWindow } from '../components/ChatWindow';
 import { Composer } from '../components/Composer';
 
@@ -65,12 +66,12 @@ export const ChatPage = () => {
             </button>
           </div>
         </header>
-        <div className="flex flex-1 items-center justify-center px-4 sm:px-6">
-          <div className="w-full max-w-[720px] text-center">
-            <h2 className="mb-2 text-h2 text-text">What's on your mind?</h2>
-            <p className="mb-6 text-body text-text-secondary">
-              Ask anything about your code — debugging, optimization, best practices
-            </p>
+        <ChatEmptyState />
+        <div
+          className="shrink-0 border-t border-border-subtle bg-canvas"
+          style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
+        >
+          <div className="mx-auto w-full max-w-[720px] px-4 py-3 sm:px-6">
             <Composer
               onSendMessage={handleSend}
               onStop={abort}

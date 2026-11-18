@@ -75,6 +75,7 @@ export const Composer = ({
     <form onSubmit={handleSubmit} className="w-full">
       <div className="relative flex items-end rounded-[var(--radius)] border border-border bg-raised px-3 py-2 focus-within:border-accent">
         <textarea
+          id="chat-composer"
           ref={textareaRef}
           value={draft}
           onChange={(event) => setDraft(event.target.value)}
