@@ -127,9 +127,8 @@ export const Dialog = ({
   return createPortal(
     <div className="fixed inset-0 z-[var(--z-index-modal)] flex items-center justify-center p-4">
       <div
-        className="fixed inset-0 z-[var(--z-index-overlay)] animate-fade-in bg-black/50"
+        className="fixed inset-0 z-[var(--z-index-overlay)] animate-fade-in bg-overlay"
         aria-hidden="true"
-        onClick={close}
       />
       <div
         ref={dialogRef}

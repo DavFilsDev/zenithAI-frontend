@@ -49,6 +49,7 @@
   --color-warning-subtle: rgb(217 164 65 / 0.12);
   --color-danger: #ff7a59;
   --color-danger-subtle: rgb(255 122 89 / 0.12);
+  --color-overlay: rgb(0 0 0 / 0.5);
 
   --font-sans: 'Geist Variable', ui-sans-serif, system-ui, sans-serif;
   --font-mono: 'Geist Mono Variable', ui-monospace, 'SF Mono', Menlo, monospace;
@@ -158,6 +159,7 @@
   --color-warning-subtle: rgb(154 103 0 / 0.12);
   --color-danger: #c2410c;
   --color-danger-subtle: rgb(194 65 12 / 0.12);
+  --color-overlay: rgb(0 0 0 / 0.4);
 
   --shadow-float: 0 8px 24px rgb(0 0 0 / 0.08);
 }
