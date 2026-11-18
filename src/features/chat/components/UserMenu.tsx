@@ -16,12 +16,12 @@ export const UserMenu = ({ username, expanded, onOpenProfile, onLogout }: UserMe
   const trigger = (
     <button
       type="button"
-      aria-label={expanded ? 'User menu' : `User menu for ${label}`}
+      aria-label={`${label}, user menu`}
       className={`flex w-full items-center rounded-[var(--radius)] text-ui text-text transition-colors duration-fast hover:bg-hover ${
         expanded ? 'h-9 gap-2 px-3' : 'h-9 justify-center px-0'
       }`}
     >
-      <Avatar name={label} size={24} />
+      <Avatar name={label} size={24} aria-hidden="true" />
       {expanded ? <span className="min-w-0 truncate">{label}</span> : null}
     </button>
   );
