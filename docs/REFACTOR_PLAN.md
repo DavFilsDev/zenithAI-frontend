@@ -9,17 +9,17 @@
 
 ## 1. Progress Overview
 
-| Phase     | Name                  |  Tasks |  Done | Status      |
-| --------- | --------------------- | -----: | ----: | ----------- |
-| 0         | Cleanup               |      7 |     7 | In review   |
-| 1         | Foundation            |      5 |     2 | In progress |
-| 2         | Primitives            |      7 |     0 | Planned     |
-| 3         | Chat                  |      9 |     0 | Planned     |
-| 4         | Auth                  |      3 |     0 | Planned     |
-| 5         | Landing               |      5 |     0 | Planned     |
-| 6         | Legal and error pages |      4 |     0 | Planned     |
-| 7         | Hardening             |     10 |     0 | Planned     |
-| **Total** |                       | **50** | **9** |             |
+| Phase     | Name                  |  Tasks |   Done | Status      |
+| --------- | --------------------- | -----: | -----: | ----------- |
+| 0         | Cleanup               |      7 |      7 | In review   |
+| 1         | Foundation            |      5 |      3 | In progress |
+| 2         | Primitives            |      7 |      0 | Planned     |
+| 3         | Chat                  |      9 |      0 | Planned     |
+| 4         | Auth                  |      3 |      0 | Planned     |
+| 5         | Landing               |      5 |      0 | Planned     |
+| 6         | Legal and error pages |      4 |      0 | Planned     |
+| 7         | Hardening             |     10 |      0 | Planned     |
+| **Total** |                       | **50** | **10** |             |
 
 ---
 
@@ -164,7 +164,7 @@
   - **Depends on:** P1-T01.
   - **Risk:** Medium. Font file paths and licenses must be verified.
 
-- [ ] **P1-T03 Migrate chat icons to `lucide-react`**
+- [x] **P1-T03 Migrate chat icons to `lucide-react`**
   - **Design rules:** Design.md 5, 15.
   - **Files:** `src/features/chat/components/Sidebar.tsx`, `src/features/chat/components/SidebarHeader.tsx`, `src/features/chat/components/ConversationList.tsx`, `src/features/chat/components/Composer.tsx`, `src/features/chat/components/SettingsDropdown.tsx`, `src/features/chat/components/UserButton.tsx`.
   - **Do:**

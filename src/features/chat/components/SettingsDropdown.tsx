@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useId, useRef, useState } from 'react';
-import { FiSettings, FiSun, FiMoon, FiLogOut } from 'react-icons/fi';
+import { LogOut, Moon, Settings, Sun } from 'lucide-react';
 import { useOnClickOutside } from '../../../shared/hooks/useOnClickOutside';
 
 interface SettingsDropdownProps {
@@ -44,7 +44,7 @@ export const SettingsDropdown = ({
   }, [isOpen]);
 
   const themeLabel = theme === 'light' ? 'Dark Mode' : 'Light Mode';
-  const ThemeIcon = theme === 'light' ? FiMoon : FiSun;
+  const ThemeIcon = theme === 'light' ? Moon : Sun;
 
   const menuItems = (nowrap: boolean) => (
     <>
@@ -58,7 +58,7 @@ export const SettingsDropdown = ({
           nowrap ? 'whitespace-nowrap' : ''
         }`}
       >
-        <ThemeIcon size={18} aria-hidden="true" />
+        <ThemeIcon size={16} strokeWidth={1.5} aria-hidden="true" />
         <span className="text-sm">{themeLabel}</span>
       </button>
 
@@ -74,7 +74,7 @@ export const SettingsDropdown = ({
           nowrap ? 'whitespace-nowrap' : ''
         }`}
       >
-        <FiLogOut size={18} aria-hidden="true" />
+        <LogOut size={16} strokeWidth={1.5} aria-hidden="true" />
         <span className="text-sm">Logout</span>
       </button>
     </>
@@ -94,8 +94,9 @@ export const SettingsDropdown = ({
           className="group flex w-full items-center justify-center rounded-lg p-2 transition-all duration-200 hover:bg-white/10"
           title="Settings"
         >
-          <FiSettings
+          <Settings
             size={20}
+            strokeWidth={1.5}
             aria-hidden="true"
             className="transition-transform duration-200 group-hover:rotate-90"
           />
@@ -127,8 +128,9 @@ export const SettingsDropdown = ({
         aria-controls={menuId}
         className="group flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-all duration-200 hover:bg-white/10"
       >
-        <FiSettings
-          size={18}
+        <Settings
+          size={16}
+          strokeWidth={1.5}
           aria-hidden="true"
           className="transition-transform duration-200 group-hover:rotate-90"
         />

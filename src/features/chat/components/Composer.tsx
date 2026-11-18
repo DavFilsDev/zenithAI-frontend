@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { IoSend } from 'react-icons/io5';
+import { ArrowUp } from 'lucide-react';
 import { useChatUiStore } from '../model/chatUiStore';
 
 interface ComposerProps {
@@ -66,7 +66,7 @@ export const Composer = ({ onSendMessage, disabled }: ComposerProps) => {
           aria-label="Send message"
           className="absolute right-1 bottom-1 flex items-center justify-center rounded-xl border border-white/20 bg-white/10 p-2 text-accent-text backdrop-blur-md transition-all duration-200 hover:bg-white/20 disabled:opacity-40 dark:border-white/10 dark:bg-white/5 dark:hover:bg-white/10"
         >
-          <IoSend size={18} />
+          <ArrowUp size={20} strokeWidth={1.5} />
         </button>
       </div>
     </form>

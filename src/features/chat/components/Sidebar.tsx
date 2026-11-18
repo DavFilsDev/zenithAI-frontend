@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { FiPlus } from 'react-icons/fi';
+import { Plus } from 'lucide-react';
 import { useTheme } from '../../../shared/ui/useTheme';
 import { notify } from '../../../shared/ui/notify';
 import type { User } from '../../../shared/api/types';
@@ -94,8 +94,9 @@ export const Sidebar = ({ user, onLogout, onOpenProfile }: SidebarProps) => {
     >
       <div className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-accent/25 to-transparent transition-transform duration-1000 group-hover:translate-x-full" />
       <span className="absolute top-1.5 right-1.5 h-1.5 w-1.5 animate-pulse rounded-full bg-green-400" />
-      <FiPlus
-        size={expanded ? 18 : 20}
+      <Plus
+        size={20}
+        strokeWidth={1.5}
         className="transition-all duration-300 group-hover:scale-110 group-hover:rotate-90"
       />
       {expanded && <span className="text-sm font-bold tracking-wide">New Chat</span>}
