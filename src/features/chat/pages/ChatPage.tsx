@@ -26,11 +26,11 @@ export const ChatPage = () => {
 
   if (!uuid) {
     return (
-      <div className="flex h-full flex-1 flex-col bg-canvas">
-        <div className="flex flex-1 items-center justify-center p-8">
-          <div className="w-full max-w-xl text-center">
-            <h2 className="mb-2 text-2xl font-semibold">What's on your mind?</h2>
-            <p className="mb-6 opacity-60">
+      <div className="flex h-full min-h-0 flex-1 flex-col bg-canvas">
+        <div className="flex flex-1 items-center justify-center px-4 sm:px-6">
+          <div className="w-full max-w-[720px] text-center">
+            <h2 className="mb-2 text-h2 text-text">What's on your mind?</h2>
+            <p className="mb-6 text-body text-text-secondary">
               Ask anything about your code — debugging, optimization, best practices
             </p>
             <Composer onSendMessage={handleSend} disabled={isSending} />

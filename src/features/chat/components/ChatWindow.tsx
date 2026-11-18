@@ -1,6 +1,6 @@
 import type { Message } from '../api/types';
-import { MessageList } from './MessageList';
 import { Composer } from './Composer';
+import { MessageList } from './MessageList';
 
 interface ChatWindowProps {
   title: string;
@@ -20,21 +20,25 @@ export const ChatWindow = ({
   disabled = false,
 }: ChatWindowProps) => {
   return (
-    <div className="flex h-full flex-1 flex-col bg-canvas">
-      <div className="border-b border-white/10 bg-white/10 py-4 backdrop-blur-md dark:bg-white/5">
-        <div className="mx-auto w-full max-w-4xl px-4">
-          <h2 className="truncate font-semibold text-text">{title}</h2>
+    <div className="flex h-full min-h-0 flex-1 flex-col bg-canvas">
+      <header
+        className="shrink-0 border-b border-border-subtle bg-canvas"
+        style={{ paddingTop: 'env(safe-area-inset-top)' }}
+      >
+        <div className="mx-auto flex h-12 w-full max-w-[720px] items-center px-4 sm:px-6">
+          <h2 className="truncate text-ui font-medium text-text">{title}</h2>
         </div>
+      </header>
+
+      <div className="min-h-0 flex-1 overflow-hidden">
+        <MessageList messages={messages} isLoading={isLoading} isSending={isSending} />
       </div>
 
-      <div className="flex-1 overflow-hidden">
-        <div className="mx-auto h-full max-w-4xl px-4">
-          <MessageList messages={messages} isLoading={isLoading} isSending={isSending} />
-        </div>
-      </div>
-
-      <div className="w-full">
-        <div className="mx-auto w-full max-w-4xl px-4">
+      <div
+        className="shrink-0 border-t border-border-subtle bg-canvas"
+        style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
+      >
+        <div className="mx-auto w-full max-w-[720px] px-4 py-3 sm:px-6">
           <Composer onSendMessage={onSendMessage} disabled={disabled || isSending} />
         </div>
       </div>

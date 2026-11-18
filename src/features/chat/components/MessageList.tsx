@@ -17,10 +17,10 @@ export const MessageList = ({ messages, isLoading, isSending }: MessageListProps
 
   if (messages.length === 0 && !isLoading) {
     return (
-      <div role="status" className="flex flex-1 items-center justify-center p-8">
-        <div className="text-center text-text opacity-60">
-          <p className="mb-2 text-lg">No messages yet</p>
-          <p className="text-sm">Start a conversation by sending a message below!</p>
+      <div role="status" className="flex h-full items-center justify-center px-4 sm:px-6">
+        <div className="mx-auto w-full max-w-[720px] text-center text-text-secondary">
+          <p className="mb-2 text-body">No messages yet</p>
+          <p className="text-small">Start a conversation by sending a message below.</p>
         </div>
       </div>
     );
@@ -33,23 +33,25 @@ export const MessageList = ({ messages, isLoading, isSending }: MessageListProps
       aria-live="polite"
       aria-relevant="additions text"
       aria-busy={isSending || undefined}
-      className="flex-1 space-y-4 overflow-y-auto p-4"
+      className="h-full overflow-y-auto"
     >
-      {messages.map((message) => (
-        <MessageBubble key={message.uuid} message={message} />
-      ))}
+      <div className="mx-auto w-full max-w-[720px] space-y-4 px-4 py-4 sm:px-6">
+        {messages.map((message) => (
+          <MessageBubble key={message.uuid} message={message} />
+        ))}
 
-      {isLoading && (
-        <div role="status" className="flex justify-center p-4">
-          <div
-            aria-hidden="true"
-            className="h-6 w-6 animate-spin rounded-full border-b-2 border-accent"
-          />
-          <span className="sr-only">Loading messages</span>
-        </div>
-      )}
+        {isLoading && (
+          <div role="status" className="flex justify-center p-4">
+            <div
+              aria-hidden="true"
+              className="h-6 w-6 animate-spin rounded-full border-b-2 border-accent"
+            />
+            <span className="sr-only">Loading messages</span>
+          </div>
+        )}
 
-      <div ref={messagesEndRef} />
+        <div ref={messagesEndRef} />
+      </div>
     </div>
   );
 };

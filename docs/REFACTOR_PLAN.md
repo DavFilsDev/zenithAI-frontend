@@ -9,17 +9,17 @@
 
 ## 1. Progress Overview
 
-| Phase     | Name                  |  Tasks |   Done | Status    |
-| --------- | --------------------- | -----: | -----: | --------- |
-| 0         | Cleanup               |      7 |      7 | In review |
-| 1         | Foundation            |      5 |      5 | In review |
-| 2         | Primitives            |      7 |      7 | Done      |
-| 3         | Chat                  |      9 |      0 | Planned   |
-| 4         | Auth                  |      3 |      0 | Planned   |
-| 5         | Landing               |      5 |      0 | Planned   |
-| 6         | Legal and error pages |      4 |      0 | Planned   |
-| 7         | Hardening             |     10 |      0 | Planned   |
-| **Total** |                       | **50** | **19** |           |
+| Phase     | Name                  |  Tasks |   Done | Status      |
+| --------- | --------------------- | -----: | -----: | ----------- |
+| 0         | Cleanup               |      7 |      7 | In review   |
+| 1         | Foundation            |      5 |      5 | In review   |
+| 2         | Primitives            |      7 |      7 | Done        |
+| 3         | Chat                  |      9 |      1 | In progress |
+| 4         | Auth                  |      3 |      0 | Planned     |
+| 5         | Landing               |      5 |      0 | Planned     |
+| 6         | Legal and error pages |      4 |      0 | Planned     |
+| 7         | Hardening             |     10 |      0 | Planned     |
+| **Total** |                       | **50** | **20** |             |
 
 ---
 
@@ -314,7 +314,7 @@
 
 ### Tasks
 
-- [ ] **P3-T01 Build the chat shell, landmarks, skip link, and 720px column**
+- [x] **P3-T01 Build the chat shell, landmarks, skip link, and 720px column**
   - **Design rules:** Design.md 6.2, 6.3, 7 (focus ring), 8, 11.
   - **Files:** `src/app/ChatShell.tsx`, `src/features/chat/components/ChatWindow.tsx`, `src/shared/ui/SkipLink.tsx` (to be created).
   - **Do:**
