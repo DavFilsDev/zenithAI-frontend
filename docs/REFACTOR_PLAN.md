@@ -9,17 +9,17 @@
 
 ## 1. Progress Overview
 
-| Phase     | Name                  |  Tasks |   Done | Status      |
-| --------- | --------------------- | -----: | -----: | ----------- |
-| 0         | Cleanup               |      7 |      7 | In review   |
-| 1         | Foundation            |      5 |      5 | In review   |
-| 2         | Primitives            |      7 |      7 | Done        |
-| 3         | Chat                  |      9 |      8 | In progress |
-| 4         | Auth                  |      3 |      0 | Planned     |
-| 5         | Landing               |      5 |      0 | Planned     |
-| 6         | Legal and error pages |      4 |      0 | Planned     |
-| 7         | Hardening             |     10 |      0 | Planned     |
-| **Total** |                       | **50** | **27** |             |
+| Phase     | Name                  |  Tasks |   Done | Status    |
+| --------- | --------------------- | -----: | -----: | --------- |
+| 0         | Cleanup               |      7 |      7 | In review |
+| 1         | Foundation            |      5 |      5 | In review |
+| 2         | Primitives            |      7 |      7 | Done      |
+| 3         | Chat                  |      9 |      9 | Done      |
+| 4         | Auth                  |      3 |      0 | Planned   |
+| 5         | Landing               |      5 |      0 | Planned   |
+| 6         | Legal and error pages |      4 |      0 | Planned   |
+| 7         | Hardening             |     10 |      0 | Planned   |
+| **Total** |                       | **50** | **28** |           |
 
 ---
 
@@ -411,7 +411,7 @@
   - **Depends on:** P2-T04, P3-T02.
   - **Risk:** Medium.
 
-- [ ] **P3-T09 Restyle the service status pill**
+- [x] **P3-T09 Restyle the service status pill**
   - **Design rules:** Design.md 2.1, 2.2, 3.1, 3.4, 3.6, 8 (Service status pill), 11.
   - **Files:** `src/features/status/components/ServiceStatus.tsx`, `src/features/status/components/ServiceStatus.test.tsx`.
   - **Do:**
