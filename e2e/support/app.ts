@@ -297,7 +297,8 @@ export const expectNoSeriousOrCriticalAxeViolations = async (page: Page): Promis
 };
 
 export const openProfileModal = async (page: Page): Promise<void> => {
-  const menuButton = page.getByRole('button', { name: 'ada, user menu' }).first();
+  await expect(page.getByRole('textbox', { name: 'Message' })).toBeVisible();
+  const menuButton = page.getByRole('button', { name: /user menu/ }).first();
   if (!(await menuButton.isVisible().catch(() => false))) {
     const openSidebar = page.getByRole('button', { name: 'Open sidebar' });
     if (await openSidebar.isVisible().catch(() => false)) {

@@ -12,11 +12,19 @@ interface UserMenuProps {
 
 export const UserMenu = ({ username, expanded, onOpenProfile, onLogout }: UserMenuProps) => {
   const label = username || 'User';
+  const initials =
+    label
+      .trim()
+      .split(/\s+/)
+      .filter(Boolean)
+      .slice(0, 2)
+      .map((part) => part[0]?.toUpperCase() ?? '')
+      .join('') || '?';
 
   const trigger = (
     <button
       type="button"
-      aria-label={`${label}, user menu`}
+      aria-label={expanded ? `${initials}${label}, user menu` : `${initials}, user menu`}
       className={`flex w-full items-center rounded-[var(--radius)] text-ui text-text transition-colors duration-fast hover:bg-hover ${
         expanded ? 'h-9 gap-2 px-3' : 'h-9 justify-center px-0'
       }`}
