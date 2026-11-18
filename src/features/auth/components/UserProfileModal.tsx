@@ -1,8 +1,9 @@
-import { useEffect, useId, useRef, useState, type ReactNode } from 'react';
-import { Mail, User as UserIcon, X } from 'lucide-react';
+import { useState } from 'react';
+import { Dialog } from '../../../shared/ui/Dialog';
 import { ApiError } from '../../../shared/api/apiError';
 import { notify } from '../../../shared/ui/notify';
 import type { UpdateProfilePayload, User } from '../../../shared/api/types';
+import { EditableField } from './EditableField';
 
 interface UserProfileModalProps {
   isOpen: boolean;
@@ -14,109 +15,7 @@ interface UserProfileModalProps {
   onUpdateProfile: (payload: UpdateProfilePayload) => Promise<User>;
 }
 
-const FOCUSABLE_SELECTOR =
-  'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
-
 type ProfileFieldName = 'email' | 'username';
-
-interface ProfileFieldProps {
-  field: ProfileFieldName;
-  label: string;
-  icon: ReactNode;
-  inputType: 'email' | 'text';
-  value: string;
-  displayValue: string;
-  isEditing: boolean;
-  errorMessage: string | null;
-  errorId: string;
-  isLoading: boolean;
-  onChange: (value: string) => void;
-  onStartEditing: () => void;
-  onCancel: () => void;
-  onSave: () => Promise<void> | void;
-}
-
-const ProfileField = ({
-  field,
-  label,
-  icon,
-  inputType,
-  value,
-  displayValue,
-  isEditing,
-  errorMessage,
-  errorId,
-  isLoading,
-  onChange,
-  onStartEditing,
-  onCancel,
-  onSave,
-}: ProfileFieldProps) => {
-  const inputId = `profile-${field}`;
-
-  return (
-    <div className="space-y-2">
-      <div className="flex items-center justify-between">
-        <label
-          htmlFor={inputId}
-          className="flex items-center gap-2 text-sm font-medium text-gray-400"
-        >
-          {icon} {label}
-        </label>
-        {!isEditing && (
-          <button
-            type="button"
-            onClick={onStartEditing}
-            aria-label={`Update ${field}`}
-            className="text-xs text-accent-text hover:underline"
-          >
-            Update
-          </button>
-        )}
-      </div>
-      {isEditing ? (
-        <div className="space-y-2">
-          <input
-            id={inputId}
-            type={inputType}
-            value={value}
-            onChange={(event) => onChange(event.target.value)}
-            aria-invalid={Boolean(errorMessage)}
-            aria-describedby={errorMessage ? errorId : undefined}
-            className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 transition-colors focus:border-accent focus:outline-none"
-          />
-          {errorMessage && (
-            <p id={errorId} role="alert" className="text-xs text-red-500">
-              {errorMessage}
-            </p>
-          )}
-          <div className="flex gap-2">
-            <button
-              type="button"
-              onClick={() => {
-                void onSave();
-              }}
-              disabled={isLoading}
-              aria-busy={isLoading || undefined}
-              className="flex-1 rounded-lg bg-accent px-3 py-1 text-white transition hover:opacity-90 disabled:opacity-50"
-            >
-              {isLoading ? 'Saving...' : 'Save'}
-            </button>
-            <button
-              type="button"
-              onClick={onCancel}
-              className="rounded-lg bg-white/10 px-3 py-1 transition hover:bg-white/20"
-            >
-              Cancel
-            </button>
-          </div>
-        </div>
-      ) : (
-        <div className="rounded-lg border border-white/10 bg-white/5 px-3 py-2">{displayValue}</div>
-      )}
-    </div>
-  );
-};
 
 export const UserProfileModal = ({
   isOpen,
@@ -129,72 +28,19 @@ export const UserProfileModal = ({
   const [username, setUsername] = useState('');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const dialogRef = useRef<HTMLDivElement>(null);
-  const onCloseRef = useRef(onClose);
-  const titleId = useId();
-  const emailErrorId = `${titleId}-email-error`;
-  const usernameErrorId = `${titleId}-username-error`;
 
-  onCloseRef.current = onClose;
+  const resetState = () => {
+    setEditingField(null);
+    setErrorMessage(null);
+    setIsLoading(false);
+  };
 
-  useEffect(() => {
-    if (!isOpen) {
-      return;
+  const handleOpenChange = (open: boolean) => {
+    if (!open) {
+      resetState();
+      onClose();
     }
-
-    const previouslyFocused =
-      document.activeElement instanceof HTMLElement ? document.activeElement : null;
-    const originalOverflow = document.body.style.overflow;
-    const dialog = dialogRef.current;
-
-    document.body.style.overflow = 'hidden';
-
-    const getFocusableElements = () =>
-      Array.from(dialog?.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR) ?? []);
-
-    getFocusableElements()[0]?.focus();
-
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        event.preventDefault();
-        onCloseRef.current();
-        return;
-      }
-
-      if (event.key !== 'Tab') {
-        return;
-      }
-
-      const focusableElements = getFocusableElements();
-
-      if (focusableElements.length === 0) {
-        event.preventDefault();
-        dialog?.focus();
-        return;
-      }
-
-      const firstElement = focusableElements[0];
-      const lastElement = focusableElements[focusableElements.length - 1];
-
-      if (event.shiftKey && document.activeElement === firstElement) {
-        event.preventDefault();
-        lastElement?.focus();
-      } else if (!event.shiftKey && document.activeElement === lastElement) {
-        event.preventDefault();
-        firstElement?.focus();
-      }
-    };
-
-    document.addEventListener('keydown', handleKeyDown);
-
-    return () => {
-      document.removeEventListener('keydown', handleKeyDown);
-      document.body.style.overflow = originalOverflow;
-      previouslyFocused?.focus();
-    };
-  }, [isOpen]);
-
-  if (!isOpen) return null;
+  };
 
   const startEditing = (field: ProfileFieldName) => {
     setEmail(user.email);
@@ -244,78 +90,46 @@ export const UserProfileModal = ({
   };
 
   return (
-    <>
-      <button
-        type="button"
-        aria-label="Close profile dialog"
-        tabIndex={-1}
-        className="fixed inset-0 z-50 animate-fade-in bg-black/50 backdrop-blur-sm"
-        onClick={onClose}
-      />
+    <Dialog open={isOpen} onOpenChange={handleOpenChange} title="Profile">
+      <div className="space-y-6">
+        <EditableField
+          label="Email"
+          value={user.email}
+          draftValue={email}
+          isEditing={editingField === 'email'}
+          isSaving={isLoading && editingField === 'email'}
+          error={editingField === 'email' ? errorMessage : null}
+          inputType="email"
+          autoComplete="email"
+          onDraftChange={setEmail}
+          onStartEdit={() => startEditing('email')}
+          onCancel={cancelEditing}
+          onSave={() => {
+            void handleUpdateEmail();
+          }}
+        />
 
-      <div
-        ref={dialogRef}
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby={titleId}
-        aria-busy={isLoading || undefined}
-        tabIndex={-1}
-        className="fixed top-1/2 left-1/2 z-50 w-full max-w-md -translate-x-1/2 -translate-y-1/2 animate-scale-up rounded-2xl border border-white/10 bg-canvas shadow-2xl"
-      >
-        <div className="flex items-center justify-between border-b border-white/10 p-6">
-          <h2 id={titleId} className="text-xl font-bold">
-            Profile
-          </h2>
-          <button
-            type="button"
-            onClick={onClose}
-            aria-label="Close profile"
-            className="rounded-lg p-1 transition-colors hover:bg-white/10"
-          >
-            <X size={20} strokeWidth={1.5} aria-hidden="true" />
-          </button>
-        </div>
-
-        <div className="space-y-4 p-6">
-          <ProfileField
-            field="email"
-            label="Email"
-            icon={<Mail size={14} strokeWidth={1.5} aria-hidden="true" />}
-            inputType="email"
-            value={email}
-            displayValue={user.email}
-            isEditing={editingField === 'email'}
-            errorMessage={errorMessage}
-            errorId={emailErrorId}
-            isLoading={isLoading}
-            onChange={setEmail}
-            onStartEditing={() => startEditing('email')}
-            onCancel={cancelEditing}
-            onSave={handleUpdateEmail}
-          />
-
-          <ProfileField
-            field="username"
-            label="Username"
-            icon={<UserIcon size={14} strokeWidth={1.5} aria-hidden="true" />}
-            inputType="text"
-            value={username}
-            displayValue={user.username}
-            isEditing={editingField === 'username'}
-            errorMessage={errorMessage}
-            errorId={usernameErrorId}
-            isLoading={isLoading}
-            onChange={setUsername}
-            onStartEditing={() => startEditing('username')}
-            onCancel={cancelEditing}
-            onSave={handleUpdateUsername}
-          />
-        </div>
+        <EditableField
+          label="Username"
+          value={user.username}
+          draftValue={username}
+          isEditing={editingField === 'username'}
+          isSaving={isLoading && editingField === 'username'}
+          error={editingField === 'username' ? errorMessage : null}
+          inputType="text"
+          autoComplete="username"
+          onDraftChange={setUsername}
+          onStartEdit={() => startEditing('username')}
+          onCancel={cancelEditing}
+          onSave={() => {
+            void handleUpdateUsername();
+          }}
+        />
 
         <span className="sr-only" role="status" aria-live="polite">
           {isLoading ? 'Saving profile changes' : ''}
         </span>
       </div>
-    </>
+    </Dialog>
   );
 };

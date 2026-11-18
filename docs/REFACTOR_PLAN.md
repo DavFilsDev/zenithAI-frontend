@@ -15,11 +15,11 @@
 | 1         | Foundation            |      5 |      5 | In review |
 | 2         | Primitives            |      7 |      7 | Done      |
 | 3         | Chat                  |      9 |      9 | Done      |
-| 4         | Auth                  |      3 |      0 | Planned   |
+| 4         | Auth                  |      3 |      3 | In review |
 | 5         | Landing               |      5 |      0 | Planned   |
 | 6         | Legal and error pages |      4 |      0 | Planned   |
 | 7         | Hardening             |     10 |      0 | Planned   |
-| **Total** |                       | **50** | **28** |           |
+| **Total** |                       | **50** | **31** |           |
 
 ---
 
@@ -296,14 +296,14 @@
 
 ### Phase 2 exit checklist
 
-- [ ] `npm run format:check`
-- [ ] `npm run lint`
-- [ ] `npm run type-check`
-- [ ] `npm run test`
-- [ ] `npm run test:e2e`
-- [ ] `npm run build`
+- [x] `npm run format:check`
+- [x] `npm run lint`
+- [x] `npm run type-check`
+- [x] `npm run test`
+- [x] `npm run test:e2e`
+- [x] `npm run build`
 - [ ] Screenshot review at 390px and 1280px, dark and light
-- [ ] `rg 'GlassButton|AnimatedBackground|Typewriter|backdrop-blur|rounded-xl|rounded-2xl|shadow-xl|shadow-2xl|hover:scale|active:scale' src` reviewed
+- [x] `rg 'GlassButton|AnimatedBackground|Typewriter|backdrop-blur|rounded-xl|rounded-2xl|shadow-xl|shadow-2xl|hover:scale|active:scale' src` reviewed
 
 ---
 
@@ -424,14 +424,14 @@
 
 ### Phase 3 exit checklist
 
-- [ ] `npm run format:check`
-- [ ] `npm run lint`
-- [ ] `npm run type-check`
-- [ ] `npm run test`
-- [ ] `npm run test:e2e`
-- [ ] `npm run build`
+- [x] `npm run format:check`
+- [x] `npm run lint`
+- [x] `npm run type-check`
+- [x] `npm run test`
+- [x] `npm run test:e2e`
+- [x] `npm run build`
 - [ ] Screenshot review at 390px and 1280px, dark and light
-- [ ] `rg 'window\.confirm|backdrop-blur|bg-white/|border-white/|animate-bounce|animate-pulse|hover:scale|active:scale|h-screen' src/features/chat src/app/ChatShell.tsx` reviewed
+- [x] `rg 'window\.confirm|backdrop-blur|bg-white/|border-white/|animate-bounce|animate-pulse|hover:scale|active:scale|h-screen' src/features/chat src/app/ChatShell.tsx` reviewed
 
 ---
 
@@ -442,7 +442,7 @@
 
 ### Tasks
 
-- [ ] **P4-T01 Build AuthLayout and refactor Login and Register**
+- [x] **P4-T01 Build AuthLayout and refactor Login and Register**
   - **Design rules:** Design.md 2.1, 2.3, 3.5, 9.2, 11, 15.
   - **Files:** `src/features/auth/components/AuthLayout.tsx` (to be created), `src/features/auth/pages/LoginPage.tsx`, `src/features/auth/pages/RegisterPage.tsx`, `src/shared/ui/CardHeader.tsx` (delete).
   - **Do:**
@@ -454,7 +454,7 @@
   - **Depends on:** P2-T02.
   - **Risk:** Medium.
 
-- [ ] **P4-T02 Refactor the profile modal onto Dialog and EditableField**
+- [x] **P4-T02 Refactor the profile modal onto Dialog and EditableField**
   - **Design rules:** Design.md 7 (Dialog), 9.5, 11.
   - **Files:** `src/features/auth/components/UserProfileModal.tsx`, `src/features/auth/components/EditableField.tsx` (to be created).
   - **Do:**
@@ -465,7 +465,7 @@
   - **Depends on:** P2-T05, P4-T01.
   - **Risk:** Medium.
 
-- [ ] **P4-T03 Update auth tests for the new layout and dialog**
+- [x] **P4-T03 Update auth tests for the new layout and dialog**
   - **Design rules:** Design.md 11, 15.
   - **Files:** `src/features/auth/pages/authFlows.test.tsx`, `src/features/auth/components/UserProfileModal.test.tsx`.
   - **Do:**
@@ -478,14 +478,14 @@
 
 ### Phase 4 exit checklist
 
-- [ ] `npm run format:check`
-- [ ] `npm run lint`
-- [ ] `npm run type-check`
-- [ ] `npm run test`
-- [ ] `npm run test:e2e`
-- [ ] `npm run build`
+- [x] `npm run format:check`
+- [x] `npm run lint`
+- [x] `npm run type-check`
+- [x] `npm run test`
+- [x] `npm run test:e2e`
+- [x] `npm run build`
 - [ ] Screenshot review at 390px and 1280px, dark and light
-- [ ] `rg 'CardHeader|backdrop-blur|rounded-2xl|shadow-xl|shadow-2xl|text-gray|dark:' src/features/auth src/shared/ui/CardHeader.tsx` reviewed
+- [x] `rg 'CardHeader|backdrop-blur|rounded-2xl|shadow-xl|shadow-2xl|text-gray|dark:' src/features/auth src/shared/ui/CardHeader.tsx` reviewed
 
 ---
 

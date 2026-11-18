@@ -42,11 +42,13 @@ describe('UserProfileModal', () => {
     );
 
     expect(screen.getByRole('dialog', { name: 'Profile' })).toHaveAttribute('aria-modal', 'true');
-    const closeButton = screen.getByRole('button', { name: 'Close profile' });
+    const closeButton = screen.getByRole('button', { name: 'Close dialog' });
     const lastButton = screen.getByRole('button', { name: 'Update username' });
     const userEventInstance = userEvent.setup();
 
-    expect(closeButton).toHaveFocus();
+    await waitFor(() => {
+      expect(closeButton).toHaveFocus();
+    });
     expect(document.body.style.overflow).toBe('hidden');
 
     await userEventInstance.tab({ shift: true });
@@ -71,17 +73,17 @@ describe('UserProfileModal', () => {
     trigger.remove();
   });
 
-  it('renders nothing when closed and closes from both close controls', async () => {
+  it('renders nothing when closed and closes from dialog controls', async () => {
     const { onClose } = renderModal(false);
     expect(screen.queryByText('Profile')).not.toBeInTheDocument();
 
     const userEventInstance = userEvent.setup();
     const { onClose: openOnClose } = renderModal();
 
-    await userEventInstance.click(screen.getByRole('button', { name: 'Close profile' }));
+    await userEventInstance.click(screen.getByRole('button', { name: 'Close dialog' }));
     expect(openOnClose).toHaveBeenCalledTimes(1);
 
-    await userEventInstance.click(screen.getByLabelText('Close profile dialog'));
+    await userEventInstance.click(document.querySelector('[aria-hidden="true"].fixed.inset-0')!);
     expect(openOnClose).toHaveBeenCalledTimes(2);
 
     expect(onClose).not.toHaveBeenCalled();
@@ -105,7 +107,7 @@ describe('UserProfileModal', () => {
     await userEventInstance.type(emailInput, 'new@example.com');
     await userEventInstance.click(screen.getByRole('button', { name: 'Save' }));
 
-    expect(screen.getByRole('button', { name: 'Saving...' })).toBeDisabled();
+    expect(screen.getByRole('button', { name: 'Save' })).toBeDisabled();
     expect(onUpdateProfile).toHaveBeenCalledWith({ email: 'new@example.com' });
 
     resolveUpdate({ ...user, email: 'new@example.com' });
