@@ -12,14 +12,14 @@
 | Phase     | Name                  |  Tasks |  Done | Status      |
 | --------- | --------------------- | -----: | ----: | ----------- |
 | 0         | Cleanup               |      7 |     7 | In review   |
-| 1         | Foundation            |      5 |     1 | In progress |
+| 1         | Foundation            |      5 |     2 | In progress |
 | 2         | Primitives            |      7 |     0 | Planned     |
 | 3         | Chat                  |      9 |     0 | Planned     |
 | 4         | Auth                  |      3 |     0 | Planned     |
 | 5         | Landing               |      5 |     0 | Planned     |
 | 6         | Legal and error pages |      4 |     0 | Planned     |
 | 7         | Hardening             |     10 |     0 | Planned     |
-| **Total** |                       | **50** | **8** |             |
+| **Total** |                       | **50** | **9** |             |
 
 ---
 
@@ -152,9 +152,9 @@
   - **Depends on:** Phase 0.
   - **Risk:** High. This task changes the visual foundation and must be reviewed first.
 
-- [ ] **P1-T02 Self-host Geist Sans and Geist Mono**
+- [x] **P1-T02 Self-host Geist Sans and Geist Mono**
   - **Design rules:** Design.md 3.4, 10.3, 15.
-  - **Files:** `package.json`, `package-lock.json`, `index.html`, `src/index.css`, `public/fonts/geist-variable.woff2` (to be created), `public/fonts/geist-mono-variable.woff2` (to be created).
+  - **Files:** `package.json`, `package-lock.json`, `index.html`, `src/index.css`, `public/fonts/geist-variable.woff2`, `public/fonts/geist-mono-variable.woff2`, `public/fonts/LICENSE-geist.txt`, `public/fonts/LICENSE-geist-mono.txt`.
   - **Do:**
     - Install `@fontsource-variable/geist` and `@fontsource-variable/geist-mono` as dependencies.
     - Copy the two variable font files into `public/fonts/` and declare `@font-face` in `src/index.css` with `font-display: swap` and the correct weight range.
