@@ -13,13 +13,13 @@
 | --------- | --------------------- | -----: | -----: | ----------- |
 | 0         | Cleanup               |      7 |      7 | In review   |
 | 1         | Foundation            |      5 |      5 | In review   |
-| 2         | Primitives            |      7 |      3 | In progress |
+| 2         | Primitives            |      7 |      4 | In progress |
 | 3         | Chat                  |      9 |      0 | Planned     |
 | 4         | Auth                  |      3 |      0 | Planned     |
 | 5         | Landing               |      5 |      0 | Planned     |
 | 6         | Legal and error pages |      4 |      0 | Planned     |
 | 7         | Hardening             |     10 |      0 | Planned     |
-| **Total** |                       | **50** | **15** |             |
+| **Total** |                       | **50** | **16** |             |
 
 ---
 
@@ -250,7 +250,7 @@
   - **Depends on:** P1-T01.
   - **Risk:** Low.
 
-- [ ] **P2-T04 Build Menu and Tooltip primitives**
+- [x] **P2-T04 Build Menu and Tooltip primitives**
   - **Design rules:** Design.md 3.7, 7 (Menu/Dropdown, Tooltip), 10.2, 11.
   - **Files:** `src/shared/ui/Menu.tsx` (to be created), `src/shared/ui/Tooltip.tsx` (to be created), `src/shared/ui/Menu.test.tsx` (to be created).
   - **Do:**
