@@ -214,17 +214,117 @@
     --tw-prose-th-borders: var(--color-border);
     --tw-prose-td-borders: var(--color-border-subtle);
     max-width: 68ch;
+    color: var(--color-text);
+  }
+
+  .prose :where(h1) {
+    color: var(--color-text);
+    font-size: var(--text-h1);
+    line-height: var(--text-h1--line-height);
+    letter-spacing: var(--text-h1--letter-spacing);
+    font-weight: var(--text-h1--font-weight);
+  }
+
+  .prose :where(h2) {
+    color: var(--color-text);
+    font-size: var(--text-h2);
+    line-height: var(--text-h2--line-height);
+    letter-spacing: var(--text-h2--letter-spacing);
+    font-weight: var(--text-h2--font-weight);
+  }
+
+  .prose :where(h3) {
+    color: var(--color-text);
+    font-size: var(--text-h3);
+    line-height: var(--text-h3--line-height);
+    font-weight: var(--text-h3--font-weight);
+  }
+
+  .prose :where(h4) {
+    color: var(--color-text);
+    font-size: var(--text-body);
+    line-height: var(--text-body--line-height);
+    font-weight: var(--text-h3--font-weight);
+  }
+
+  .prose :where(p, li) {
+    color: var(--color-text);
+    font-size: var(--text-body);
+    line-height: var(--text-body--line-height);
+  }
+
+  .prose :where(a) {
+    color: var(--color-accent-text);
+    text-decoration-line: underline;
+    text-underline-offset: 2px;
+  }
+
+  .prose :where(ul, ol) {
+    display: grid;
+    gap: 8px;
+  }
+
+  .prose :where(li)::marker {
+    color: var(--color-border-strong);
+  }
+
+  .prose :where(blockquote) {
+    border-left: 2px solid var(--color-border-strong);
+    color: var(--color-text-secondary);
+    font-style: normal;
+  }
+
+  .prose :where(table) {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .prose :where(th, td) {
+    border: 1px solid var(--color-border);
+    padding: 8px 12px;
+  }
+
+  .prose :where(th) {
+    border-bottom-color: var(--color-border);
+    color: var(--color-text);
+    font-weight: var(--text-ui--font-weight);
+  }
+
+  .prose :where(hr) {
+    border-color: var(--color-border);
+  }
+
+  .prose :where(:not(pre) > code) {
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-sm);
+    background-color: var(--color-raised);
+    color: var(--color-text);
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+    padding: 1px 4px;
+  }
+
+  .prose :where(:not(pre) > code)::before,
+  .prose :where(:not(pre) > code)::after {
+    content: none;
   }
 
   .prose pre {
     margin: 0;
+    padding: 0;
+    background: transparent;
+    border: 0;
   }
 
+  .prose pre code,
   .prose pre code.hljs {
     display: block;
     padding: 0;
     background: transparent;
     color: var(--color-text);
+    font-family: var(--font-mono);
+    font-size: 13px;
+    line-height: 20px;
   }
 
   .hljs-comment,

@@ -14,12 +14,12 @@
 | 0         | Cleanup               |      7 |      7 | In review   |
 | 1         | Foundation            |      5 |      5 | In review   |
 | 2         | Primitives            |      7 |      7 | Done        |
-| 3         | Chat                  |      9 |      3 | In progress |
+| 3         | Chat                  |      9 |      4 | In progress |
 | 4         | Auth                  |      3 |      0 | Planned     |
 | 5         | Landing               |      5 |      0 | Planned     |
 | 6         | Legal and error pages |      4 |      0 | Planned     |
 | 7         | Hardening             |     10 |      0 | Planned     |
-| **Total** |                       | **50** | **22** |             |
+| **Total** |                       | **50** | **23** |             |
 
 ---
 
@@ -351,7 +351,7 @@
   - **Depends on:** P3-T01.
   - **Risk:** High.
 
-- [ ] **P3-T04 Restyle markdown and code blocks**
+- [x] **P3-T04 Restyle markdown and code blocks**
   - **Design rules:** Design.md 3.4, 3.6, 8 (Markdown/prose, Code blocks), 10.
   - **Files:** `src/features/chat/components/MessageBubble.tsx`, `src/index.css`.
   - **Do:**

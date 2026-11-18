@@ -1,3 +1,4 @@
+import { Children, isValidElement, type HTMLAttributes, type ReactNode } from 'react';
 import ReactMarkdown, { defaultUrlTransform, type Components } from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeSanitize from 'rehype-sanitize';
@@ -21,17 +22,84 @@ const safeUrlTransform = (url: string): string => {
   return '';
 };
 
+const getNodeText = (node: ReactNode): string => {
+  if (node == null || typeof node === 'boolean') {
+    return '';
+  }
+  if (typeof node === 'string' || typeof node === 'number') {
+    return String(node);
+  }
+  if (Array.isArray(node)) {
+    return node.map(getNodeText).join('');
+  }
+  if (isValidElement<{ children?: ReactNode }>(node)) {
+    return getNodeText(node.props.children);
+  }
+  return '';
+};
+
+const getCodeLanguage = (className?: string): string => {
+  const match = /language-([a-z0-9_-]+)/i.exec(className ?? '');
+  return match?.[1] ?? 'text';
+};
+
+const copyText = async (text: string) => {
+  if (!navigator.clipboard) {
+    notify.error('Clipboard is not available.');
+    return;
+  }
+
+  try {
+    await navigator.clipboard.writeText(text);
+    notify.success('Copied to clipboard.');
+  } catch {
+    notify.error('Could not copy message.');
+  }
+};
+
+type CodeElementProps = HTMLAttributes<HTMLElement> & { children?: ReactNode };
+
+const CodeBlock = ({
+  children,
+  ...preProps
+}: HTMLAttributes<HTMLPreElement> & { children?: ReactNode }) => {
+  const child = Children.toArray(children)[0];
+  const codeElement = isValidElement<CodeElementProps>(child) ? child : null;
+  const language = getCodeLanguage(codeElement?.props.className);
+  const codeText = getNodeText(codeElement?.props.children ?? children);
+  const label = language === 'text' ? 'Code block' : `${language} code block`;
+
+  return (
+    <div className="my-4 overflow-hidden rounded-[var(--radius)] border border-border bg-raised">
+      <div className="flex items-center justify-between border-b border-border-subtle px-3 py-2">
+        <span className="font-mono text-small text-text-secondary">{language}</span>
+        <button
+          type="button"
+          onClick={() => {
+            void copyText(codeText.replace(/\n$/, ''));
+          }}
+          aria-label="Copy code"
+          title="Copy code"
+          className="flex h-8 w-8 items-center justify-center rounded-[var(--radius-sm)] text-text-secondary transition-colors duration-fast hover:bg-hover hover:text-text"
+        >
+          <Copy size={14} strokeWidth={1.5} aria-hidden="true" />
+        </button>
+      </div>
+      <pre
+        {...preProps}
+        role="region"
+        aria-label={label}
+        tabIndex={0}
+        className="overflow-x-auto p-4 font-mono text-[13px] leading-[20px] text-text"
+      >
+        {children}
+      </pre>
+    </div>
+  );
+};
+
 const markdownComponents: Components = {
-  pre: ({ children }) => (
-    <pre
-      role="region"
-      aria-label="Code block"
-      tabIndex={0}
-      className="my-4 overflow-x-auto rounded-xl border border-white/10 bg-slate-950 p-4 text-sm text-slate-100"
-    >
-      {children}
-    </pre>
-  ),
+  pre: CodeBlock,
   code: ({ className, children, ...props }) => {
     const isBlock = Boolean(className?.includes('language-') || className?.includes('hljs'));
 
@@ -45,7 +113,7 @@ const markdownComponents: Components = {
 
     return (
       <code
-        className="rounded bg-white/10 px-1.5 py-0.5 font-mono text-[0.9em] text-accent-text"
+        className="rounded-[var(--radius-sm)] border border-border-subtle bg-raised px-1 py-px font-mono text-[0.9em] text-text"
         {...props}
       >
         {children}
@@ -57,20 +125,6 @@ const markdownComponents: Components = {
 export const MessageBubble = ({ message }: MessageBubbleProps) => {
   const isUser = message.role === 'user';
   const isTyping = !isUser && message.content === '';
-
-  const handleCopy = async () => {
-    if (!navigator.clipboard) {
-      notify.error('Clipboard is not available.');
-      return;
-    }
-
-    try {
-      await navigator.clipboard.writeText(message.content);
-      notify.success('Copied to clipboard.');
-    } catch {
-      notify.error('Could not copy message.');
-    }
-  };
 
   const timestamp = new Date(message.created_at).toLocaleTimeString([], {
     hour: '2-digit',
@@ -89,7 +143,7 @@ export const MessageBubble = ({ message }: MessageBubbleProps) => {
         <button
           type="button"
           onClick={() => {
-            void handleCopy();
+            void copyText(message.content);
           }}
           aria-label="Copy message"
           title="Copy message"
@@ -129,7 +183,7 @@ export const MessageBubble = ({ message }: MessageBubbleProps) => {
           />
         </div>
       ) : (
-        <div className="prose prose-sm max-w-none dark:prose-invert">
+        <div className="prose max-w-none">
           <ReactMarkdown
             remarkPlugins={[remarkGfm]}
             rehypePlugins={[rehypeSanitize, rehypeHighlight]}
