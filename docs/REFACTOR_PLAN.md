@@ -296,14 +296,14 @@
 
 ### Phase 2 exit checklist
 
-- [ ] `npm run format:check`
-- [ ] `npm run lint`
-- [ ] `npm run type-check`
-- [ ] `npm run test`
-- [ ] `npm run test:e2e`
-- [ ] `npm run build`
+- [x] `npm run format:check`
+- [x] `npm run lint`
+- [x] `npm run type-check`
+- [x] `npm run test`
+- [x] `npm run test:e2e`
+- [x] `npm run build`
 - [ ] Screenshot review at 390px and 1280px, dark and light
-- [ ] `rg 'GlassButton|AnimatedBackground|Typewriter|backdrop-blur|rounded-xl|rounded-2xl|shadow-xl|shadow-2xl|hover:scale|active:scale' src` reviewed
+- [x] `rg 'GlassButton|AnimatedBackground|Typewriter|backdrop-blur|rounded-xl|rounded-2xl|shadow-xl|shadow-2xl|hover:scale|active:scale' src` reviewed
 
 ---
 
@@ -424,14 +424,14 @@
 
 ### Phase 3 exit checklist
 
-- [ ] `npm run format:check`
-- [ ] `npm run lint`
-- [ ] `npm run type-check`
-- [ ] `npm run test`
-- [ ] `npm run test:e2e`
-- [ ] `npm run build`
+- [x] `npm run format:check`
+- [x] `npm run lint`
+- [x] `npm run type-check`
+- [x] `npm run test`
+- [x] `npm run test:e2e`
+- [x] `npm run build`
 - [ ] Screenshot review at 390px and 1280px, dark and light
-- [ ] `rg 'window\.confirm|backdrop-blur|bg-white/|border-white/|animate-bounce|animate-pulse|hover:scale|active:scale|h-screen' src/features/chat src/app/ChatShell.tsx` reviewed
+- [x] `rg 'window\.confirm|backdrop-blur|bg-white/|border-white/|animate-bounce|animate-pulse|hover:scale|active:scale|h-screen' src/features/chat src/app/ChatShell.tsx` reviewed
 
 ---
 
