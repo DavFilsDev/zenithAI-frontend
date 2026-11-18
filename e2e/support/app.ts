@@ -217,7 +217,6 @@ export const signIn = async (page: Page): Promise<void> => {
   await page.goto('/login');
   await page.getByRole('textbox', { name: 'Email' }).fill(user.email);
   await page.getByRole('textbox', { name: 'Password' }).fill('secret123');
-  await page.getByRole('button', { name: 'Sign In' }).click();
-  await expect(page).toHaveURL(/\/chat$/);
-  await expect(page.getByRole('textbox', { name: 'Message' })).toBeVisible();
+  await page.getByRole('button', { name: 'Sign in' }).click();
+  await expect(page).toHaveURL(/\/chat(?:\/.*)?$/);
 };

@@ -26,9 +26,12 @@ describe('authentication flows', () => {
     const user = userEvent.setup();
     renderWithProviders(<LoginPage />, { route: '/login', path: '/login' });
 
+    expect(screen.getByRole('main')).toHaveClass('px-4');
+    expect(screen.getByRole('heading', { name: 'Sign in' })).toBeInTheDocument();
+
     await user.type(screen.getByLabelText('Email'), 'ada@example.com');
     await user.type(screen.getByLabelText('Password'), 'secret123');
-    await user.click(screen.getByRole('button', { name: 'Sign In' }));
+    await user.click(screen.getByRole('button', { name: 'Sign in' }));
 
     await waitFor(() => {
       expect(screen.getByLabelText('location')).toHaveTextContent('/chat');
@@ -72,20 +75,20 @@ describe('authentication flows', () => {
 
     await user.type(screen.getByLabelText('Email'), 'ada@example.com');
     await user.type(screen.getByLabelText('Password'), 'secret123');
-    await user.click(screen.getByRole('button', { name: 'Sign In' }));
+    await user.click(screen.getByRole('button', { name: 'Sign in' }));
 
     expect(
       await screen.findByText('Invalid email or password. Please try again.'),
     ).toBeInTheDocument();
 
     mode = 'validation';
-    await user.click(screen.getByRole('button', { name: 'Sign In' }));
+    await user.click(screen.getByRole('button', { name: 'Sign in' }));
     expect(
       await screen.findByText('Invalid request format. Please check your input.'),
     ).toBeInTheDocument();
 
     mode = 'server';
-    await user.click(screen.getByRole('button', { name: 'Sign In' }));
+    await user.click(screen.getByRole('button', { name: 'Sign in' }));
     expect(await screen.findByText('Server exploded.')).toBeInTheDocument();
   });
 
@@ -116,7 +119,7 @@ describe('authentication flows', () => {
     await user.type(screen.getByLabelText('Username'), 'grace');
     await user.type(screen.getByLabelText('Password'), 'secret123');
     await user.type(screen.getByLabelText('Confirm Password'), 'secret123');
-    await user.click(screen.getByRole('button', { name: 'Sign Up' }));
+    await user.click(screen.getByRole('button', { name: 'Create account' }));
 
     expect(await screen.findByText('Already used')).toBeInTheDocument();
     expect(await screen.findByText('Taken')).toBeInTheDocument();
@@ -140,7 +143,7 @@ describe('authentication flows', () => {
     await user.type(screen.getByLabelText('Username'), 'grace');
     await user.type(screen.getByLabelText('Password'), 'secret123');
     await user.type(screen.getByLabelText('Confirm Password'), 'secret123');
-    await user.click(screen.getByRole('button', { name: 'Sign Up' }));
+    await user.click(screen.getByRole('button', { name: 'Create account' }));
 
     expect(await screen.findByText('Registration failed.')).toBeInTheDocument();
   });
@@ -158,11 +161,14 @@ describe('authentication flows', () => {
     const user = userEvent.setup();
     renderWithProviders(<RegisterPage />, { route: '/register', path: '/register' });
 
+    expect(screen.getByRole('main')).toHaveClass('px-4');
+    expect(screen.getByRole('heading', { name: 'Create account' })).toBeInTheDocument();
+
     await user.type(screen.getByLabelText('Email'), 'grace@example.com');
     await user.type(screen.getByLabelText('Username'), 'grace');
     await user.type(screen.getByLabelText('Password'), 'secret123');
     await user.type(screen.getByLabelText('Confirm Password'), 'secret123');
-    await user.click(screen.getByRole('button', { name: 'Sign Up' }));
+    await user.click(screen.getByRole('button', { name: 'Create account' }));
 
     await waitFor(() => {
       expect(screen.getByLabelText('location')).toHaveTextContent('/login');
