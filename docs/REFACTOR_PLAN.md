@@ -13,13 +13,13 @@
 | --------- | --------------------- | -----: | -----: | ----------- |
 | 0         | Cleanup               |      7 |      7 | In review   |
 | 1         | Foundation            |      5 |      5 | In review   |
-| 2         | Primitives            |      7 |      4 | In progress |
+| 2         | Primitives            |      7 |      5 | In progress |
 | 3         | Chat                  |      9 |      0 | Planned     |
 | 4         | Auth                  |      3 |      0 | Planned     |
 | 5         | Landing               |      5 |      0 | Planned     |
 | 6         | Legal and error pages |      4 |      0 | Planned     |
 | 7         | Hardening             |     10 |      0 | Planned     |
-| **Total** |                       | **50** | **16** |             |
+| **Total** |                       | **50** | **17** |             |
 
 ---
 
@@ -261,7 +261,7 @@
   - **Depends on:** P1-T01.
   - **Risk:** Medium.
 
-- [ ] **P2-T05 Build Dialog and ConfirmDialog primitives**
+- [x] **P2-T05 Build Dialog and ConfirmDialog primitives**
   - **Design rules:** Design.md 2.1, 2.4, 3.6, 3.7, 7 (Dialog), 9.5, 11.
   - **Files:** `src/shared/ui/Dialog.tsx` (to be created), `src/shared/ui/ConfirmDialog.tsx` (to be created), `src/shared/ui/Dialog.test.tsx` (to be created).
   - **Do:**
