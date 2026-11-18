@@ -27,6 +27,7 @@ jobs:
       - run: npm run format:check
       - run: npm run lint
       - run: npm run type-check
+      - run: npm run check:design
       - run: npm run test:coverage
       - run: npm run build
 

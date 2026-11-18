@@ -14,6 +14,7 @@
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
     "test:e2e": "playwright test",
+    "check:design": "node scripts/check-banned-patterns.mjs",
     "prepare": "husky",
     "generate:api-types": "openapi-typescript \"${API_SCHEMA_URL:-http://localhost:8000/api/v1/schema/}\" -o src/shared/api/api.generated.ts",
     "generate:msw-handlers": "msw-auto-mock src/shared/api/openapi.yml -o src/test/msw --typescript --base-url http://localhost:8000 --codes 200,201,204 --static && node -e \"require('node:fs').rmSync('src/test/msw/native.ts', { force: true })\""
@@ -49,6 +50,7 @@
     "zustand": "^5.0.11"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.14.0",
     "@eslint/js": "^9.39.1",
     "@faker-js/faker": "^10.6.0",
     "@playwright/test": "^1.65.1",

@@ -35,8 +35,8 @@
   --color-border: #2e2e33;
   --color-border-strong: #3f3f46;
   --color-text: #ededef;
-  --color-text-secondary: #a1a1aa;
-  --color-text-tertiary: #8b8b94;
+  --color-text-secondary: #c0c0c8;
+  --color-text-tertiary: #a1a1aa;
   --color-accent: #d6303a;
   --color-accent-hover: #e03b45;
   --color-accent-active: #bc2a33;
@@ -49,6 +49,7 @@
   --color-warning-subtle: rgb(217 164 65 / 0.12);
   --color-danger: #ff7a59;
   --color-danger-subtle: rgb(255 122 89 / 0.12);
+  --color-overlay: rgb(0 0 0 / 0.5);
 
   --font-sans: 'Geist Variable', ui-sans-serif, system-ui, sans-serif;
   --font-mono: 'Geist Mono Variable', ui-monospace, 'SF Mono', Menlo, monospace;
@@ -128,12 +129,12 @@
   --animate-slide-up: menuIn var(--duration-fast) var(--ease-out);
 }
 
-:root {
+:root,
+.dark {
   color-scheme: dark;
 }
 
-:root.light:not(.dark),
-:root:not(.dark) {
+.light {
   color-scheme: light;
 
   --color-canvas: #ffffff;
@@ -144,8 +145,8 @@
   --color-border: #e4e4e7;
   --color-border-strong: #d1d1d6;
   --color-text: #0a0a0b;
-  --color-text-secondary: #52525b;
-  --color-text-tertiary: #71717a;
+  --color-text-secondary: #3f3f46;
+  --color-text-tertiary: #52525b;
   --color-accent: #c4222d;
   --color-accent-hover: #ae1e28;
   --color-accent-active: #981a23;
@@ -158,6 +159,7 @@
   --color-warning-subtle: rgb(154 103 0 / 0.12);
   --color-danger: #c2410c;
   --color-danger-subtle: rgb(194 65 12 / 0.12);
+  --color-overlay: rgb(0 0 0 / 0.4);
 
   --shadow-float: 0 8px 24px rgb(0 0 0 / 0.08);
 }
@@ -217,46 +219,8 @@
     color: var(--color-text);
   }
 
-  .prose :where(h1) {
-    color: var(--color-text);
-    font-size: var(--text-h1);
-    line-height: var(--text-h1--line-height);
-    letter-spacing: var(--text-h1--letter-spacing);
-    font-weight: var(--text-h1--font-weight);
-  }
-
-  .prose :where(h2) {
-    color: var(--color-text);
-    font-size: var(--text-h2);
-    line-height: var(--text-h2--line-height);
-    letter-spacing: var(--text-h2--letter-spacing);
-    font-weight: var(--text-h2--font-weight);
-  }
-
-  .prose :where(h3) {
-    color: var(--color-text);
-    font-size: var(--text-h3);
-    line-height: var(--text-h3--line-height);
-    font-weight: var(--text-h3--font-weight);
-  }
-
-  .prose :where(h4) {
-    color: var(--color-text);
-    font-size: var(--text-body);
-    line-height: var(--text-body--line-height);
-    font-weight: var(--text-h3--font-weight);
-  }
-
-  .prose :where(p, li) {
-    color: var(--color-text);
-    font-size: var(--text-body);
-    line-height: var(--text-body--line-height);
-  }
-
-  .prose :where(a) {
-    color: var(--color-accent-text);
-    text-decoration-line: underline;
-    text-underline-offset: 2px;
+  .prose a :is(strong, em, code) {
+    color: inherit;
   }
 
   .prose :where(ul, ol) {
@@ -268,10 +232,15 @@
     color: var(--color-border-strong);
   }
 
-  .prose :where(blockquote) {
-    border-left: 2px solid var(--color-border-strong);
+  .prose blockquote,
+  .prose blockquote :is(p, li, strong, em, a) {
+    border-left-color: var(--color-border-strong);
     color: var(--color-text-secondary);
     font-style: normal;
+  }
+
+  .prose blockquote {
+    border-left: 2px solid var(--color-border-strong);
   }
 
   .prose :where(table) {
@@ -312,19 +281,29 @@
   .prose pre {
     margin: 0;
     padding: 0;
-    background: transparent;
+    background-color: transparent;
     border: 0;
   }
 
   .prose pre code,
-  .prose pre code.hljs {
+  .prose pre code.hljs,
+  .prose pre .hljs {
     display: block;
     padding: 0;
-    background: transparent;
+    background-color: transparent;
     color: var(--color-text);
     font-family: var(--font-mono);
     font-size: 13px;
     line-height: 20px;
+  }
+
+  .prose :where(code, pre) :is(.hljs, .hljs-subst) {
+    color: var(--color-text);
+    background-color: transparent;
+  }
+
+  .prose :where(code, pre) :is(.hljs-params, .hljs-property, .hljs-attr, .hljs-variable) {
+    color: var(--color-text);
   }
 
   .hljs-comment,
@@ -343,7 +322,7 @@
   .hljs-attr,
   .hljs-template-variable,
   .hljs-addition {
-    color: var(--color-success);
+    color: var(--color-accent-text);
   }
 
   .hljs-number,
@@ -351,7 +330,7 @@
   .hljs-bullet,
   .hljs-variable,
   .hljs-template-tag {
-    color: var(--color-warning);
+    color: var(--color-accent-text);
   }
 
   .hljs-title,
@@ -365,13 +344,40 @@
   .hljs-built_in,
   .hljs-builtin-name,
   .hljs-function .hljs-title {
-    color: var(--color-text-secondary);
+    color: var(--color-text);
   }
 
   .hljs-deletion,
   .hljs-meta {
     color: var(--color-danger);
   }
+}
+
+.prose,
+.prose :where(h1, h2, h3, h4, p, li, strong, em, code, pre, table, th, td) {
+  color: var(--color-text);
+}
+
+.prose a {
+  color: var(--color-accent-text);
+}
+
+.prose blockquote,
+.prose blockquote :is(p, li, strong, em, a) {
+  color: var(--color-text-secondary);
+}
+
+.prose :not(pre) > code {
+  background-color: var(--color-raised);
+  color: var(--color-text);
+}
+
+.prose pre,
+.prose pre code,
+.prose pre code.hljs,
+.prose pre .hljs {
+  background-color: transparent;
+  color: var(--color-text);
 }
 
 @utility list-stagger {

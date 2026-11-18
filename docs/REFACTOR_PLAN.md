@@ -9,17 +9,17 @@
 
 ## 1. Progress Overview
 
-| Phase     | Name                  |  Tasks |   Done | Status    |
-| --------- | --------------------- | -----: | -----: | --------- |
-| 0         | Cleanup               |      7 |      7 | In review |
-| 1         | Foundation            |      5 |      5 | In review |
-| 2         | Primitives            |      7 |      7 | Done      |
-| 3         | Chat                  |      9 |      9 | Done      |
-| 4         | Auth                  |      3 |      3 | In review |
-| 5         | Landing               |      5 |      5 | In review |
-| 6         | Legal and error pages |      4 |      4 | In review |
-| 7         | Hardening             |     10 |      0 | Planned   |
-| **Total** |                       | **50** | **40** |           |
+| Phase     | Name                  |  Tasks |   Done | Status      |
+| --------- | --------------------- | -----: | -----: | ----------- |
+| 0         | Cleanup               |      7 |      7 | In review   |
+| 1         | Foundation            |      5 |      5 | In review   |
+| 2         | Primitives            |      7 |      7 | Done        |
+| 3         | Chat                  |      9 |      9 | Done        |
+| 4         | Auth                  |      3 |      3 | In review   |
+| 5         | Landing               |      5 |      5 | In review   |
+| 6         | Legal and error pages |      4 |      4 | In review   |
+| 7         | Hardening             |     10 |      9 | In progress |
+| **Total** |                       | **50** | **49** |             |
 
 ---
 
@@ -637,7 +637,7 @@
 
 ### Tasks
 
-- [ ] **P7-T01 Add axe checks for every route in both themes**
+- [x] **P7-T01 Add axe checks for every route in both themes**
   - **Design rules:** Design.md 11, 13.6, 15.
   - **Files:** `package.json`, `package-lock.json`, `e2e/a11y.spec.ts` (to be created), `e2e/support/app.ts`.
   - **Do:**
@@ -648,7 +648,7 @@
   - **Depends on:** Phase 6.
   - **Risk:** Medium.
 
-- [ ] **P7-T02 Add Playwright visual regression baselines**
+- [x] **P7-T02 Add Playwright visual regression baselines**
   - **Design rules:** Design.md 13.6, 15.
   - **Files:** `e2e/visual.spec.ts` (to be created), `playwright.config.ts`, `e2e/support/app.ts`.
   - **Do:**
@@ -659,7 +659,7 @@
   - **Depends on:** P7-T01.
   - **Risk:** Medium.
 
-- [ ] **P7-T03 Run the responsive audit at all required widths**
+- [x] **P7-T03 Run the responsive audit at all required widths**
   - **Design rules:** Design.md 6.1, 6.2, 11, 15.
   - **Files:** `e2e/responsive.spec.ts` (to be created), `src/index.css`.
   - **Do:**
@@ -669,7 +669,7 @@
   - **Depends on:** P7-T02.
   - **Risk:** Medium.
 
-- [ ] **P7-T04 Add the banned-pattern guard**
+- [x] **P7-T04 Add the banned-pattern guard**
   - **Design rules:** Design.md 2, 13.3, 15.
   - **Files:** `scripts/check-banned-patterns.mjs` (to be created), `package.json`, `.github/workflows/ci.yml`.
   - **Do:**
@@ -680,7 +680,7 @@
   - **Depends on:** Phase 6.
   - **Risk:** Low.
 
-- [ ] **P7-T05 Clean up app and shared residuals**
+- [x] **P7-T05 Clean up app and shared residuals**
   - **Design rules:** Design.md 2, 3, 13, 15.
   - **Files:** Residual files reported by `npm run check:design` under `src/app` and `src/shared/ui`, up to 8 files. Expected candidates: `src/app/ErrorBoundary.tsx`, `src/shared/ui/Button.tsx`, `src/shared/ui/Input.tsx`, `src/shared/ui/Spinner.tsx`, `src/shared/ui/ThemeToggle.tsx`, `src/shared/ui/toastConfig.ts`, `src/shared/ui/RateLimitToast.tsx`.
   - **Do:**
@@ -690,7 +690,7 @@
   - **Depends on:** P7-T04.
   - **Risk:** Medium. Split by directory if more than 8 files appear.
 
-- [ ] **P7-T06 Clean up chat residuals**
+- [x] **P7-T06 Clean up chat residuals**
   - **Design rules:** Design.md 2, 3, 8, 13, 15.
   - **Files:** Residual files reported by `npm run check:design` under `src/features/chat`, up to 8 files.
   - **Do:**
@@ -700,7 +700,7 @@
   - **Depends on:** P7-T05.
   - **Risk:** Medium. Split by component group if more than 8 files appear.
 
-- [ ] **P7-T07 Clean up auth, home, legal, and status residuals**
+- [x] **P7-T07 Clean up auth, home, legal, and status residuals**
   - **Design rules:** Design.md 2, 3, 9, 13, 15.
   - **Files:** Residual files reported by `npm run check:design` under `src/features/auth`, `src/features/home`, `src/features/legal`, and `src/features/status`, up to 8 files.
   - **Do:**
@@ -710,7 +710,7 @@
   - **Depends on:** P7-T06.
   - **Risk:** Medium. Split by feature if more than 8 files appear.
 
-- [ ] **P7-T08 Correct the documentation**
+- [x] **P7-T08 Correct the documentation**
   - **Design rules:** Design.md 3, 5, 11, 13.2, 15.
   - **Files:** `docs/CONVENTIONS.md`, `docs/ARCHITECTURE.md`, `README.md`.
   - **Do:**
@@ -721,7 +721,7 @@
   - **Depends on:** P7-T07.
   - **Risk:** Low.
 
-- [ ] **P7-T09 Update end-to-end journeys for the new UI**
+- [x] **P7-T09 Update end-to-end journeys for the new UI**
   - **Design rules:** Design.md 2.3, 8, 9, 11, 15.
   - **Files:** `e2e/support/app.ts`, `e2e/chat.spec.ts`, `e2e/legal.spec.ts`.
   - **Do:**
@@ -745,14 +745,14 @@
 
 ### Phase 7 exit checklist
 
-- [ ] `npm run format:check`
-- [ ] `npm run lint`
-- [ ] `npm run type-check`
-- [ ] `npm run test`
-- [ ] `npm run test:e2e`
-- [ ] `npm run build`
-- [ ] `npm run check:design`
-- [ ] Playwright visual regression and axe suites pass
+- [x] `npm run format:check`
+- [x] `npm run lint`
+- [x] `npm run type-check`
+- [x] `npm run test`
+- [x] `npm run test:e2e`
+- [x] `npm run build`
+- [x] `npm run check:design`
+- [x] Playwright visual regression and axe suites pass
 - [ ] Screenshot review at 390px and 1280px, dark and light
 - [ ] Definition of Done from Design.md Section 15 is complete
 

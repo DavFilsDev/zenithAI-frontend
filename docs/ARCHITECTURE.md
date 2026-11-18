@@ -233,10 +233,12 @@ P4.8 adds `app/ErrorBoundary.tsx` to catch a render crash, show a recoverable sc
 | `/`            | `HomePage`               | public                        | lazily                   |
 | `/login`       | `LoginPage`              | public, redirect if signed in | lazily                   |
 | `/register`    | `RegisterPage`           | public, redirect if signed in | lazily                   |
+| `/privacy`     | `PrivacyPage`            | public                        | lazily                   |
+| `/terms`       | `TermsPage`              | public                        | lazily                   |
 | `/chat/:uuid?` | `ChatShell` → `ChatPage` | authenticated                 | after the guard resolves |
-| `*`            | redirect to `/`          | public                        | eagerly                  |
+| `*`            | `NotFoundPage`           | public                        | lazily                   |
 
-`HomePage`, `LoginPage` and `RegisterPage` are behind `React.lazy` with a shared `Suspense` fallback. The authenticated shell is one route with an optional `uuid`, so creating the first conversation changes the URL without remounting `ChatPage` or cancelling the stream. The guard is a layout route rendering an `Outlet`, so a new protected route costs one line.
+`HomePage`, `LoginPage`, `RegisterPage`, `PrivacyPage`, `TermsPage`, and `NotFoundPage` are behind `React.lazy` with a shared `Suspense` fallback. The authenticated shell is one route with an optional `uuid`, so creating the first conversation changes the URL without remounting `ChatPage` or cancelling the stream. The guard is a layout route rendering an `Outlet`, so a new protected route costs one line.
 
 `BrowserRouter` is used, not the data router: there is no loader, and the server state is TanStack Query's job. The consequence is that every host must rewrite unknown paths to `index.html`, which is a deployment requirement, not a code one.
 

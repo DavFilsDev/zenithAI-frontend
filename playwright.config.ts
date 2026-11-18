@@ -9,6 +9,13 @@ export default defineConfig({
   retries: isCI ? 2 : 0,
   ...(isCI ? { workers: 1 } : {}),
   reporter: [['list'], ['html', { open: 'never' }]],
+  expect: {
+    toHaveScreenshot: {
+      animations: 'disabled',
+      caret: 'hide',
+      maxDiffPixelRatio: 0.01,
+    },
+  },
   use: {
     baseURL: 'http://127.0.0.1:5173',
     trace: 'on-first-retry',
