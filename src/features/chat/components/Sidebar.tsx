@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { Plus } from 'lucide-react';
-import { useTheme } from '../../../shared/ui/useTheme';
+import { ThemeToggle } from '../../../shared/ui/ThemeToggle';
 import { notify } from '../../../shared/ui/notify';
 import { ConfirmDialog } from '../../../shared/ui/ConfirmDialog';
 import type { User } from '../../../shared/api/types';
@@ -13,8 +13,7 @@ import {
 } from '../model/useConversations';
 import { ConversationList } from './ConversationList';
 import { SidebarHeader } from './SidebarHeader';
-import { SettingsDropdown } from './SettingsDropdown';
-import { UserButton } from './UserButton';
+import { UserMenu } from './UserMenu';
 
 interface SidebarProps {
   user: User | null;
@@ -28,7 +27,6 @@ const SIDEBAR_TRIGGER_ID = 'sidebar-trigger';
 const isDesktopViewport = () => window.matchMedia('(min-width: 1024px)').matches;
 
 export const Sidebar = ({ user, onLogout, onOpenProfile }: SidebarProps) => {
-  const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
   const location = useLocation();
   const { uuid: activeUuid } = useParams<{ uuid: string }>();
@@ -179,18 +177,19 @@ export const Sidebar = ({ user, onLogout, onOpenProfile }: SidebarProps) => {
       )}
 
       <div
-        className={`border-t border-border-subtle ${expanded ? 'space-y-2 p-4' : 'space-y-3 p-3'}`}
+        className={`border-t border-border-subtle ${expanded ? 'space-y-2 p-4' : 'flex flex-col items-center gap-2 p-3'}`}
       >
-        <SettingsDropdown
-          theme={theme}
-          onToggleTheme={toggleTheme}
-          onLogout={onLogout}
-          variant={expanded ? 'full' : 'icon'}
-        />
-        <UserButton
+        <div
+          className={expanded ? 'flex items-center justify-between px-1' : 'flex justify-center'}
+        >
+          {expanded ? <span className="font-mono text-label text-text-tertiary">Theme</span> : null}
+          <ThemeToggle />
+        </div>
+        <UserMenu
           username={user?.username || user?.email?.split('@')[0]}
-          onClick={onOpenProfile}
-          variant={expanded ? 'full' : 'icon'}
+          expanded={expanded}
+          onOpenProfile={onOpenProfile}
+          onLogout={onLogout}
         />
       </div>
     </>

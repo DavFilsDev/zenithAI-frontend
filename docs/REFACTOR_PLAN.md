@@ -14,12 +14,12 @@
 | 0         | Cleanup               |      7 |      7 | In review   |
 | 1         | Foundation            |      5 |      5 | In review   |
 | 2         | Primitives            |      7 |      7 | Done        |
-| 3         | Chat                  |      9 |      7 | In progress |
+| 3         | Chat                  |      9 |      8 | In progress |
 | 4         | Auth                  |      3 |      0 | Planned     |
 | 5         | Landing               |      5 |      0 | Planned     |
 | 6         | Legal and error pages |      4 |      0 | Planned     |
 | 7         | Hardening             |     10 |      0 | Planned     |
-| **Total** |                       | **50** | **26** |             |
+| **Total** |                       | **50** | **27** |             |
 
 ---
 
@@ -399,7 +399,7 @@
   - **Depends on:** P3-T02, P2-T05.
   - **Risk:** High.
 
-- [ ] **P3-T08 Replace SettingsDropdown with Menu and Avatar**
+- [x] **P3-T08 Replace SettingsDropdown with Menu and Avatar**
   - **Design rules:** Design.md 3.4, 7 (Menu, Avatar, Tooltip), 8 (Sidebar), 11.
   - **Files:** `src/features/chat/components/SettingsDropdown.tsx` (delete), `src/features/chat/components/SettingsDropdown.test.tsx` (delete), `src/features/chat/components/Sidebar.tsx`, `src/features/chat/components/UserButton.tsx`.
   - **Do:**
