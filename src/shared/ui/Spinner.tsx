@@ -1,13 +1,17 @@
+import { LoaderCircle } from 'lucide-react';
+
 export const Spinner = () => {
   return (
     <div
       role="status"
       aria-live="polite"
-      className="flex min-h-screen items-center justify-center bg-canvas"
+      className="flex min-h-dvh items-center justify-center bg-canvas"
     >
-      <div
+      <LoaderCircle
         aria-hidden="true"
-        className="h-12 w-12 animate-spin rounded-full border-2 border-transparent border-t-accent"
+        size={20}
+        strokeWidth={1.5}
+        className="animate-spin text-accent-text"
       />
       <span className="sr-only">Loading</span>
     </div>
