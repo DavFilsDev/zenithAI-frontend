@@ -129,12 +129,12 @@
   --animate-slide-up: menuIn var(--duration-fast) var(--ease-out);
 }
 
-:root {
+:root,
+.dark {
   color-scheme: dark;
 }
 
-:root.light:not(.dark),
-:root:not(.dark) {
+.light {
   color-scheme: light;
 
   --color-canvas: #ffffff;
@@ -219,46 +219,8 @@
     color: var(--color-text);
   }
 
-  .prose :where(h1) {
-    color: var(--color-text);
-    font-size: var(--text-h1);
-    line-height: var(--text-h1--line-height);
-    letter-spacing: var(--text-h1--letter-spacing);
-    font-weight: var(--text-h1--font-weight);
-  }
-
-  .prose :where(h2) {
-    color: var(--color-text);
-    font-size: var(--text-h2);
-    line-height: var(--text-h2--line-height);
-    letter-spacing: var(--text-h2--letter-spacing);
-    font-weight: var(--text-h2--font-weight);
-  }
-
-  .prose :where(h3) {
-    color: var(--color-text);
-    font-size: var(--text-h3);
-    line-height: var(--text-h3--line-height);
-    font-weight: var(--text-h3--font-weight);
-  }
-
-  .prose :where(h4) {
-    color: var(--color-text);
-    font-size: var(--text-body);
-    line-height: var(--text-body--line-height);
-    font-weight: var(--text-h3--font-weight);
-  }
-
-  .prose :where(p, li) {
-    color: var(--color-text);
-    font-size: var(--text-body);
-    line-height: var(--text-body--line-height);
-  }
-
-  .prose :where(a) {
-    color: var(--color-accent-text);
-    text-decoration-line: underline;
-    text-underline-offset: 2px;
+  .prose a :is(strong, em, code) {
+    color: inherit;
   }
 
   .prose :where(ul, ol) {
@@ -270,10 +232,15 @@
     color: var(--color-border-strong);
   }
 
-  .prose :where(blockquote) {
-    border-left: 2px solid var(--color-border-strong);
+  .prose blockquote,
+  .prose blockquote :is(p, li, strong, em, a) {
+    border-left-color: var(--color-border-strong);
     color: var(--color-text-secondary);
     font-style: normal;
+  }
+
+  .prose blockquote {
+    border-left: 2px solid var(--color-border-strong);
   }
 
   .prose :where(table) {
@@ -314,19 +281,29 @@
   .prose pre {
     margin: 0;
     padding: 0;
-    background: transparent;
+    background-color: transparent;
     border: 0;
   }
 
   .prose pre code,
-  .prose pre code.hljs {
+  .prose pre code.hljs,
+  .prose pre .hljs {
     display: block;
     padding: 0;
-    background: transparent;
+    background-color: transparent;
     color: var(--color-text);
     font-family: var(--font-mono);
     font-size: 13px;
     line-height: 20px;
+  }
+
+  .prose :where(code, pre) :is(.hljs, .hljs-subst) {
+    color: var(--color-text);
+    background-color: transparent;
+  }
+
+  .prose :where(code, pre) :is(.hljs-params, .hljs-property, .hljs-attr, .hljs-variable) {
+    color: var(--color-text);
   }
 
   .hljs-comment,
@@ -345,7 +322,7 @@
   .hljs-attr,
   .hljs-template-variable,
   .hljs-addition {
-    color: var(--color-success);
+    color: var(--color-accent-text);
   }
 
   .hljs-number,
@@ -353,7 +330,7 @@
   .hljs-bullet,
   .hljs-variable,
   .hljs-template-tag {
-    color: var(--color-warning);
+    color: var(--color-accent-text);
   }
 
   .hljs-title,
@@ -367,7 +344,7 @@
   .hljs-built_in,
   .hljs-builtin-name,
   .hljs-function .hljs-title {
-    color: var(--color-text-secondary);
+    color: var(--color-text);
   }
 
   .hljs-deletion,
