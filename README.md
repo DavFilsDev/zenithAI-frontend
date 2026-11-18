@@ -53,7 +53,7 @@ The application is functional and hardened through the security and accessibilit
 | Forms         | React Hook Form                                                    |
 | Markdown      | react-markdown, remark-gfm, rehype-sanitize, rehype-highlight      |
 | Notifications | react-hot-toast                                                    |
-| Icons         | react-icons and lucide-react, both in use                          |
+| Icons         | lucide-react                                                       |
 | Testing       | Vitest, Testing Library, MSW and Playwright                        |
 
 Not installed, and therefore not used: Prism, CSS Modules, any WebSocket library.
@@ -127,12 +127,13 @@ Run these before committing:
 npm run format:check
 npm run type-check
 npm run lint
+npm run check:design
 npm run test:coverage
 npm run test:e2e
 npm run build
 ```
 
-`type-check` and `build` share the same `tsc -b` gate with `strict`, `noUncheckedIndexedAccess` and `exactOptionalPropertyTypes`. `lint` runs the flat ESLint config with type-aware `typescript-eslint` rules, including `no-floating-promises` and `no-misused-promises`, plus the `jsx-a11y` recommended set, and `--max-warnings 0`. `test:coverage` enforces the 80% threshold on `features/` and `shared/api/`. All gates pass on the current tree. Lighthouse on the production preview scores 95 performance, 100 accessibility and 100 best practices.
+`type-check` and `build` share the same `tsc -b` gate with `strict`, `noUncheckedIndexedAccess` and `exactOptionalPropertyTypes`. `lint` runs the flat ESLint config with type-aware `typescript-eslint` rules, including `no-floating-promises` and `no-misused-promises`, plus the `jsx-a11y` recommended set, and `--max-warnings 0`. `test:coverage` enforces the 80% threshold on `features/` and `shared/api/`. `check:design` enforces the Design.md banned-pattern guard in source files. Accessibility and responsive behavior are covered by lint rules, component tests, and Playwright journeys; axe, visual regression, and responsive-width audits are planned in hardening.
 
 `lint-staged` runs ESLint and `tsc -b` on staged TS/TSX files, and Prettier on the rest, so a commit cannot carry a type or lint error.
 

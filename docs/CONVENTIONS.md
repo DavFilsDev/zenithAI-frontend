@@ -57,17 +57,20 @@ Organised by feature, not by kind. A feature owns its components, its hooks, its
 
 ```
 src/
-├── app/            router, providers, ChatShell, ProfileBootstrap
+├── app/            router, providers, shell, error and not-found pages
 ├── features/
 │   ├── auth/       login, register, session, profile
 │   ├── chat/       conversation list, message list, composer, stream
-│   └── home/       landing page
+│   ├── home/       landing page
+│   ├── legal/      privacy and terms pages
+│   └── status/     health and service status
 ├── shared/
 │   ├── api/        client, interceptors, error type, generated types
-│   ├── auth/       session store and useSession
-│   ├── ui/         Button, Input, theme, toasts, Spinner
-│   ├── hooks/      reusable DOM hooks
-│   └── lib/        pure helpers
+│   ├── auth/       session store and hooks
+│   ├── hooks/      reusable hooks
+│   ├── layout/     site header and footer
+│   ├── lib/        pure helpers
+│   └── ui/         primitives, theme, toasts
 └── main.tsx
 ```
 
@@ -141,11 +144,13 @@ Three kinds, never mixed in one component:
 
 ### Styling
 
-- Tailwind only, v4, configured in CSS with `@theme`. There is no `tailwind.config.js` and no CSS Modules.
-- Design tokens are referenced through the theme, never as a raw arbitrary value such as `bg-[rgb(var(--color-primary))]`.
-- A value used in more than three components is a token. A value used once stays inline.
-- Conditional classes are composed with a helper or a template string, never string-concatenated into a variable.
-- Colours that differ between themes are driven by the token, not by a `dark:` variant hardcoded per component.
+- [`Design.md`](Design.md) is the source of truth for UI tokens, motion, layout, and component rules. `docs/CONVENTIONS.md` defers to it on visual decisions.
+- Tailwind v4 is configured in CSS with `@theme` in `src/index.css`. There is no `tailwind.config.js` and no CSS Modules.
+- Use semantic design tokens only: no raw colors or palette utilities, arbitrary color values, raw radii, raw shadows, raw durations, or raw fonts.
+- No `dark:` utilities in components; theme differences come from semantic tokens. Keep the `.dark` class strategy and `@custom-variant dark`.
+- No banned visual patterns: glass/backdrop blur, gradients, decorative glows/shadows on static surfaces, `hover:scale`/`active:scale`, oversized radii, or non-token values.
+- Motion is CSS only, uses motion tokens, follows the approved list, and respects `prefers-reduced-motion`.
+- Conditional classes are composed with helpers or template strings, not string concatenation into variables. Reuse `shared/ui` primitives instead of restyling them per feature.
 
 ### Tests
 
