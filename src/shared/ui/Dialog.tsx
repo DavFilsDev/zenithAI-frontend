@@ -129,6 +129,7 @@ export const Dialog = ({
       <div
         className="fixed inset-0 z-[var(--z-index-overlay)] animate-fade-in bg-overlay"
         aria-hidden="true"
+        onClick={close}
       />
       <div
         ref={dialogRef}
