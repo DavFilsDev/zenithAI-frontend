@@ -16,10 +16,10 @@
 | 2         | Primitives            |      7 |      7 | Done      |
 | 3         | Chat                  |      9 |      9 | Done      |
 | 4         | Auth                  |      3 |      3 | In review |
-| 5         | Landing               |      5 |      0 | Planned   |
+| 5         | Landing               |      5 |      5 | In review |
 | 6         | Legal and error pages |      4 |      0 | Planned   |
 | 7         | Hardening             |     10 |      0 | Planned   |
-| **Total** |                       | **50** | **31** |           |
+| **Total** |                       | **50** | **36** |           |
 
 ---
 
@@ -496,7 +496,7 @@
 
 ### Tasks
 
-- [ ] **P5-T01 Build the shared site header and footer**
+- [x] **P5-T01 Build the shared site header and footer**
   - **Design rules:** Design.md 9.1, 9.4, 11.
   - **Files:** `src/shared/layout/SiteHeader.tsx` (to be created), `src/shared/layout/SiteFooter.tsx` (to be created), `src/features/home/pages/HomePage.tsx`.
   - **Do:**
@@ -507,7 +507,7 @@
   - **Depends on:** P2-T01, P3-T09.
   - **Risk:** Low.
 
-- [ ] **P5-T02 Build the hero and static product preview**
+- [x] **P5-T02 Build the hero and static product preview**
   - **Design rules:** Design.md 2.1, 2.3, 9.1 (Hero), 10.2, 11.
   - **Files:** `src/features/home/pages/HomePage.tsx`, `src/features/home/components/ProductPreview.tsx` (to be created).
   - **Do:**
@@ -518,7 +518,7 @@
   - **Depends on:** P5-T01.
   - **Risk:** Medium.
 
-- [ ] **P5-T03 Build the capabilities definition list**
+- [x] **P5-T03 Build the capabilities definition list**
   - **Design rules:** Design.md 2.1, 2.3, 9.1 (Capabilities), 11.
   - **Files:** `src/features/home/pages/HomePage.tsx`, `src/features/home/components/Capabilities.tsx` (to be created).
   - **Do:**
@@ -529,7 +529,7 @@
   - **Depends on:** P5-T02.
   - **Risk:** Low.
 
-- [ ] **P5-T04 Add landing motion sequence and simulated preview**
+- [x] **P5-T04 Add landing motion sequence and simulated preview**
   - **Design rules:** Design.md 10.1, 10.2, 10.3, 11.
   - **Files:** `src/features/home/pages/HomePage.tsx`, `src/features/home/components/ProductPreview.tsx`, `src/index.css`, `src/shared/hooks/useReveal.ts` (to be created).
   - **Do:**
@@ -541,7 +541,7 @@
   - **Depends on:** P5-T02, P5-T03.
   - **Risk:** Medium.
 
-- [ ] **P5-T05 Update landing tests**
+- [x] **P5-T05 Update landing tests**
   - **Design rules:** Design.md 9.1, 11, 15.
   - **Files:** `src/features/home/pages/HomePage.test.tsx`.
   - **Do:**
@@ -554,14 +554,14 @@
 
 ### Phase 5 exit checklist
 
-- [ ] `npm run format:check`
-- [ ] `npm run lint`
-- [ ] `npm run type-check`
-- [ ] `npm run test`
-- [ ] `npm run test:e2e`
-- [ ] `npm run build`
+- [x] `npm run format:check`
+- [x] `npm run lint`
+- [x] `npm run type-check`
+- [x] `npm run test`
+- [x] `npm run test:e2e`
+- [x] `npm run build`
 - [ ] Screenshot review at 390px and 1280px, dark and light
-- [ ] `rg 'Typewriter|AnimatedBackground|GlassButton|bg-gradient|from-|to-|backdrop-blur|rounded-xl|rounded-2xl|shadow-xl' src/features/home src/shared/layout` reviewed
+- [x] `rg 'Typewriter|AnimatedBackground|GlassButton|bg-gradient|from-|to-|backdrop-blur|rounded-xl|rounded-2xl|shadow-xl' src/features/home src/shared/layout` reviewed
 
 ---
 
