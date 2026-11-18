@@ -9,17 +9,17 @@
 
 ## 1. Progress Overview
 
-| Phase     | Name                  |  Tasks |  Done | Status      |
-| --------- | --------------------- | -----: | ----: | ----------- |
-| 0         | Cleanup               |      7 |     2 | In progress |
-| 1         | Foundation            |      5 |     0 | Planned     |
-| 2         | Primitives            |      7 |     0 | Planned     |
-| 3         | Chat                  |      9 |     0 | Planned     |
-| 4         | Auth                  |      3 |     0 | Planned     |
-| 5         | Landing               |      5 |     0 | Planned     |
-| 6         | Legal and error pages |      4 |     0 | Planned     |
-| 7         | Hardening             |     10 |     0 | Planned     |
-| **Total** |                       | **50** | **2** |             |
+| Phase     | Name                  |  Tasks |  Done | Status    |
+| --------- | --------------------- | -----: | ----: | --------- |
+| 0         | Cleanup               |      7 |     7 | In review |
+| 1         | Foundation            |      5 |     0 | Planned   |
+| 2         | Primitives            |      7 |     0 | Planned   |
+| 3         | Chat                  |      9 |     0 | Planned   |
+| 4         | Auth                  |      3 |     0 | Planned   |
+| 5         | Landing               |      5 |     0 | Planned   |
+| 6         | Legal and error pages |      4 |     0 | Planned   |
+| 7         | Hardening             |     10 |     0 | Planned   |
+| **Total** |                       | **50** | **7** |           |
 
 ---
 
@@ -67,7 +67,7 @@
   - **Depends on:** None.
   - **Risk:** Low. Final 720px column is completed in P3-T01.
 
-- [ ] **P0-T03 Fix Register horizontal gutters**
+- [x] **P0-T03 Fix Register horizontal gutters**
   - **Design rules:** Design.md 3.5, 9.2, 14 (Phase 0).
   - **Files:** `src/features/auth/pages/RegisterPage.tsx`.
   - **Do:**
@@ -77,7 +77,7 @@
   - **Depends on:** None.
   - **Risk:** Low.
 
-- [ ] **P0-T04 Remove duplicate sidebar collapse control**
+- [x] **P0-T04 Remove duplicate sidebar collapse control**
   - **Design rules:** Design.md 6.2, 14 (Phase 0).
   - **Files:** `src/features/chat/components/Sidebar.tsx`, `src/features/chat/components/SidebarHeader.tsx`.
   - **Do:**
@@ -88,7 +88,7 @@
   - **Depends on:** None.
   - **Risk:** Medium. Responsive drawer behavior is completed in P3-T02.
 
-- [ ] **P0-T05 Deduplicate SettingsDropdown markup**
+- [x] **P0-T05 Deduplicate SettingsDropdown markup**
   - **Design rules:** Design.md 2.4, 7 (Menu), 14 (Phase 0).
   - **Files:** `src/features/chat/components/SettingsDropdown.tsx`.
   - **Do:**
@@ -98,7 +98,7 @@
   - **Depends on:** P0-T01.
   - **Risk:** Low. The final Menu primitive replacement is P3-T08.
 
-- [ ] **P0-T06 Deduplicate profile field blocks**
+- [x] **P0-T06 Deduplicate profile field blocks**
   - **Design rules:** Design.md 9.5, 14 (Phase 0).
   - **Files:** `src/features/auth/components/UserProfileModal.tsx`.
   - **Do:**
@@ -108,7 +108,7 @@
   - **Depends on:** None.
   - **Risk:** Medium. The shared `EditableField` and Dialog extraction are completed in P4-T02.
 
-- [ ] **P0-T07 Remove duplicate typing dots**
+- [x] **P0-T07 Remove duplicate typing dots**
   - **Design rules:** Design.md 2.2, 8, 14 (Phase 0).
   - **Files:** `src/features/chat/components/MessageList.tsx`, `src/features/chat/components/MessageBubble.tsx`.
   - **Do:**
@@ -121,14 +121,14 @@
 
 ### Phase 0 exit checklist
 
-- [ ] `npm run format:check`
-- [ ] `npm run lint`
-- [ ] `npm run type-check`
-- [ ] `npm run test`
-- [ ] `npm run test:e2e`
-- [ ] `npm run build`
+- [x] `npm run format:check`
+- [x] `npm run lint`
+- [x] `npm run type-check`
+- [x] `npm run test`
+- [x] `npm run test:e2e`
+- [x] `npm run build`
 - [ ] Screenshot review at 390px and 1280px, dark and light
-- [ ] Manual grep for the Phase 0 bugs and duplicate markers
+- [x] Manual grep for the Phase 0 bugs and duplicate markers
 
 ---
 

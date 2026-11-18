@@ -1,4 +1,4 @@
-import { useEffect, useId, useRef, useState } from 'react';
+import { useEffect, useId, useRef, useState, type ReactNode } from 'react';
 import { FiX, FiMail, FiUser } from 'react-icons/fi';
 import { ApiError } from '../../../shared/api/apiError';
 import { notify } from '../../../shared/ui/notify';
@@ -17,13 +17,114 @@ interface UserProfileModalProps {
 const FOCUSABLE_SELECTOR =
   'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
+type ProfileFieldName = 'email' | 'username';
+
+interface ProfileFieldProps {
+  field: ProfileFieldName;
+  label: string;
+  icon: ReactNode;
+  inputType: 'email' | 'text';
+  value: string;
+  displayValue: string;
+  isEditing: boolean;
+  errorMessage: string | null;
+  errorId: string;
+  isLoading: boolean;
+  onChange: (value: string) => void;
+  onStartEditing: () => void;
+  onCancel: () => void;
+  onSave: () => Promise<void> | void;
+}
+
+const ProfileField = ({
+  field,
+  label,
+  icon,
+  inputType,
+  value,
+  displayValue,
+  isEditing,
+  errorMessage,
+  errorId,
+  isLoading,
+  onChange,
+  onStartEditing,
+  onCancel,
+  onSave,
+}: ProfileFieldProps) => {
+  const inputId = `profile-${field}`;
+
+  return (
+    <div className="space-y-2">
+      <div className="flex items-center justify-between">
+        <label
+          htmlFor={inputId}
+          className="flex items-center gap-2 text-sm font-medium text-gray-400"
+        >
+          {icon} {label}
+        </label>
+        {!isEditing && (
+          <button
+            type="button"
+            onClick={onStartEditing}
+            aria-label={`Update ${field}`}
+            className="text-xs text-[rgb(var(--color-primary))] hover:underline"
+          >
+            Update
+          </button>
+        )}
+      </div>
+      {isEditing ? (
+        <div className="space-y-2">
+          <input
+            id={inputId}
+            type={inputType}
+            value={value}
+            onChange={(event) => onChange(event.target.value)}
+            aria-invalid={Boolean(errorMessage)}
+            aria-describedby={errorMessage ? errorId : undefined}
+            className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 transition-colors focus:border-[rgb(var(--color-primary))] focus:outline-none"
+          />
+          {errorMessage && (
+            <p id={errorId} role="alert" className="text-xs text-red-500">
+              {errorMessage}
+            </p>
+          )}
+          <div className="flex gap-2">
+            <button
+              type="button"
+              onClick={() => {
+                void onSave();
+              }}
+              disabled={isLoading}
+              aria-busy={isLoading || undefined}
+              className="flex-1 rounded-lg bg-[rgb(var(--color-primary))] px-3 py-1 text-white transition hover:opacity-90 disabled:opacity-50"
+            >
+              {isLoading ? 'Saving...' : 'Save'}
+            </button>
+            <button
+              type="button"
+              onClick={onCancel}
+              className="rounded-lg bg-white/10 px-3 py-1 transition hover:bg-white/20"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      ) : (
+        <div className="rounded-lg border border-white/10 bg-white/5 px-3 py-2">{displayValue}</div>
+      )}
+    </div>
+  );
+};
+
 export const UserProfileModal = ({
   isOpen,
   onClose,
   user,
   onUpdateProfile,
 }: UserProfileModalProps) => {
-  const [editingField, setEditingField] = useState<'email' | 'username' | null>(null);
+  const [editingField, setEditingField] = useState<ProfileFieldName | null>(null);
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -95,7 +196,7 @@ export const UserProfileModal = ({
 
   if (!isOpen) return null;
 
-  const startEditing = (field: 'email' | 'username') => {
+  const startEditing = (field: ProfileFieldName) => {
     setEmail(user.email);
     setUsername(user.username);
     setErrorMessage(null);
@@ -142,8 +243,6 @@ export const UserProfileModal = ({
     }
   };
 
-  const errorId = editingField === 'email' ? emailErrorId : usernameErrorId;
-
   return (
     <>
       <button
@@ -178,131 +277,39 @@ export const UserProfileModal = ({
         </div>
 
         <div className="space-y-4 p-6">
-          <div className="space-y-2">
-            <div className="flex items-center justify-between">
-              <label
-                htmlFor="profile-email"
-                className="flex items-center gap-2 text-sm font-medium text-gray-400"
-              >
-                <FiMail size={14} aria-hidden="true" /> Email
-              </label>
-              {editingField !== 'email' && (
-                <button
-                  type="button"
-                  onClick={() => startEditing('email')}
-                  aria-label="Update email"
-                  className="text-xs text-[rgb(var(--color-primary))] hover:underline"
-                >
-                  Update
-                </button>
-              )}
-            </div>
-            {editingField === 'email' ? (
-              <div className="space-y-2">
-                <input
-                  id="profile-email"
-                  type="email"
-                  value={email}
-                  onChange={(event) => setEmail(event.target.value)}
-                  aria-invalid={Boolean(errorMessage)}
-                  aria-describedby={errorMessage ? errorId : undefined}
-                  className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 transition-colors focus:border-[rgb(var(--color-primary))] focus:outline-none"
-                />
-                {errorMessage && (
-                  <p id={errorId} role="alert" className="text-xs text-red-500">
-                    {errorMessage}
-                  </p>
-                )}
-                <div className="flex gap-2">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      void handleUpdateEmail();
-                    }}
-                    disabled={isLoading}
-                    aria-busy={isLoading || undefined}
-                    className="flex-1 rounded-lg bg-[rgb(var(--color-primary))] px-3 py-1 text-white transition hover:opacity-90 disabled:opacity-50"
-                  >
-                    {isLoading ? 'Saving...' : 'Save'}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={cancelEditing}
-                    className="rounded-lg bg-white/10 px-3 py-1 transition hover:bg-white/20"
-                  >
-                    Cancel
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <div className="rounded-lg border border-white/10 bg-white/5 px-3 py-2">
-                {user.email}
-              </div>
-            )}
-          </div>
+          <ProfileField
+            field="email"
+            label="Email"
+            icon={<FiMail size={14} aria-hidden="true" />}
+            inputType="email"
+            value={email}
+            displayValue={user.email}
+            isEditing={editingField === 'email'}
+            errorMessage={errorMessage}
+            errorId={emailErrorId}
+            isLoading={isLoading}
+            onChange={setEmail}
+            onStartEditing={() => startEditing('email')}
+            onCancel={cancelEditing}
+            onSave={handleUpdateEmail}
+          />
 
-          <div className="space-y-2">
-            <div className="flex items-center justify-between">
-              <label
-                htmlFor="profile-username"
-                className="flex items-center gap-2 text-sm font-medium text-gray-400"
-              >
-                <FiUser size={14} aria-hidden="true" /> Username
-              </label>
-              {editingField !== 'username' && (
-                <button
-                  type="button"
-                  onClick={() => startEditing('username')}
-                  aria-label="Update username"
-                  className="text-xs text-[rgb(var(--color-primary))] hover:underline"
-                >
-                  Update
-                </button>
-              )}
-            </div>
-            {editingField === 'username' ? (
-              <div className="space-y-2">
-                <input
-                  id="profile-username"
-                  type="text"
-                  value={username}
-                  onChange={(event) => setUsername(event.target.value)}
-                  aria-invalid={Boolean(errorMessage)}
-                  aria-describedby={errorMessage ? errorId : undefined}
-                  className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 transition-colors focus:border-[rgb(var(--color-primary))] focus:outline-none"
-                />
-                {errorMessage && (
-                  <p id={errorId} role="alert" className="text-xs text-red-500">
-                    {errorMessage}
-                  </p>
-                )}
-                <div className="flex gap-2">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      void handleUpdateUsername();
-                    }}
-                    disabled={isLoading}
-                    aria-busy={isLoading || undefined}
-                    className="flex-1 rounded-lg bg-[rgb(var(--color-primary))] px-3 py-1 text-white transition hover:opacity-90 disabled:opacity-50"
-                  >
-                    {isLoading ? 'Saving...' : 'Save'}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={cancelEditing}
-                    className="rounded-lg bg-white/10 px-3 py-1 transition hover:bg-white/20"
-                  >
-                    Cancel
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <div className="rounded-lg border border-white/10 bg-white/5 px-3 py-2">
-                {user.username}
-              </div>
-            )}
-          </div>
+          <ProfileField
+            field="username"
+            label="Username"
+            icon={<FiUser size={14} aria-hidden="true" />}
+            inputType="text"
+            value={username}
+            displayValue={user.username}
+            isEditing={editingField === 'username'}
+            errorMessage={errorMessage}
+            errorId={usernameErrorId}
+            isLoading={isLoading}
+            onChange={setUsername}
+            onStartEditing={() => startEditing('username')}
+            onCancel={cancelEditing}
+            onSave={handleUpdateUsername}
+          />
         </div>
 
         <span className="sr-only" role="status" aria-live="polite">

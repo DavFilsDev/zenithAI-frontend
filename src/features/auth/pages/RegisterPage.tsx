@@ -65,7 +65,7 @@ export const RegisterPage = () => {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[rgb(var(--color-bg))]">
+    <div className="flex min-h-screen items-center justify-center bg-[rgb(var(--color-bg))] px-4">
       <div className="w-full max-w-md space-y-6 rounded-2xl border border-white/20 bg-white/10 p-8 shadow-xl backdrop-blur-md dark:border-white/10 dark:bg-white/5">
         <CardHeader phrase="Create your account and join the most advanced AI coding platform!" />
 
