@@ -14,7 +14,7 @@ export const GlassButton = ({ children, onClick, to, className }: GlassButtonPro
     bg-white/10 dark:bg-white/5
     backdrop-blur-md
     border border-white/20 dark:border-white/10
-    text-[rgb(var(--color-text))]
+    text-text
     shadow-lg hover:shadow-xl
     transition-all duration-300
     hover:scale-105 active:scale-95

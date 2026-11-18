@@ -9,10 +9,10 @@ export const HomePage = () => {
   const { user } = useSession();
 
   return (
-    <div className="flex h-screen w-full flex-col overflow-hidden bg-[rgb(var(--color-bg))] text-[rgb(var(--color-text))]">
+    <div className="flex h-screen w-full flex-col overflow-hidden bg-canvas text-text">
       <header className="flex items-center justify-between border-b border-white/10 px-6 py-4 backdrop-blur-md">
         <h1 className="text-xl font-bold tracking-wide">
-          Zenith<span className="text-[rgb(var(--color-primary))]">AI</span>
+          Zenith<span className="text-accent-text">AI</span>
         </h1>
 
         <div className="flex items-center gap-4">
@@ -32,7 +32,7 @@ export const HomePage = () => {
           {user && (
             <Link
               to="/chat"
-              className="rounded-lg bg-[rgb(var(--color-primary))] px-4 py-2 text-white transition hover:opacity-90"
+              className="rounded-lg bg-accent px-4 py-2 text-white transition hover:opacity-90"
             >
               Chat
             </Link>
@@ -59,19 +59,19 @@ export const HomePage = () => {
         </div>
       </main>
 
-      <footer className="mt-auto flex w-full flex-col items-center justify-center gap-4 border-t border-white/20 bg-white/10 py-2 text-sm text-[rgb(var(--color-text))] shadow-inner shadow-white/5 backdrop-blur-md transition-colors md:flex-row dark:border-white/10 dark:bg-white/5">
+      <footer className="mt-auto flex w-full flex-col items-center justify-center gap-4 border-t border-white/20 bg-white/10 py-2 text-sm text-text shadow-inner shadow-white/5 backdrop-blur-md transition-colors md:flex-row dark:border-white/10 dark:bg-white/5">
         <p>© 2026 Zenith AI</p>
 
         <div className="flex gap-4">
           <Link
             to="/privacy"
-            className="opacity-80 transition hover:text-[rgb(var(--color-primary))] hover:underline"
+            className="opacity-80 transition hover:text-accent-text hover:underline"
           >
             Privacy
           </Link>
           <Link
             to="/terms"
-            className="opacity-80 transition hover:text-[rgb(var(--color-primary))] hover:underline"
+            className="opacity-80 transition hover:text-accent-text hover:underline"
           >
             Terms
           </Link>

@@ -18,7 +18,7 @@ export const MessageList = ({ messages, isLoading, isSending }: MessageListProps
   if (messages.length === 0 && !isLoading) {
     return (
       <div role="status" className="flex flex-1 items-center justify-center p-8">
-        <div className="text-center text-[rgb(var(--color-text))] opacity-60">
+        <div className="text-center text-text opacity-60">
           <p className="mb-2 text-lg">No messages yet</p>
           <p className="text-sm">Start a conversation by sending a message below!</p>
         </div>
@@ -43,7 +43,7 @@ export const MessageList = ({ messages, isLoading, isSending }: MessageListProps
         <div role="status" className="flex justify-center p-4">
           <div
             aria-hidden="true"
-            className="h-6 w-6 animate-spin rounded-full border-b-2 border-[rgb(var(--color-primary))]"
+            className="h-6 w-6 animate-spin rounded-full border-b-2 border-accent"
           />
           <span className="sr-only">Loading messages</span>
         </div>

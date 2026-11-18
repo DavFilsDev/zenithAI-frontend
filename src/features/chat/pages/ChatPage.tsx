@@ -26,7 +26,7 @@ export const ChatPage = () => {
 
   if (!uuid) {
     return (
-      <div className="flex h-full flex-1 flex-col bg-[rgb(var(--color-bg))]">
+      <div className="flex h-full flex-1 flex-col bg-canvas">
         <div className="flex flex-1 items-center justify-center p-8">
           <div className="w-full max-w-xl text-center">
             <h2 className="mb-2 text-2xl font-semibold">What's on your mind?</h2>

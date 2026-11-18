@@ -10,21 +10,18 @@ interface LegalLayoutProps {
 
 export const LegalLayout = ({ title, updatedAt, children }: LegalLayoutProps) => {
   return (
-    <div className="flex min-h-screen flex-col bg-[rgb(var(--color-bg))] text-[rgb(var(--color-text))]">
+    <div className="flex min-h-screen flex-col bg-canvas text-text">
       <header className="border-b border-white/10 px-6 py-4 backdrop-blur-md">
         <div className="mx-auto flex w-full max-w-3xl items-center justify-between">
           <Link to="/" className="text-xl font-bold tracking-wide">
-            Zenith<span className="text-[rgb(var(--color-primary))]">AI</span>
+            Zenith<span className="text-accent-text">AI</span>
           </Link>
           <ThemeToggle />
         </div>
       </header>
 
       <main className="mx-auto w-full max-w-3xl flex-1 px-6 py-10">
-        <Link
-          to="/"
-          className="text-sm font-medium text-[rgb(var(--color-primary))] hover:underline"
-        >
+        <Link to="/" className="text-sm font-medium text-accent-text hover:underline">
           Back to home
         </Link>
 

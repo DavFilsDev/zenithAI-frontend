@@ -1,4 +1,4 @@
-import { FiSidebar } from 'react-icons/fi';
+import { PanelLeft } from 'lucide-react';
 import { useState } from 'react';
 
 interface SidebarHeaderProps {
@@ -22,8 +22,9 @@ export const SidebarHeader = ({ isOpen, onToggle, compact = false }: SidebarHead
         aria-expanded={isOpen}
         className="rounded-lg p-2 transition-all duration-200 hover:bg-white/10"
       >
-        <FiSidebar
+        <PanelLeft
           size={20}
+          strokeWidth={1.5}
           className={`transition-all duration-300 ${isOpen ? '' : 'rotate-180'}`}
         />
       </button>
@@ -40,7 +41,7 @@ export const SidebarHeader = ({ isOpen, onToggle, compact = false }: SidebarHead
     return (
       <div className="border-b border-white/10 p-4">
         <h1 className="text-center text-xl font-bold tracking-wide">
-          Z<span className="text-[rgb(var(--color-primary))]">A</span>
+          Z<span className="text-accent-text">A</span>
         </h1>
         {toggle}
       </div>
@@ -50,7 +51,7 @@ export const SidebarHeader = ({ isOpen, onToggle, compact = false }: SidebarHead
   return (
     <div className="flex items-center justify-between border-b border-white/10 p-4">
       <h1 className="text-xl font-bold tracking-wide">
-        Zenith<span className="text-[rgb(var(--color-primary))]">AI</span>
+        Zenith<span className="text-accent-text">AI</span>
       </h1>
       {toggle}
     </div>

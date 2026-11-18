@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { IoSend } from 'react-icons/io5';
+import { ArrowUp } from 'lucide-react';
 import { useChatUiStore } from '../model/chatUiStore';
 
 interface ComposerProps {
@@ -44,7 +44,7 @@ export const Composer = ({ onSendMessage, disabled }: ComposerProps) => {
 
   return (
     <form onSubmit={handleSubmit} className="border-t border-white/10 p-4">
-      <div className="relative flex items-end rounded-2xl border border-white/20 bg-white/10 px-3 py-2 backdrop-blur-md focus-within:ring-2 focus-within:ring-[rgb(var(--color-primary))] dark:border-white/10 dark:bg-white/5">
+      <div className="relative flex items-end rounded-2xl border border-white/20 bg-white/10 px-3 py-2 backdrop-blur-md focus-within:ring-2 focus-within:ring-accent-text dark:border-white/10 dark:bg-white/5">
         <textarea
           ref={textareaRef}
           value={draft}
@@ -56,7 +56,7 @@ export const Composer = ({ onSendMessage, disabled }: ComposerProps) => {
           aria-multiline="true"
           disabled={disabled}
           rows={1}
-          className="flex-1 resize-none bg-transparent pr-10 text-[rgb(var(--color-text))] outline-none placeholder:opacity-60"
+          className="flex-1 resize-none bg-transparent pr-10 text-text outline-none placeholder:opacity-60"
           style={{ minHeight: '24px', maxHeight: '120px', overflow: 'hidden' }}
         />
 
@@ -64,9 +64,9 @@ export const Composer = ({ onSendMessage, disabled }: ComposerProps) => {
           type="submit"
           disabled={disabled || !draft.trim()}
           aria-label="Send message"
-          className="absolute right-1 bottom-1 flex items-center justify-center rounded-xl border border-white/20 bg-white/10 p-2 text-[rgb(var(--color-primary))] backdrop-blur-md transition-all duration-200 hover:bg-white/20 disabled:opacity-40 dark:border-white/10 dark:bg-white/5 dark:hover:bg-white/10"
+          className="absolute right-1 bottom-1 flex items-center justify-center rounded-xl border border-white/20 bg-white/10 p-2 text-accent-text backdrop-blur-md transition-all duration-200 hover:bg-white/20 disabled:opacity-40 dark:border-white/10 dark:bg-white/5 dark:hover:bg-white/10"
         >
-          <IoSend size={18} />
+          <ArrowUp size={20} strokeWidth={1.5} />
         </button>
       </div>
     </form>

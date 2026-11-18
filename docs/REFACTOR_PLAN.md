@@ -9,17 +9,17 @@
 
 ## 1. Progress Overview
 
-| Phase     | Name                  |  Tasks |  Done | Status    |
-| --------- | --------------------- | -----: | ----: | --------- |
-| 0         | Cleanup               |      7 |     7 | In review |
-| 1         | Foundation            |      5 |     0 | Planned   |
-| 2         | Primitives            |      7 |     0 | Planned   |
-| 3         | Chat                  |      9 |     0 | Planned   |
-| 4         | Auth                  |      3 |     0 | Planned   |
-| 5         | Landing               |      5 |     0 | Planned   |
-| 6         | Legal and error pages |      4 |     0 | Planned   |
-| 7         | Hardening             |     10 |     0 | Planned   |
-| **Total** |                       | **50** | **7** |           |
+| Phase     | Name                  |  Tasks |   Done | Status    |
+| --------- | --------------------- | -----: | -----: | --------- |
+| 0         | Cleanup               |      7 |      7 | In review |
+| 1         | Foundation            |      5 |      5 | In review |
+| 2         | Primitives            |      7 |      0 | Planned   |
+| 3         | Chat                  |      9 |      0 | Planned   |
+| 4         | Auth                  |      3 |      0 | Planned   |
+| 5         | Landing               |      5 |      0 | Planned   |
+| 6         | Legal and error pages |      4 |      0 | Planned   |
+| 7         | Hardening             |     10 |      0 | Planned   |
+| **Total** |                       | **50** | **12** |           |
 
 ---
 
@@ -139,9 +139,9 @@
 
 ### Tasks
 
-- [ ] **P1-T01 Rewrite `src/index.css` with the design token system**
+- [x] **P1-T01 Rewrite `src/index.css` with the design token system**
   - **Design rules:** Design.md 2, 3.1–3.7, 4, 7 (focus ring), 10, 11, 15.
-  - **Files:** `src/index.css`.
+  - **Files:** `src/index.css`; token consumers across `src/`.
   - **Do:**
     - Replace the old `:root` RGB-triplet variables and arbitrary `rgb(var())` pattern with `@theme` tokens for dark default and `.light` overrides.
     - Add color, type scale, spacing, radius, `--shadow-float`, z-index, easing, and duration tokens from Design.md Sections 3.1–3.7 and 10.1.
@@ -152,9 +152,9 @@
   - **Depends on:** Phase 0.
   - **Risk:** High. This task changes the visual foundation and must be reviewed first.
 
-- [ ] **P1-T02 Self-host Geist Sans and Geist Mono**
+- [x] **P1-T02 Self-host Geist Sans and Geist Mono**
   - **Design rules:** Design.md 3.4, 10.3, 15.
-  - **Files:** `package.json`, `package-lock.json`, `index.html`, `src/index.css`, `public/fonts/geist-variable.woff2` (to be created), `public/fonts/geist-mono-variable.woff2` (to be created).
+  - **Files:** `package.json`, `package-lock.json`, `index.html`, `src/index.css`, `public/fonts/geist-variable.woff2`, `public/fonts/geist-mono-variable.woff2`, `public/fonts/LICENSE-geist.txt`, `public/fonts/LICENSE-geist-mono.txt`.
   - **Do:**
     - Install `@fontsource-variable/geist` and `@fontsource-variable/geist-mono` as dependencies.
     - Copy the two variable font files into `public/fonts/` and declare `@font-face` in `src/index.css` with `font-display: swap` and the correct weight range.
@@ -164,7 +164,7 @@
   - **Depends on:** P1-T01.
   - **Risk:** Medium. Font file paths and licenses must be verified.
 
-- [ ] **P1-T03 Migrate chat icons to `lucide-react`**
+- [x] **P1-T03 Migrate chat icons to `lucide-react`**
   - **Design rules:** Design.md 5, 15.
   - **Files:** `src/features/chat/components/Sidebar.tsx`, `src/features/chat/components/SidebarHeader.tsx`, `src/features/chat/components/ConversationList.tsx`, `src/features/chat/components/Composer.tsx`, `src/features/chat/components/SettingsDropdown.tsx`, `src/features/chat/components/UserButton.tsx`.
   - **Do:**
@@ -175,7 +175,7 @@
   - **Depends on:** P1-T01.
   - **Risk:** Low.
 
-- [ ] **P1-T04 Migrate profile icons and remove `react-icons`**
+- [x] **P1-T04 Migrate profile icons and remove `react-icons`**
   - **Design rules:** Design.md 5, 15.
   - **Files:** `src/features/auth/components/UserProfileModal.tsx`, `package.json`, `package-lock.json`.
   - **Do:**
@@ -185,9 +185,9 @@
   - **Depends on:** P1-T03.
   - **Risk:** Low.
 
-- [ ] **P1-T05 Make dark the default and update the theme switch**
+- [x] **P1-T05 Make dark the default and update the theme switch**
   - **Design rules:** Design.md 3.1, 3.2, 4, 11.
-  - **Files:** `src/shared/ui/ThemeProvider.tsx`, `src/shared/ui/ThemeToggle.tsx`, `src/main.tsx`.
+  - **Files:** `src/shared/ui/ThemeProvider.tsx`, `src/shared/ui/ThemeToggle.tsx`, `src/main.tsx`, `src/index.css`, `index.html`.
   - **Do:**
     - Persist `theme` in `localStorage`; when no stored value exists, use dark and do not follow the system preference.
     - Toggle the `.dark` and `.light` classes consistently with the token strategy chosen in P1-T01.
@@ -199,14 +199,14 @@
 
 ### Phase 1 exit checklist
 
-- [ ] `npm run format:check`
-- [ ] `npm run lint`
-- [ ] `npm run type-check`
-- [ ] `npm run test`
-- [ ] `npm run test:e2e`
-- [ ] `npm run build`
+- [x] `npm run format:check`
+- [x] `npm run lint`
+- [x] `npm run type-check`
+- [x] `npm run test`
+- [x] `npm run test:e2e`
+- [x] `npm run build`
 - [ ] Screenshot review at 390px and 1280px, dark and light
-- [ ] `rg 'react-icons|bg-\[rgb\(var\(--color|backdrop-blur|hover:scale|active:scale' src` reviewed
+- [x] `rg 'react-icons|bg-\[rgb\(var\(--color|backdrop-blur|hover:scale|active:scale' src` reviewed; remaining matches are scheduled for Phases 2–6.
 
 ---
 

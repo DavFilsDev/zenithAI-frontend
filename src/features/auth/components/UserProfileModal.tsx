@@ -1,5 +1,5 @@
 import { useEffect, useId, useRef, useState, type ReactNode } from 'react';
-import { FiX, FiMail, FiUser } from 'react-icons/fi';
+import { Mail, User as UserIcon, X } from 'lucide-react';
 import { ApiError } from '../../../shared/api/apiError';
 import { notify } from '../../../shared/ui/notify';
 import type { UpdateProfilePayload, User } from '../../../shared/api/types';
@@ -68,7 +68,7 @@ const ProfileField = ({
             type="button"
             onClick={onStartEditing}
             aria-label={`Update ${field}`}
-            className="text-xs text-[rgb(var(--color-primary))] hover:underline"
+            className="text-xs text-accent-text hover:underline"
           >
             Update
           </button>
@@ -83,7 +83,7 @@ const ProfileField = ({
             onChange={(event) => onChange(event.target.value)}
             aria-invalid={Boolean(errorMessage)}
             aria-describedby={errorMessage ? errorId : undefined}
-            className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 transition-colors focus:border-[rgb(var(--color-primary))] focus:outline-none"
+            className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 transition-colors focus:border-accent focus:outline-none"
           />
           {errorMessage && (
             <p id={errorId} role="alert" className="text-xs text-red-500">
@@ -98,7 +98,7 @@ const ProfileField = ({
               }}
               disabled={isLoading}
               aria-busy={isLoading || undefined}
-              className="flex-1 rounded-lg bg-[rgb(var(--color-primary))] px-3 py-1 text-white transition hover:opacity-90 disabled:opacity-50"
+              className="flex-1 rounded-lg bg-accent px-3 py-1 text-white transition hover:opacity-90 disabled:opacity-50"
             >
               {isLoading ? 'Saving...' : 'Save'}
             </button>
@@ -249,7 +249,7 @@ export const UserProfileModal = ({
         type="button"
         aria-label="Close profile dialog"
         tabIndex={-1}
-        className="animate-fade-in fixed inset-0 z-50 bg-black/50 backdrop-blur-sm"
+        className="fixed inset-0 z-50 animate-fade-in bg-black/50 backdrop-blur-sm"
         onClick={onClose}
       />
 
@@ -260,7 +260,7 @@ export const UserProfileModal = ({
         aria-labelledby={titleId}
         aria-busy={isLoading || undefined}
         tabIndex={-1}
-        className="animate-scale-up fixed top-1/2 left-1/2 z-50 w-full max-w-md -translate-x-1/2 -translate-y-1/2 rounded-2xl border border-white/10 bg-[rgb(var(--color-bg))] shadow-2xl"
+        className="fixed top-1/2 left-1/2 z-50 w-full max-w-md -translate-x-1/2 -translate-y-1/2 animate-scale-up rounded-2xl border border-white/10 bg-canvas shadow-2xl"
       >
         <div className="flex items-center justify-between border-b border-white/10 p-6">
           <h2 id={titleId} className="text-xl font-bold">
@@ -272,7 +272,7 @@ export const UserProfileModal = ({
             aria-label="Close profile"
             className="rounded-lg p-1 transition-colors hover:bg-white/10"
           >
-            <FiX size={20} aria-hidden="true" />
+            <X size={20} strokeWidth={1.5} aria-hidden="true" />
           </button>
         </div>
 
@@ -280,7 +280,7 @@ export const UserProfileModal = ({
           <ProfileField
             field="email"
             label="Email"
-            icon={<FiMail size={14} aria-hidden="true" />}
+            icon={<Mail size={14} strokeWidth={1.5} aria-hidden="true" />}
             inputType="email"
             value={email}
             displayValue={user.email}
@@ -297,7 +297,7 @@ export const UserProfileModal = ({
           <ProfileField
             field="username"
             label="Username"
-            icon={<FiUser size={14} aria-hidden="true" />}
+            icon={<UserIcon size={14} strokeWidth={1.5} aria-hidden="true" />}
             inputType="text"
             value={username}
             displayValue={user.username}

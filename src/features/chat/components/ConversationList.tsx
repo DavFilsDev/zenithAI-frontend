@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { formatDistanceToNow } from 'date-fns';
-import { FiMessageSquare, FiTrash2, FiEdit2, FiCheck, FiX } from 'react-icons/fi';
+import { Check, MessageSquare, Pencil, Trash2, X } from 'lucide-react';
 import type { ConversationSummary } from '../api/types';
 
 interface ConversationListProps {
@@ -63,7 +63,7 @@ export const ConversationList = ({
       <div role="status" className="flex flex-1 items-center justify-center p-4">
         <div
           aria-hidden="true"
-          className="h-6 w-6 animate-spin rounded-full border-2 border-transparent border-t-[rgb(var(--color-primary))]"
+          className="h-6 w-6 animate-spin rounded-full border-2 border-transparent border-t-accent"
         />
         <span className="sr-only">Loading conversations</span>
       </div>
@@ -76,7 +76,7 @@ export const ConversationList = ({
         role="status"
         className="flex flex-1 flex-col items-center justify-center p-4 text-center text-gray-400"
       >
-        <FiMessageSquare size={32} className="mb-2 opacity-50" aria-hidden="true" />
+        <MessageSquare size={20} strokeWidth={1.5} className="mb-2 opacity-50" aria-hidden="true" />
         <p className="text-sm">No conversations yet</p>
         <p className="mt-1 text-xs">Start a new chat to begin</p>
       </div>
@@ -111,24 +111,24 @@ export const ConversationList = ({
                     aria-label="Conversation title"
                     value={title}
                     onChange={(event) => setTitle(event.target.value)}
-                    className="min-w-0 flex-1 rounded-lg border border-white/20 bg-white/10 px-2 py-1 text-sm outline-none focus:border-[rgb(var(--color-primary))]"
+                    className="min-w-0 flex-1 rounded-lg border border-white/20 bg-white/10 px-2 py-1 text-sm outline-none focus:border-accent"
                   />
                   <button
                     type="submit"
                     title="Save title"
                     aria-label="Save title"
-                    className="rounded-lg p-1.5 hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-[rgb(var(--color-primary))] focus-visible:outline-none"
+                    className="rounded-lg p-1.5 hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-accent-text focus-visible:outline-none"
                   >
-                    <FiCheck size={14} aria-hidden="true" />
+                    <Check size={14} strokeWidth={1.5} aria-hidden="true" />
                   </button>
                   <button
                     type="button"
                     onClick={cancelEditing}
                     title="Cancel rename"
                     aria-label="Cancel rename"
-                    className="rounded-lg p-1.5 hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-[rgb(var(--color-primary))] focus-visible:outline-none"
+                    className="rounded-lg p-1.5 hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-accent-text focus-visible:outline-none"
                   >
-                    <FiX size={14} aria-hidden="true" />
+                    <X size={14} strokeWidth={1.5} aria-hidden="true" />
                   </button>
                 </form>
               ) : (
@@ -138,7 +138,7 @@ export const ConversationList = ({
                     onClick={() => onSelect(conversation.uuid)}
                     aria-current={activeUuid === conversation.uuid ? 'page' : undefined}
                     aria-label={`Open ${conversationTitle}`}
-                    className="w-full rounded-lg text-left focus-visible:ring-2 focus-visible:ring-[rgb(var(--color-primary))] focus-visible:outline-none"
+                    className="w-full rounded-lg text-left focus-visible:ring-2 focus-visible:ring-accent-text focus-visible:outline-none"
                   >
                     <div className="truncate pr-16 font-medium">{conversationTitle}</div>
                     <div className="mt-1 text-xs text-gray-400">
@@ -153,9 +153,9 @@ export const ConversationList = ({
                       onClick={() => startEditing(conversation)}
                       title="Rename conversation"
                       aria-label={`Rename ${conversationTitle}`}
-                      className="rounded-lg p-1.5 hover:bg-white/10 hover:text-[rgb(var(--color-primary))] focus-visible:ring-2 focus-visible:ring-[rgb(var(--color-primary))] focus-visible:outline-none"
+                      className="rounded-lg p-1.5 hover:bg-white/10 hover:text-accent-text focus-visible:ring-2 focus-visible:ring-accent-text focus-visible:outline-none"
                     >
-                      <FiEdit2 size={14} aria-hidden="true" />
+                      <Pencil size={14} strokeWidth={1.5} aria-hidden="true" />
                     </button>
                     <button
                       type="button"
@@ -164,7 +164,7 @@ export const ConversationList = ({
                       aria-label={`Delete ${conversationTitle}`}
                       className="rounded-lg p-1.5 hover:bg-white/10 hover:text-red-500 focus-visible:ring-2 focus-visible:ring-red-400 focus-visible:outline-none"
                     >
-                      <FiTrash2 size={14} aria-hidden="true" />
+                      <Trash2 size={14} strokeWidth={1.5} aria-hidden="true" />
                     </button>
                   </div>
                 </>
