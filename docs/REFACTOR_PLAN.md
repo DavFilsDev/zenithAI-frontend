@@ -9,17 +9,17 @@
 
 ## 1. Progress Overview
 
-| Phase     | Name                  |  Tasks |   Done | Status    |
-| --------- | --------------------- | -----: | -----: | --------- |
-| 0         | Cleanup               |      7 |      7 | In review |
-| 1         | Foundation            |      5 |      5 | In review |
-| 2         | Primitives            |      7 |      0 | Planned   |
-| 3         | Chat                  |      9 |      0 | Planned   |
-| 4         | Auth                  |      3 |      0 | Planned   |
-| 5         | Landing               |      5 |      0 | Planned   |
-| 6         | Legal and error pages |      4 |      0 | Planned   |
-| 7         | Hardening             |     10 |      0 | Planned   |
-| **Total** |                       | **50** | **12** |           |
+| Phase     | Name                  |  Tasks |   Done | Status      |
+| --------- | --------------------- | -----: | -----: | ----------- |
+| 0         | Cleanup               |      7 |      7 | In review   |
+| 1         | Foundation            |      5 |      5 | In review   |
+| 2         | Primitives            |      7 |      1 | In progress |
+| 3         | Chat                  |      9 |      0 | Planned     |
+| 4         | Auth                  |      3 |      0 | Planned     |
+| 5         | Landing               |      5 |      0 | Planned     |
+| 6         | Legal and error pages |      4 |      0 | Planned     |
+| 7         | Hardening             |     10 |      0 | Planned     |
+| **Total** |                       | **50** | **13** |             |
 
 ---
 
@@ -217,7 +217,7 @@
 
 ### Tasks
 
-- [ ] **P2-T01 Build Button and IconButton primitives**
+- [x] **P2-T01 Build Button and IconButton primitives**
   - **Design rules:** Design.md 2.1, 2.2, 3.6, 7 (Button, IconButton), 11.
   - **Files:** `src/shared/ui/Button.tsx`, `src/shared/ui/IconButton.tsx` (to be created), `src/shared/ui/Button.test.tsx` (to be created), `src/shared/ui/IconButton.test.tsx` (to be created).
   - **Do:**
