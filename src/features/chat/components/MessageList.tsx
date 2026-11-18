@@ -43,7 +43,7 @@ export const MessageList = ({ messages, isLoading, isSending }: MessageListProps
       ))}
 
       {showTyping && (
-        <div className="mb-4 flex justify-start">
+        <div className="flex justify-start">
           <div role="status" className="rounded-xl bg-white/10 p-4 backdrop-blur-md">
             <div className="flex space-x-2" aria-hidden="true">
               <div

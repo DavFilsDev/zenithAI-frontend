@@ -11,7 +11,7 @@
 
 | Phase     | Name                  |  Tasks |  Done | Status      |
 | --------- | --------------------- | -----: | ----: | ----------- |
-| 0         | Cleanup               |      7 |     1 | In progress |
+| 0         | Cleanup               |      7 |     2 | In progress |
 | 1         | Foundation            |      5 |     0 | Planned     |
 | 2         | Primitives            |      7 |     0 | Planned     |
 | 3         | Chat                  |      9 |     0 | Planned     |
@@ -19,7 +19,7 @@
 | 5         | Landing               |      5 |     0 | Planned     |
 | 6         | Legal and error pages |      4 |     0 | Planned     |
 | 7         | Hardening             |     10 |     0 | Planned     |
-| **Total** |                       | **50** | **1** |             |
+| **Total** |                       | **50** | **2** |             |
 
 ---
 
@@ -56,7 +56,7 @@
   - **Depends on:** None.
   - **Risk:** Low. Temporary tokens are replaced in P1-T01.
 
-- [ ] **P0-T02 Fix chat header alignment and double message spacing**
+- [x] **P0-T02 Fix chat header alignment and double message spacing**
   - **Design rules:** Design.md 3.5, 6.2, 8, 14 (Phase 0).
   - **Files:** `src/features/chat/components/ChatWindow.tsx`, `src/features/chat/components/MessageList.tsx`, `src/features/chat/components/MessageBubble.tsx`.
   - **Do:**
