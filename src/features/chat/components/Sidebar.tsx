@@ -105,7 +105,10 @@ export const Sidebar = ({ user, onLogout, onOpenProfile }: SidebarProps) => {
 
   if (!isSidebarOpen) {
     return (
-      <div className="flex h-screen w-16 flex-col border-r border-white/10 bg-canvas text-text">
+      <aside
+        aria-label="Sidebar"
+        className="flex h-dvh w-16 shrink-0 flex-col border-r border-white/10 bg-canvas text-text"
+      >
         <SidebarHeader isOpen={false} onToggle={toggleSidebar} compact />
 
         <div className="p-3">{newChatButton(false)}</div>
@@ -121,12 +124,15 @@ export const Sidebar = ({ user, onLogout, onOpenProfile }: SidebarProps) => {
           />
           <UserButton variant="icon" onClick={onOpenProfile} />
         </div>
-      </div>
+      </aside>
     );
   }
 
   return (
-    <div className="flex h-screen w-64 flex-col border-r border-white/10 bg-canvas text-text">
+    <aside
+      aria-label="Sidebar"
+      className="flex h-dvh w-64 shrink-0 flex-col border-r border-white/10 bg-canvas text-text"
+    >
       <SidebarHeader isOpen={isSidebarOpen} onToggle={toggleSidebar} />
 
       <div className="p-4">{newChatButton(true)}</div>
@@ -161,6 +167,6 @@ export const Sidebar = ({ user, onLogout, onOpenProfile }: SidebarProps) => {
           variant="full"
         />
       </div>
-    </div>
+    </aside>
   );
 };

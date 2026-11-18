@@ -2,6 +2,7 @@ import { useCallback, useState } from 'react';
 import { useSessionStore } from '../shared/auth/sessionStore';
 import { useLogout } from '../features/auth/model/useLogout';
 import { useUpdateProfile } from '../features/auth/model/useProfile';
+import { SkipLink } from '../shared/ui/SkipLink';
 import { UserProfileModal } from '../features/auth/components/UserProfileModal';
 import { Sidebar } from '../features/chat/components/Sidebar';
 import { ChatPage } from '../features/chat/pages/ChatPage';
@@ -14,7 +15,8 @@ export const ChatShell = () => {
   const closeProfile = useCallback(() => setIsProfileOpen(false), []);
 
   return (
-    <div className="flex h-screen overflow-hidden">
+    <div className="flex h-dvh overflow-hidden bg-canvas text-text">
+      <SkipLink />
       <Sidebar
         user={user}
         onLogout={() => {
@@ -24,9 +26,9 @@ export const ChatShell = () => {
         }}
         onOpenProfile={() => setIsProfileOpen(true)}
       />
-      <div className="flex-1 overflow-hidden">
+      <main id="main" className="flex min-w-0 flex-1 flex-col overflow-hidden">
         <ChatPage />
-      </div>
+      </main>
       <UserProfileModal
         isOpen={isProfileOpen}
         onClose={closeProfile}
