@@ -1,5 +1,5 @@
 import { useEffect, useId, useRef, useState, type ReactNode } from 'react';
-import { FiX, FiMail, FiUser } from 'react-icons/fi';
+import { Mail, User as UserIcon, X } from 'lucide-react';
 import { ApiError } from '../../../shared/api/apiError';
 import { notify } from '../../../shared/ui/notify';
 import type { UpdateProfilePayload, User } from '../../../shared/api/types';
@@ -272,7 +272,7 @@ export const UserProfileModal = ({
             aria-label="Close profile"
             className="rounded-lg p-1 transition-colors hover:bg-white/10"
           >
-            <FiX size={20} aria-hidden="true" />
+            <X size={20} strokeWidth={1.5} aria-hidden="true" />
           </button>
         </div>
 
@@ -280,7 +280,7 @@ export const UserProfileModal = ({
           <ProfileField
             field="email"
             label="Email"
-            icon={<FiMail size={14} aria-hidden="true" />}
+            icon={<Mail size={14} strokeWidth={1.5} aria-hidden="true" />}
             inputType="email"
             value={email}
             displayValue={user.email}
@@ -297,7 +297,7 @@ export const UserProfileModal = ({
           <ProfileField
             field="username"
             label="Username"
-            icon={<FiUser size={14} aria-hidden="true" />}
+            icon={<UserIcon size={14} strokeWidth={1.5} aria-hidden="true" />}
             inputType="text"
             value={username}
             displayValue={user.username}

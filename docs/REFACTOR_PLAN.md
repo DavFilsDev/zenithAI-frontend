@@ -12,14 +12,14 @@
 | Phase     | Name                  |  Tasks |   Done | Status      |
 | --------- | --------------------- | -----: | -----: | ----------- |
 | 0         | Cleanup               |      7 |      7 | In review   |
-| 1         | Foundation            |      5 |      3 | In progress |
+| 1         | Foundation            |      5 |      4 | In progress |
 | 2         | Primitives            |      7 |      0 | Planned     |
 | 3         | Chat                  |      9 |      0 | Planned     |
 | 4         | Auth                  |      3 |      0 | Planned     |
 | 5         | Landing               |      5 |      0 | Planned     |
 | 6         | Legal and error pages |      4 |      0 | Planned     |
 | 7         | Hardening             |     10 |      0 | Planned     |
-| **Total** |                       | **50** | **10** |             |
+| **Total** |                       | **50** | **11** |             |
 
 ---
 
@@ -175,7 +175,7 @@
   - **Depends on:** P1-T01.
   - **Risk:** Low.
 
-- [ ] **P1-T04 Migrate profile icons and remove `react-icons`**
+- [x] **P1-T04 Migrate profile icons and remove `react-icons`**
   - **Design rules:** Design.md 5, 15.
   - **Files:** `src/features/auth/components/UserProfileModal.tsx`, `package.json`, `package-lock.json`.
   - **Do:**
