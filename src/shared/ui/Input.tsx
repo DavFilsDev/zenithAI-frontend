@@ -1,5 +1,5 @@
 import { type InputHTMLAttributes, useId, useState } from 'react';
-import { Eye, EyeOff } from 'lucide-react';
+import { CircleAlert, Eye, EyeOff } from 'lucide-react';
 import { type UseFormRegisterReturn } from 'react-hook-form';
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
@@ -21,40 +21,44 @@ export const Input = ({
   const errorId = `${inputId}-error`;
   const [showPassword, setShowPassword] = useState(false);
   const isPassword = type === 'password';
+  const inputType = isPassword && showPassword ? 'text' : type;
 
   return (
-    <div className="relative space-y-1">
-      <label htmlFor={inputId} className="text-sm font-medium opacity-80">
+    <div className="space-y-2">
+      <label htmlFor={inputId} className="block text-ui text-text">
         {label}
       </label>
       <div className="relative">
         <input
           id={inputId}
-          type={isPassword && showPassword ? 'text' : type}
+          type={inputType}
           {...registration}
           {...props}
           aria-invalid={Boolean(error)}
           aria-describedby={error ? errorId : undefined}
-          className={`w-full rounded-xl border border-white/20 bg-white/10 px-4 py-2 pr-10 backdrop-blur-md transition-all focus:ring-2 focus:ring-accent-text focus:outline-none dark:border-white/10 dark:bg-white/5 ${className} `}
+          className={`h-9 w-full rounded-[var(--radius)] border bg-raised px-3 text-ui text-text transition-colors duration-fast placeholder:text-text-tertiary focus-visible:border-accent focus-visible:ring-2 focus-visible:ring-accent-text focus-visible:ring-offset-0 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 ${
+            error ? 'border-danger pr-10' : 'border-border'
+          } ${isPassword ? 'pr-10' : ''} ${className}`}
         />
         {isPassword && (
           <button
             type="button"
-            onClick={() => setShowPassword(!showPassword)}
+            onClick={() => setShowPassword((value) => !value)}
             aria-label={showPassword ? 'Hide password' : 'Show password'}
-            className="absolute top-1/2 right-3 -translate-y-1/2 opacity-60 transition hover:opacity-100"
+            className="absolute top-1/2 right-2 inline-flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-[var(--radius)] text-text-secondary transition-colors duration-fast hover:text-text focus-visible:ring-2 focus-visible:ring-accent-text focus-visible:outline-none"
           >
             {showPassword ? (
-              <EyeOff className="text-accent-text" size={18} />
+              <EyeOff aria-hidden="true" size={16} strokeWidth={1.5} />
             ) : (
-              <Eye className="text-accent-text" size={18} />
+              <Eye aria-hidden="true" size={16} strokeWidth={1.5} />
             )}
           </button>
         )}
       </div>
       {error && (
-        <p id={errorId} role="alert" className="text-sm text-red-400">
-          {error}
+        <p id={errorId} role="alert" className="flex items-start gap-2 text-small text-danger">
+          <CircleAlert aria-hidden="true" size={14} strokeWidth={1.5} className="mt-0.5 shrink-0" />
+          <span>{error}</span>
         </p>
       )}
     </div>
