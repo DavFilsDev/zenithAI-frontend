@@ -18,8 +18,8 @@
 | 4         | Auth                  |      3 |      3 | In review   |
 | 5         | Landing               |      5 |      5 | In review   |
 | 6         | Legal and error pages |      4 |      4 | In review   |
-| 7         | Hardening             |     10 |      5 | In progress |
-| **Total** |                       | **50** | **45** |             |
+| 7         | Hardening             |     10 |      9 | In progress |
+| **Total** |                       | **50** | **49** |             |
 
 ---
 
@@ -637,7 +637,7 @@
 
 ### Tasks
 
-- [ ] **P7-T01 Add axe checks for every route in both themes**
+- [x] **P7-T01 Add axe checks for every route in both themes**
   - **Design rules:** Design.md 11, 13.6, 15.
   - **Files:** `package.json`, `package-lock.json`, `e2e/a11y.spec.ts` (to be created), `e2e/support/app.ts`.
   - **Do:**
@@ -648,7 +648,7 @@
   - **Depends on:** Phase 6.
   - **Risk:** Medium.
 
-- [ ] **P7-T02 Add Playwright visual regression baselines**
+- [x] **P7-T02 Add Playwright visual regression baselines**
   - **Design rules:** Design.md 13.6, 15.
   - **Files:** `e2e/visual.spec.ts` (to be created), `playwright.config.ts`, `e2e/support/app.ts`.
   - **Do:**
@@ -659,7 +659,7 @@
   - **Depends on:** P7-T01.
   - **Risk:** Medium.
 
-- [ ] **P7-T03 Run the responsive audit at all required widths**
+- [x] **P7-T03 Run the responsive audit at all required widths**
   - **Design rules:** Design.md 6.1, 6.2, 11, 15.
   - **Files:** `e2e/responsive.spec.ts` (to be created), `src/index.css`.
   - **Do:**
@@ -721,7 +721,7 @@
   - **Depends on:** P7-T07.
   - **Risk:** Low.
 
-- [ ] **P7-T09 Update end-to-end journeys for the new UI**
+- [x] **P7-T09 Update end-to-end journeys for the new UI**
   - **Design rules:** Design.md 2.3, 8, 9, 11, 15.
   - **Files:** `e2e/support/app.ts`, `e2e/chat.spec.ts`, `e2e/legal.spec.ts`.
   - **Do:**
@@ -745,14 +745,14 @@
 
 ### Phase 7 exit checklist
 
-- [ ] `npm run format:check`
-- [ ] `npm run lint`
-- [ ] `npm run type-check`
-- [ ] `npm run test`
-- [ ] `npm run test:e2e`
-- [ ] `npm run build`
+- [x] `npm run format:check`
+- [x] `npm run lint`
+- [x] `npm run type-check`
+- [x] `npm run test`
+- [x] `npm run test:e2e`
+- [x] `npm run build`
 - [x] `npm run check:design`
-- [ ] Playwright visual regression and axe suites pass
+- [x] Playwright visual regression and axe suites pass
 - [ ] Screenshot review at 390px and 1280px, dark and light
 - [ ] Definition of Done from Design.md Section 15 is complete
 
