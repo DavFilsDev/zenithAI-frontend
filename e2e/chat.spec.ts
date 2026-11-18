@@ -43,4 +43,20 @@ test.describe('chat journeys', () => {
     await expect(page.getByText('Too many requests. Try again in 3 seconds.')).toBeVisible();
     await expect(page.getByRole('textbox', { name: 'Message' })).toHaveValue('Please answer');
   });
+
+  test('stops a held stream', async ({ page }) => {
+    await mockApi(page, { stream: 'hold' });
+    await signIn(page);
+
+    const composer = page.getByRole('textbox', { name: 'Message' });
+    await composer.fill('Hold this answer');
+    await page.getByRole('button', { name: 'Send message' }).click();
+
+    const stop = page.getByRole('button', { name: 'Stop generating' });
+    await expect(stop).toBeVisible();
+    await stop.click();
+
+    await expect(stop).toBeHidden();
+    await expect(composer).toBeEnabled();
+  });
 });
