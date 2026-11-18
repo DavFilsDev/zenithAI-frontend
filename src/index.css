@@ -35,8 +35,8 @@
   --color-border: #2e2e33;
   --color-border-strong: #3f3f46;
   --color-text: #ededef;
-  --color-text-secondary: #a1a1aa;
-  --color-text-tertiary: #8b8b94;
+  --color-text-secondary: #c0c0c8;
+  --color-text-tertiary: #a1a1aa;
   --color-accent: #d6303a;
   --color-accent-hover: #e03b45;
   --color-accent-active: #bc2a33;
@@ -145,8 +145,8 @@
   --color-border: #e4e4e7;
   --color-border-strong: #d1d1d6;
   --color-text: #0a0a0b;
-  --color-text-secondary: #52525b;
-  --color-text-tertiary: #71717a;
+  --color-text-secondary: #3f3f46;
+  --color-text-tertiary: #52525b;
   --color-accent: #c4222d;
   --color-accent-hover: #ae1e28;
   --color-accent-active: #981a23;
@@ -351,6 +351,33 @@
   .hljs-meta {
     color: var(--color-danger);
   }
+}
+
+.prose,
+.prose :where(h1, h2, h3, h4, p, li, strong, em, code, pre, table, th, td) {
+  color: var(--color-text);
+}
+
+.prose a {
+  color: var(--color-accent-text);
+}
+
+.prose blockquote,
+.prose blockquote :is(p, li, strong, em, a) {
+  color: var(--color-text-secondary);
+}
+
+.prose :not(pre) > code {
+  background-color: var(--color-raised);
+  color: var(--color-text);
+}
+
+.prose pre,
+.prose pre code,
+.prose pre code.hljs,
+.prose pre .hljs {
+  background-color: transparent;
+  color: var(--color-text);
 }
 
 @utility list-stagger {
