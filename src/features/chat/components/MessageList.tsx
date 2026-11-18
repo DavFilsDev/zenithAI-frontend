@@ -10,9 +10,6 @@ interface MessageListProps {
 
 export const MessageList = ({ messages, isLoading, isSending }: MessageListProps) => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const lastMessage = messages[messages.length - 1];
-  const showTyping =
-    isSending && !(lastMessage?.role === 'assistant' && lastMessage.content === '');
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: isSending ? 'auto' : 'smooth' });
@@ -41,28 +38,6 @@ export const MessageList = ({ messages, isLoading, isSending }: MessageListProps
       {messages.map((message) => (
         <MessageBubble key={message.uuid} message={message} />
       ))}
-
-      {showTyping && (
-        <div className="flex justify-start">
-          <div role="status" className="rounded-xl bg-white/10 p-4 backdrop-blur-md">
-            <div className="flex space-x-2" aria-hidden="true">
-              <div
-                className="h-2 w-2 animate-bounce rounded-full bg-[rgb(var(--color-primary))]"
-                style={{ animationDelay: '0ms' }}
-              />
-              <div
-                className="h-2 w-2 animate-bounce rounded-full bg-[rgb(var(--color-primary))]"
-                style={{ animationDelay: '150ms' }}
-              />
-              <div
-                className="h-2 w-2 animate-bounce rounded-full bg-[rgb(var(--color-primary))]"
-                style={{ animationDelay: '300ms' }}
-              />
-            </div>
-            <span className="sr-only">Assistant is responding</span>
-          </div>
-        </div>
-      )}
 
       {isLoading && (
         <div role="status" className="flex justify-center p-4">
