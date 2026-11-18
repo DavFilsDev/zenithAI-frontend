@@ -30,12 +30,12 @@ export const MessageList = ({ messages, isLoading, isSending }: MessageListProps
     <div
       role="log"
       aria-label="Conversation messages"
-      aria-live="polite"
+      aria-live={isSending ? 'off' : 'polite'}
       aria-relevant="additions text"
       aria-busy={isSending || undefined}
       className="h-full overflow-y-auto"
     >
-      <div className="mx-auto w-full max-w-[720px] space-y-4 px-4 py-4 sm:px-6">
+      <div className="mx-auto w-full max-w-[720px] space-y-8 px-4 py-4 sm:px-6">
         {messages.map((message) => (
           <MessageBubble key={message.uuid} message={message} />
         ))}

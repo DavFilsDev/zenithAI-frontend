@@ -14,12 +14,12 @@
 | 0         | Cleanup               |      7 |      7 | In review   |
 | 1         | Foundation            |      5 |      5 | In review   |
 | 2         | Primitives            |      7 |      7 | Done        |
-| 3         | Chat                  |      9 |      2 | In progress |
+| 3         | Chat                  |      9 |      3 | In progress |
 | 4         | Auth                  |      3 |      0 | Planned     |
 | 5         | Landing               |      5 |      0 | Planned     |
 | 6         | Legal and error pages |      4 |      0 | Planned     |
 | 7         | Hardening             |     10 |      0 | Planned     |
-| **Total** |                       | **50** | **21** |             |
+| **Total** |                       | **50** | **22** |             |
 
 ---
 
@@ -338,7 +338,7 @@
   - **Depends on:** P3-T01.
   - **Risk:** High.
 
-- [ ] **P3-T03 Refactor message list and message rendering**
+- [x] **P3-T03 Refactor message list and message rendering**
   - **Design rules:** Design.md 3.5, 8 (Messages, Actions row), 10.2, 11.
   - **Files:** `src/features/chat/components/MessageList.tsx`, `src/features/chat/components/MessageBubble.tsx`, `src/features/chat/components/MessageBubble.test.tsx`.
   - **Do:**
