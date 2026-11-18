@@ -1,3 +1,6 @@
+import { TriangleAlert } from 'lucide-react';
+import { Button } from './Button';
+
 interface RateLimitToastProps {
   message: string;
   onRetry?: (() => void) | undefined;
@@ -5,27 +8,30 @@ interface RateLimitToastProps {
 }
 
 export const RateLimitToast = ({ message, onRetry, onDismiss }: RateLimitToastProps) => (
-  <div className="flex items-center gap-3 rounded-xl border border-amber-400/40 bg-amber-500/10 px-4 py-3 text-sm text-white backdrop-blur-md">
-    <span className="flex-1">{message}</span>
-    {onRetry && (
-      <button
-        type="button"
-        onClick={() => {
-          onDismiss();
-          onRetry();
-        }}
-        className="rounded-lg border border-amber-400/50 px-3 py-1 font-medium text-amber-200 hover:bg-amber-400/10"
-      >
-        Retry
-      </button>
-    )}
-    <button
-      type="button"
-      onClick={onDismiss}
-      className="text-white/60 hover:text-white"
-      aria-label="Dismiss"
-    >
-      Dismiss
-    </button>
+  <div className="flex max-w-[420px] items-start gap-3 rounded-[var(--radius)] border border-border bg-surface px-4 py-3 text-small text-text">
+    <TriangleAlert
+      size={16}
+      strokeWidth={1.5}
+      className="mt-0.5 shrink-0 text-warning"
+      aria-hidden="true"
+    />
+    <p className="flex-1">{message}</p>
+    <div className="flex shrink-0 items-center gap-2">
+      {onRetry && (
+        <Button
+          size="sm"
+          variant="ghost"
+          onClick={() => {
+            onDismiss();
+            onRetry();
+          }}
+        >
+          Retry
+        </Button>
+      )}
+      <Button size="sm" variant="ghost" onClick={onDismiss}>
+        Dismiss
+      </Button>
+    </div>
   </div>
 );
