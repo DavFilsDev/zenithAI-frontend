@@ -1,8 +1,9 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { Plus } from 'lucide-react';
 import { useTheme } from '../../../shared/ui/useTheme';
 import { notify } from '../../../shared/ui/notify';
+import { ConfirmDialog } from '../../../shared/ui/ConfirmDialog';
 import type { User } from '../../../shared/api/types';
 import { useChatUiStore } from '../model/chatUiStore';
 import {
@@ -31,6 +32,7 @@ export const Sidebar = ({ user, onLogout, onOpenProfile }: SidebarProps) => {
   const navigate = useNavigate();
   const location = useLocation();
   const { uuid: activeUuid } = useParams<{ uuid: string }>();
+  const [pendingDeleteUuid, setPendingDeleteUuid] = useState<string | null>(null);
   const isDesktopSidebarExpanded = useChatUiStore((state) => state.isDesktopSidebarExpanded);
   const isMobileDrawerOpen = useChatUiStore((state) => state.isMobileDrawerOpen);
   const toggleDesktopSidebar = useChatUiStore((state) => state.toggleDesktopSidebar);
@@ -54,13 +56,20 @@ export const Sidebar = ({ user, onLogout, onOpenProfile }: SidebarProps) => {
     void navigate(`/chat/${uuid}`);
   };
 
-  const handleDelete = async (uuid: string) => {
-    if (!window.confirm('Are you sure you want to delete this conversation?')) {
+  const requestDelete = (uuid: string) => {
+    setPendingDeleteUuid(uuid);
+  };
+
+  const handleDelete = async () => {
+    if (!pendingDeleteUuid) {
       return;
     }
 
+    const uuid = pendingDeleteUuid;
+
     try {
       await deleteConversation.mutateAsync(uuid);
+      setPendingDeleteUuid(null);
 
       if (activeUuid === uuid) {
         void navigate('/chat', { replace: true });
@@ -159,9 +168,7 @@ export const Sidebar = ({ user, onLogout, onOpenProfile }: SidebarProps) => {
           hasNext={Boolean(conversationsQuery.data?.next)}
           hasPrevious={Boolean(conversationsQuery.data?.previous)}
           onSelect={handleSelect}
-          onDelete={(uuid) => {
-            void handleDelete(uuid);
-          }}
+          onDelete={requestDelete}
           onRename={(uuid, title) => {
             void handleRename(uuid, title);
           }}
@@ -216,6 +223,20 @@ export const Sidebar = ({ user, onLogout, onOpenProfile }: SidebarProps) => {
           </aside>
         </div>
       ) : null}
+      <ConfirmDialog
+        open={pendingDeleteUuid !== null}
+        onOpenChange={(open) => {
+          if (!open) {
+            setPendingDeleteUuid(null);
+          }
+        }}
+        title="Delete conversation?"
+        description="This will permanently delete this conversation and its messages."
+        confirmLabel="Delete"
+        cancelLabel="Cancel"
+        onConfirm={handleDelete}
+        confirming={deleteConversation.isPending}
+      />
     </>
   );
 };

@@ -14,12 +14,12 @@
 | 0         | Cleanup               |      7 |      7 | In review   |
 | 1         | Foundation            |      5 |      5 | In review   |
 | 2         | Primitives            |      7 |      7 | Done        |
-| 3         | Chat                  |      9 |      6 | In progress |
+| 3         | Chat                  |      9 |      7 | In progress |
 | 4         | Auth                  |      3 |      0 | Planned     |
 | 5         | Landing               |      5 |      0 | Planned     |
 | 6         | Legal and error pages |      4 |      0 | Planned     |
 | 7         | Hardening             |     10 |      0 | Planned     |
-| **Total** |                       | **50** | **25** |             |
+| **Total** |                       | **50** | **26** |             |
 
 ---
 
@@ -386,7 +386,7 @@
   - **Depends on:** P3-T05.
   - **Risk:** Low.
 
-- [ ] **P3-T07 Refactor conversation list grouping, rows, and delete confirmation**
+- [x] **P3-T07 Refactor conversation list grouping, rows, and delete confirmation**
   - **Design rules:** Design.md 3.4, 3.6, 8 (Sidebar), 11.
   - **Files:** `src/features/chat/components/ConversationList.tsx`, `src/features/chat/components/Sidebar.tsx`, `src/features/chat/components/Sidebar.test.tsx`.
   - **Do:**
