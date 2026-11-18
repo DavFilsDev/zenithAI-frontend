@@ -13,13 +13,13 @@
 | --------- | --------------------- | -----: | -----: | ----------- |
 | 0         | Cleanup               |      7 |      7 | In review   |
 | 1         | Foundation            |      5 |      5 | In review   |
-| 2         | Primitives            |      7 |      1 | In progress |
+| 2         | Primitives            |      7 |      3 | In progress |
 | 3         | Chat                  |      9 |      0 | Planned     |
 | 4         | Auth                  |      3 |      0 | Planned     |
 | 5         | Landing               |      5 |      0 | Planned     |
 | 6         | Legal and error pages |      4 |      0 | Planned     |
 | 7         | Hardening             |     10 |      0 | Planned     |
-| **Total** |                       | **50** | **13** |             |
+| **Total** |                       | **50** | **15** |             |
 
 ---
 
@@ -228,7 +228,7 @@
   - **Depends on:** P1-T01.
   - **Risk:** Medium. This primitive is used by every later phase.
 
-- [ ] **P2-T02 Build Input, Textarea, and Kbd primitives**
+- [x] **P2-T02 Build Input, Textarea, and Kbd primitives**
   - **Design rules:** Design.md 3.5, 3.6, 7 (Input/Textarea, Kbd), 11.
   - **Files:** `src/shared/ui/Input.tsx`, `src/shared/ui/Textarea.tsx` (to be created), `src/shared/ui/Kbd.tsx` (to be created), `src/shared/ui/Input.test.tsx` (to be created).
   - **Do:**
@@ -239,7 +239,7 @@
   - **Depends on:** P1-T01.
   - **Risk:** Medium.
 
-- [ ] **P2-T03 Build Badge, Card, Avatar, Skeleton, and update Spinner**
+- [x] **P2-T03 Build Badge, Card, Avatar, Skeleton, and update Spinner**
   - **Design rules:** Design.md 2.1, 3.6, 7 (Badge, Card/Panel, Avatar, Skeleton), 8, 10.
   - **Files:** `src/shared/ui/Badge.tsx` (to be created), `src/shared/ui/Card.tsx` (to be created), `src/shared/ui/Avatar.tsx` (to be created), `src/shared/ui/Skeleton.tsx` (to be created), `src/shared/ui/Spinner.tsx`.
   - **Do:**
