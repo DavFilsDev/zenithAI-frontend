@@ -1,5 +1,6 @@
 import { Component, type ErrorInfo, type ReactNode } from 'react';
 import { logError } from '../shared/lib/logger';
+import { Button } from '../shared/ui/Button';
 
 interface ErrorBoundaryProps {
   children: ReactNode;
@@ -7,13 +8,14 @@ interface ErrorBoundaryProps {
 
 interface ErrorBoundaryState {
   hasError: boolean;
+  error: Error | null;
 }
 
 export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
-  state: ErrorBoundaryState = { hasError: false };
+  state: ErrorBoundaryState = { hasError: false, error: null };
 
-  static getDerivedStateFromError(): ErrorBoundaryState {
-    return { hasError: true };
+  static getDerivedStateFromError(error: Error): ErrorBoundaryState {
+    return { hasError: true, error };
   }
 
   componentDidCatch(error: Error, info: ErrorInfo): void {
@@ -25,23 +27,23 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
       return this.props.children;
     }
 
+    const errorCode = this.state.error?.name;
+
     return (
-      <main className="flex min-h-screen items-center justify-center bg-canvas p-6 text-text">
-        <div
-          role="alert"
-          className="w-full max-w-lg rounded-2xl border border-white/20 bg-white/10 p-8 text-center shadow-xl backdrop-blur-md dark:border-white/10 dark:bg-white/5"
-        >
-          <h1 className="text-2xl font-semibold">Something went wrong</h1>
-          <p className="mt-3 text-sm opacity-70">
+      <main className="flex min-h-dvh items-start bg-canvas px-4 py-16 text-text sm:px-6">
+        <div role="alert" className="mx-auto w-full max-w-[720px]">
+          <h1 className="text-h1 text-text">Something went wrong</h1>
+          <p className="mt-4 max-w-prose text-body text-text-secondary">
             The page could not render. Reload to start again; your conversation data is safe.
           </p>
-          <button
-            type="button"
-            onClick={() => window.location.reload()}
-            className="mt-6 rounded-xl bg-accent px-5 py-3 font-semibold text-white transition hover:opacity-90"
-          >
-            Reload the app
-          </button>
+          {errorCode ? (
+            <p className="mt-3 font-mono text-small text-text-tertiary">{errorCode}</p>
+          ) : null}
+          <div className="mt-8">
+            <Button type="button" variant="primary" onClick={() => window.location.reload()}>
+              Reload
+            </Button>
+          </div>
         </div>
       </main>
     );
