@@ -103,6 +103,11 @@
   --duration-base: 240ms;
   --duration-slow: 360ms;
 
+  --transition-duration-instant: var(--duration-instant);
+  --transition-duration-fast: var(--duration-fast);
+  --transition-duration-base: var(--duration-base);
+  --transition-duration-slow: var(--duration-slow);
+
   --animate-fade-in: fadeIn var(--duration-base) var(--ease-out);
   --animate-route: routeFade var(--duration-base) var(--ease-out);
   --animate-menu: menuIn var(--duration-fast) var(--ease-out);

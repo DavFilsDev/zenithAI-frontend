@@ -1,4 +1,4 @@
-import { Sun, Moon } from 'lucide-react';
+import { Moon, Sun } from 'lucide-react';
 import { useTheme } from './useTheme';
 
 export const ThemeToggle = () => {
@@ -9,30 +9,25 @@ export const ThemeToggle = () => {
   return (
     <button
       type="button"
+      role="switch"
+      aria-checked={isDark}
+      aria-label="Dark theme"
       onClick={toggleTheme}
-      aria-label={`Switch to ${isDark ? 'light' : 'dark'} theme`}
-      aria-pressed={isDark}
-      className="relative flex h-9 w-16 items-center justify-between rounded-full border border-gray-400 bg-red-200 p-1 backdrop-blur-md transition-all duration-300 dark:border-white/10 dark:bg-white/5"
+      className="inline-flex h-11 w-16 items-center justify-center rounded-full"
     >
-      <div
-        className={`absolute top-1 left-1 flex h-7 w-7 items-center justify-center rounded-full shadow-md transition-all duration-300 ease-in-out ${
-          isDark ? 'translate-x-0 bg-accent' : 'translate-x-7 bg-yellow-400'
-        } `}
-      />
-
-      <div className="z-10 flex h-7 w-7 items-center justify-center">
-        <Moon
-          size={16}
-          className={`transition-colors duration-300 ${isDark ? 'text-white' : 'text-gray-400'}`}
-        />
-      </div>
-
-      <div className="z-10 flex h-7 w-7 items-center justify-center">
-        <Sun
-          size={16}
-          className={`transition-colors duration-300 ${!isDark ? 'text-white' : 'text-yellow-400'}`}
-        />
-      </div>
+      <span className="relative flex h-8 w-14 items-center rounded-full border border-border bg-raised p-1 transition-colors duration-instant ease-out">
+        <span
+          className={`flex h-6 w-6 items-center justify-center rounded-full border border-border bg-canvas text-text-secondary transition-transform duration-base ease-out ${
+            isDark ? 'translate-x-0' : 'translate-x-6'
+          }`}
+        >
+          {isDark ? (
+            <Moon size={14} strokeWidth={1.5} aria-hidden="true" />
+          ) : (
+            <Sun size={14} strokeWidth={1.5} aria-hidden="true" />
+          )}
+        </span>
+      </span>
     </button>
   );
 };

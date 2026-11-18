@@ -1,30 +1,31 @@
 import { useEffect, useState, type ReactNode } from 'react';
-import { env } from '../api/env';
 import { ThemeContext, type Theme } from './themeContext';
 
 interface ThemeProviderProps {
   children: ReactNode;
 }
 
+const getInitialTheme = (): Theme => {
+  const saved = localStorage.getItem('theme');
+
+  return saved === 'light' || saved === 'dark' ? saved : 'dark';
+};
+
 export const ThemeProvider = ({ children }: ThemeProviderProps) => {
-  const [theme, setTheme] = useState<Theme>(() => {
-    const saved = localStorage.getItem('theme');
-
-    if (saved === 'light' || saved === 'dark') {
-      return saved;
-    }
-
-    return env.defaultTheme;
-  });
+  const [theme, setTheme] = useState<Theme>(getInitialTheme);
 
   useEffect(() => {
-    localStorage.setItem('theme', theme);
+    const root = document.documentElement;
+    const isDark = theme === 'dark';
 
-    document.documentElement.classList.toggle('dark', theme === 'dark');
+    localStorage.setItem('theme', theme);
+    root.classList.toggle('dark', isDark);
+    root.classList.toggle('light', !isDark);
 
     const metaThemeColor = document.querySelector('meta[name="theme-color"]');
     if (metaThemeColor) {
-      metaThemeColor.setAttribute('content', theme === 'dark' ? '#1f2937' : '#ffffff');
+      const canvas = getComputedStyle(root).getPropertyValue('--color-canvas').trim();
+      metaThemeColor.setAttribute('content', canvas || (isDark ? '#0a0a0b' : '#ffffff'));
     }
   }, [theme]);
 

@@ -9,17 +9,17 @@
 
 ## 1. Progress Overview
 
-| Phase     | Name                  |  Tasks |   Done | Status      |
-| --------- | --------------------- | -----: | -----: | ----------- |
-| 0         | Cleanup               |      7 |      7 | In review   |
-| 1         | Foundation            |      5 |      4 | In progress |
-| 2         | Primitives            |      7 |      0 | Planned     |
-| 3         | Chat                  |      9 |      0 | Planned     |
-| 4         | Auth                  |      3 |      0 | Planned     |
-| 5         | Landing               |      5 |      0 | Planned     |
-| 6         | Legal and error pages |      4 |      0 | Planned     |
-| 7         | Hardening             |     10 |      0 | Planned     |
-| **Total** |                       | **50** | **11** |             |
+| Phase     | Name                  |  Tasks |   Done | Status    |
+| --------- | --------------------- | -----: | -----: | --------- |
+| 0         | Cleanup               |      7 |      7 | In review |
+| 1         | Foundation            |      5 |      5 | In review |
+| 2         | Primitives            |      7 |      0 | Planned   |
+| 3         | Chat                  |      9 |      0 | Planned   |
+| 4         | Auth                  |      3 |      0 | Planned   |
+| 5         | Landing               |      5 |      0 | Planned   |
+| 6         | Legal and error pages |      4 |      0 | Planned   |
+| 7         | Hardening             |     10 |      0 | Planned   |
+| **Total** |                       | **50** | **12** |           |
 
 ---
 
@@ -185,9 +185,9 @@
   - **Depends on:** P1-T03.
   - **Risk:** Low.
 
-- [ ] **P1-T05 Make dark the default and update the theme switch**
+- [x] **P1-T05 Make dark the default and update the theme switch**
   - **Design rules:** Design.md 3.1, 3.2, 4, 11.
-  - **Files:** `src/shared/ui/ThemeProvider.tsx`, `src/shared/ui/ThemeToggle.tsx`, `src/main.tsx`.
+  - **Files:** `src/shared/ui/ThemeProvider.tsx`, `src/shared/ui/ThemeToggle.tsx`, `src/main.tsx`, `src/index.css`, `index.html`.
   - **Do:**
     - Persist `theme` in `localStorage`; when no stored value exists, use dark and do not follow the system preference.
     - Toggle the `.dark` and `.light` classes consistently with the token strategy chosen in P1-T01.
@@ -199,14 +199,14 @@
 
 ### Phase 1 exit checklist
 
-- [ ] `npm run format:check`
-- [ ] `npm run lint`
-- [ ] `npm run type-check`
-- [ ] `npm run test`
-- [ ] `npm run test:e2e`
-- [ ] `npm run build`
+- [x] `npm run format:check`
+- [x] `npm run lint`
+- [x] `npm run type-check`
+- [x] `npm run test`
+- [x] `npm run test:e2e`
+- [x] `npm run build`
 - [ ] Screenshot review at 390px and 1280px, dark and light
-- [ ] `rg 'react-icons|bg-\[rgb\(var\(--color|backdrop-blur|hover:scale|active:scale' src` reviewed
+- [x] `rg 'react-icons|bg-\[rgb\(var\(--color|backdrop-blur|hover:scale|active:scale' src` reviewed; remaining matches are scheduled for Phases 2–6.
 
 ---
 
