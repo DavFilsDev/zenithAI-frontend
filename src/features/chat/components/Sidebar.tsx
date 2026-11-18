@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { FiPlus, FiSidebar } from 'react-icons/fi';
+import { FiPlus } from 'react-icons/fi';
 import { useTheme } from '../../../shared/ui/useTheme';
 import { notify } from '../../../shared/ui/notify';
 import type { User } from '../../../shared/api/types';
@@ -33,7 +33,6 @@ export const Sidebar = ({ user, onLogout, onOpenProfile }: SidebarProps) => {
   const conversationsQuery = useConversations();
   const deleteConversation = useDeleteConversation();
   const renameConversation = useRenameConversation();
-  const [showTooltip, setShowTooltip] = useState(false);
 
   const handleNewChat = () => {
     setDraft('');
@@ -106,30 +105,7 @@ export const Sidebar = ({ user, onLogout, onOpenProfile }: SidebarProps) => {
   if (!isSidebarOpen) {
     return (
       <div className="flex h-screen w-16 flex-col border-r border-white/10 bg-[rgb(var(--color-bg))] text-[rgb(var(--color-text))]">
-        <div className="border-b border-white/10 p-4">
-          <h1 className="text-center text-xl font-bold tracking-wide">
-            Z<span className="text-[rgb(var(--color-primary))]">A</span>
-          </h1>
-        </div>
-
-        <div className="relative mx-auto">
-          <button
-            type="button"
-            onClick={toggleSidebar}
-            onMouseEnter={() => setShowTooltip(true)}
-            onMouseLeave={() => setShowTooltip(false)}
-            aria-label="Expand sidebar"
-            aria-expanded={false}
-            className="mx-auto mt-2 rounded-lg p-2 transition-all duration-200 hover:bg-white/10"
-          >
-            <FiSidebar size={20} className="rotate-180" />
-          </button>
-          {showTooltip && (
-            <div className="absolute top-[60%] left-full ml-2 -translate-y-1/2 rounded border border-white/20 bg-gray-900 px-2 py-1 text-xs whitespace-nowrap text-white">
-              Expand sidebar (Ctrl+B)
-            </div>
-          )}
-        </div>
+        <SidebarHeader isOpen={false} onToggle={toggleSidebar} compact />
 
         <div className="p-3">{newChatButton(false)}</div>
 
