@@ -52,7 +52,6 @@ describe('Sidebar', () => {
     mockConversations();
     const onLogout = vi.fn();
     const onOpenProfile = vi.fn();
-    const confirm = vi.spyOn(window, 'confirm').mockReturnValue(true);
     const user = userEvent.setup();
 
     renderWithProviders(
@@ -86,7 +85,8 @@ describe('Sidebar', () => {
     expect(await screen.findByText('Conversation renamed.')).toBeInTheDocument();
 
     await user.click(screen.getAllByTitle('Delete conversation')[0]!);
-    expect(confirm).toHaveBeenCalled();
+    expect(await screen.findByRole('dialog', { name: 'Delete conversation?' })).toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: 'Delete' }));
     expect(await screen.findByText('Conversation deleted.')).toBeInTheDocument();
 
     await user.click(screen.getByRole('button', { name: 'Next' }));
