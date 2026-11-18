@@ -13,13 +13,13 @@
 | --------- | --------------------- | -----: | -----: | ----------- |
 | 0         | Cleanup               |      7 |      7 | In review   |
 | 1         | Foundation            |      5 |      5 | In review   |
-| 2         | Primitives            |      7 |      5 | In progress |
+| 2         | Primitives            |      7 |      6 | In progress |
 | 3         | Chat                  |      9 |      0 | Planned     |
 | 4         | Auth                  |      3 |      0 | Planned     |
 | 5         | Landing               |      5 |      0 | Planned     |
 | 6         | Legal and error pages |      4 |      0 | Planned     |
 | 7         | Hardening             |     10 |      0 | Planned     |
-| **Total** |                       | **50** | **17** |             |
+| **Total** |                       | **50** | **18** |             |
 
 ---
 
@@ -272,7 +272,7 @@
   - **Depends on:** P2-T01.
   - **Risk:** High. Focus behavior is security- and accessibility-sensitive.
 
-- [ ] **P2-T06 Replace the toast styling with token surfaces**
+- [x] **P2-T06 Replace the toast styling with token surfaces**
   - **Design rules:** Design.md 2.1, 3.1, 3.6, 3.7, 7 (Toast), 11.
   - **Files:** `src/shared/ui/toastConfig.ts`, `src/shared/ui/notify.tsx`, `src/shared/ui/RateLimitToast.tsx`, `src/app/providers.tsx`.
   - **Do:**

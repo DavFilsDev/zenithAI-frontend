@@ -1,6 +1,6 @@
-import { lazy, Suspense, type ReactNode } from 'react';
+import { lazy, Suspense, useEffect, useState, type ReactNode } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { Toaster } from 'react-hot-toast';
+import { Toaster, type ToastPosition } from 'react-hot-toast';
 import { ThemeProvider } from '../shared/ui/ThemeProvider';
 import { tokenManager } from '../shared/api/tokenManager';
 import { useSessionStore } from '../shared/auth/sessionStore';
@@ -43,6 +43,15 @@ interface AppProvidersProps {
 export const AppProviders = ({ children }: AppProvidersProps) => {
   const status = useSessionStore((state) => state.status);
   const shouldBootstrap = status !== 'anonymous' || tokenManager.hasRefreshToken();
+  const [toastPosition, setToastPosition] = useState<ToastPosition>('bottom-center');
+
+  useEffect(() => {
+    const media = window.matchMedia('(min-width: 640px)');
+    const update = () => setToastPosition(media.matches ? 'bottom-right' : 'bottom-center');
+    update();
+    media.addEventListener('change', update);
+    return () => media.removeEventListener('change', update);
+  }, []);
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -54,7 +63,7 @@ export const AppProviders = ({ children }: AppProvidersProps) => {
         ) : (
           children
         )}
-        <Toaster position="top-right" />
+        <Toaster position={toastPosition} />
         <Suspense fallback={null}>
           <ServiceStatus />
         </Suspense>

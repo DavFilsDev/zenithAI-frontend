@@ -1,3 +1,4 @@
+import { CircleAlert, CircleCheck, LoaderCircle } from 'lucide-react';
 import toast from 'react-hot-toast';
 import type { ToastOptions } from 'react-hot-toast';
 import { toastConfig, formatToastMessage } from './toastConfig';
@@ -33,13 +34,31 @@ const rateLimitMessage = (error: ApiError): string => {
 };
 
 const success = (message: string, options?: ToastOptions): string =>
-  toast.success(formatToastMessage(message), { ...toastConfig.success, ...options });
+  toast.success(formatToastMessage(message), {
+    ...toastConfig.success,
+    icon: <CircleCheck size={16} strokeWidth={1.5} className="text-success" aria-hidden="true" />,
+    ...options,
+  });
 
 const error = (message: string, options?: ToastOptions): string =>
-  toast.error(formatToastMessage(message), { ...toastConfig.error, ...options });
+  toast.error(formatToastMessage(message), {
+    ...toastConfig.error,
+    icon: <CircleAlert size={16} strokeWidth={1.5} className="text-danger" aria-hidden="true" />,
+    ...options,
+  });
 
 const loading = (message = 'Loading...'): string =>
-  toast.loading(formatToastMessage(message), toastConfig.loading);
+  toast.loading(formatToastMessage(message), {
+    ...toastConfig.loading,
+    icon: (
+      <LoaderCircle
+        size={16}
+        strokeWidth={1.5}
+        className="animate-spin text-text-secondary"
+        aria-hidden="true"
+      />
+    ),
+  });
 
 const rateLimit = (apiError: ApiError, onRetry?: () => void): string =>
   toast.custom(
