@@ -1,49 +1,107 @@
-import type { ReactNode } from 'react';
-import { Link } from 'react-router-dom';
-import { ThemeToggle } from '../../../shared/ui/ThemeToggle';
+import { useEffect, useState, type ReactNode } from 'react';
+import { SiteFooter } from '../../../shared/layout/SiteFooter';
+import { SiteHeader } from '../../../shared/layout/SiteHeader';
+
+interface LegalSection {
+  id: string;
+  label: string;
+}
 
 interface LegalLayoutProps {
   title: string;
   updatedAt: string;
+  sections: LegalSection[];
   children: ReactNode;
 }
 
-export const LegalLayout = ({ title, updatedAt, children }: LegalLayoutProps) => {
+export const LegalLayout = ({ title, updatedAt, sections, children }: LegalLayoutProps) => {
+  const [activeId, setActiveId] = useState<string | null>(null);
+  const currentActiveId = activeId ?? sections[0]?.id ?? null;
+
+  useEffect(() => {
+    if (sections.length === 0 || typeof IntersectionObserver === 'undefined') {
+      return;
+    }
+
+    const elements = sections
+      .map((section) => document.getElementById(section.id))
+      .filter((element): element is HTMLElement => element !== null);
+
+    if (elements.length === 0) {
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+
+        if (visible[0]?.target.id) {
+          setActiveId(visible[0].target.id);
+        }
+      },
+      { rootMargin: '-20% 0px -60% 0px', threshold: [0, 1] },
+    );
+
+    for (const element of elements) {
+      observer.observe(element);
+    }
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [sections]);
+
   return (
-    <div className="flex min-h-screen flex-col bg-canvas text-text">
-      <header className="border-b border-white/10 px-6 py-4 backdrop-blur-md">
-        <div className="mx-auto flex w-full max-w-3xl items-center justify-between">
-          <Link to="/" className="text-xl font-bold tracking-wide">
-            Zenith<span className="text-accent-text">AI</span>
-          </Link>
-          <ThemeToggle />
+    <div className="flex min-h-dvh flex-col bg-canvas text-text">
+      <SiteHeader />
+
+      <div className="mx-auto w-full max-w-5xl flex-1 px-4 py-10 sm:px-6 lg:py-12">
+        <div className="lg:grid lg:grid-cols-[minmax(0,68ch)_minmax(180px,220px)] lg:items-start lg:justify-between lg:gap-12">
+          <main id="main" className="min-w-0">
+            <header className="border-b border-border pb-6">
+              <h1 className="text-h1 text-text">{title}</h1>
+              <p className="mt-3 font-mono text-small text-text-tertiary">
+                Last updated: {updatedAt}
+              </p>
+            </header>
+
+            <article className="prose mt-8">{children}</article>
+          </main>
+
+          <aside className="hidden lg:sticky lg:top-8 lg:block">
+            <nav aria-label="Table of contents">
+              <p className="font-mono text-label tracking-[0.06em] text-text-tertiary uppercase">
+                On this page
+              </p>
+              <ul className="mt-4 flex flex-col gap-2 border-l border-border">
+                {sections.map((section) => {
+                  const isActive = section.id === currentActiveId;
+
+                  return (
+                    <li key={section.id}>
+                      <a
+                        href={`#${section.id}`}
+                        aria-current={isActive ? 'location' : undefined}
+                        className={
+                          isActive
+                            ? 'block border-l border-accent-text py-1 pl-4 text-small text-text transition-colors duration-fast focus-visible:ring-2 focus-visible:ring-accent-text focus-visible:outline-none'
+                            : 'block border-l border-transparent py-1 pl-4 text-small text-text-secondary transition-colors duration-fast hover:text-text focus-visible:ring-2 focus-visible:ring-accent-text focus-visible:outline-none'
+                        }
+                      >
+                        {section.label}
+                      </a>
+                    </li>
+                  );
+                })}
+              </ul>
+            </nav>
+          </aside>
         </div>
-      </header>
+      </div>
 
-      <main className="mx-auto w-full max-w-3xl flex-1 px-6 py-10">
-        <Link to="/" className="text-sm font-medium text-accent-text hover:underline">
-          Back to home
-        </Link>
-
-        <h1 className="mt-6 text-3xl font-bold tracking-tight md:text-4xl">{title}</h1>
-        <p className="mt-2 text-sm opacity-60">Last updated: {updatedAt}</p>
-
-        <article className="prose prose-sm mt-8 max-w-none dark:prose-invert">{children}</article>
-      </main>
-
-      <footer className="border-t border-white/10 px-6 py-6 text-sm">
-        <div className="mx-auto flex w-full max-w-3xl flex-wrap items-center justify-between gap-4">
-          <p className="opacity-70">© 2026 Zenith AI</p>
-          <nav aria-label="Legal" className="flex gap-4">
-            <Link to="/privacy" className="opacity-80 hover:underline">
-              Privacy
-            </Link>
-            <Link to="/terms" className="opacity-80 hover:underline">
-              Terms
-            </Link>
-          </nav>
-        </div>
-      </footer>
+      <SiteFooter />
     </div>
   );
 };
