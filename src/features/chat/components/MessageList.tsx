@@ -9,12 +9,20 @@ interface MessageListProps {
 }
 
 export const MessageList = ({ messages, isLoading, isSending }: MessageListProps) => {
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
   const wasSendingRef = useRef(false);
   const [completionAnnouncement, setCompletionAnnouncement] = useState('');
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: isSending ? 'auto' : 'smooth' });
+    const element = scrollRef.current;
+    if (!element) {
+      return;
+    }
+
+    element.scrollTo({
+      top: element.scrollHeight,
+      behavior: isSending ? 'auto' : 'smooth',
+    });
   }, [messages, isSending]);
 
   useEffect(() => {
@@ -61,7 +69,7 @@ export const MessageList = ({ messages, isLoading, isSending }: MessageListProps
       aria-live="off"
       aria-relevant="additions text"
       aria-busy={isSending || undefined}
-      className="h-full overflow-y-auto"
+      className="h-full overflow-y-auto overscroll-contain"
     >
       <div className="mx-auto w-full max-w-[720px] space-y-8 px-4 py-4 sm:px-6">
         {messages.map((message) => (
@@ -81,8 +89,6 @@ export const MessageList = ({ messages, isLoading, isSending }: MessageListProps
             <span className="sr-only">Loading messages</span>
           </div>
         )}
-
-        <div ref={messagesEndRef} />
       </div>
       <div role="status" aria-live="polite" aria-atomic="true" className="sr-only">
         {completionAnnouncement}
