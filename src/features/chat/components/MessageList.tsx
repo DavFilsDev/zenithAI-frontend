@@ -19,10 +19,15 @@ export const MessageList = ({ messages, isLoading, isSending }: MessageListProps
       return;
     }
 
-    element.scrollTo({
-      top: element.scrollHeight,
-      behavior: isSending ? 'auto' : 'smooth',
-    });
+    if (typeof element.scrollTo === 'function') {
+      element.scrollTo({
+        top: element.scrollHeight,
+        behavior: isSending ? 'auto' : 'smooth',
+      });
+      return;
+    }
+
+    element.scrollTop = element.scrollHeight;
   }, [messages, isSending]);
 
   useEffect(() => {
