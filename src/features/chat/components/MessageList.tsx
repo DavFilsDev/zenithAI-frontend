@@ -64,6 +64,7 @@ export const MessageList = ({ messages, isLoading, isSending }: MessageListProps
 
   return (
     <div
+      ref={scrollRef}
       role="log"
       aria-label="Conversation messages"
       aria-live="off"
