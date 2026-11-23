@@ -13,6 +13,41 @@ test.describe('chat journeys', () => {
     await expect(page).toHaveURL(/\/chat\/conversation-1$/);
   });
 
+  test('keeps the page shell fixed while messages scroll', async ({ page }) => {
+    await mockApi(page);
+    await signIn(page);
+
+    for (let index = 1; index <= 5; index += 1) {
+      await page.getByRole('textbox', { name: 'Message' }).fill(`Message ${index}`);
+      await page.getByRole('button', { name: 'Send message' }).click();
+      await expect(page.getByText('Use a slice to reverse the list.').last()).toBeVisible();
+    }
+
+    const scroll = await page.evaluate(() => {
+      const scope = globalThis as unknown as {
+        scrollY?: number;
+        document?: {
+          documentElement?: { scrollTop?: number };
+          querySelector: (selector: string) => { scrollTop?: number } | null;
+        };
+      };
+
+      return {
+        windowY: scope.scrollY ?? 0,
+        documentTop: scope.document?.documentElement?.scrollTop ?? 0,
+        shellTop: scope.document?.querySelector('#root > div')?.scrollTop ?? 0,
+        mainTop: scope.document?.querySelector('#main')?.scrollTop ?? 0,
+        logTop: scope.document?.querySelector('[role="log"]')?.scrollTop ?? 0,
+      };
+    });
+
+    expect(scroll.windowY).toBe(0);
+    expect(scroll.documentTop).toBe(0);
+    expect(scroll.shellTop).toBe(0);
+    expect(scroll.mainTop).toBe(0);
+    expect(scroll.logTop).toBeGreaterThan(0);
+  });
+
   test('restores the session after a reload without persisting the access token', async ({
     page,
   }) => {
