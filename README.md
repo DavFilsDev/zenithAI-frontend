@@ -29,12 +29,12 @@ The application is functional and hardened through the security and accessibilit
 - Dark and light theme, persisted
 - Responsive layout with a collapsible sidebar
 - Vitest, Testing Library, MSW and Playwright coverage for the main flows
-- GitHub Actions CI and Netlify deployment configuration
+- GitHub Actions CI and Vercel deployment configuration
 
 **Still pending:**
 
-- **Netlify site connection and production URL.** The repository is configured in
-  `netlify.toml`; the URL is added after the first deploy.
+- **Vercel project connection and production URL.** The repository is configured in
+  `vercel.json`; the URL is added after the first deploy.
 - **A showcase recording from the deployed instance.** Local screenshots,
   recording and technical decisions are in the showcase section below; they are
   refreshed after the first deploy.
@@ -96,7 +96,7 @@ The frontend is on <http://localhost:5173>, the backend on <http://localhost:800
 
 Only `VITE_API_URL` affects where requests go. All three are validated at startup with `zod`: a missing or malformed value stops the app with a message naming the variable. `VITE_APP_NAME` sets the document title and `VITE_DEFAULT_THEME` sets the theme applied before the first paint; a theme saved in `localStorage` still wins over the default.
 
-On Netlify, `VITE_*` values are inlined at build time, so a different `VITE_API_URL` means a different build. Set all three variables in **Site configuration → Environment variables** for the production context, and set them again for deploy previews if the preview should use a different backend.
+On Vercel, `VITE_*` values are inlined at build time, so a different `VITE_API_URL` means a different build. Set all three variables in **Project Settings → Environment Variables** for Production and Preview, and set them again for preview deployments if they should use a different backend.
 
 ## Scripts
 
@@ -139,26 +139,30 @@ Visual baselines live in `e2e/visual.spec.ts-snapshots/`. Review changed images 
 
 `lint-staged` runs ESLint and `tsc -b` on staged TS/TSX files, and Prettier on the rest, so a commit cannot carry a type or lint error.
 
-## Deployment (Netlify)
+## Deployment (Vercel)
 
-The frontend is a static single-page application. [`netlify.toml`](netlify.toml) sets the build command, the publish directory, the Node version, and the SPA rewrite:
+The frontend is a static single-page application. [`vercel.json`](vercel.json) sets the install command, the build command, the output directory, the SPA rewrite and the security headers. `package.json` pins Node 22.
 
-| Setting       | Value                                                     |
-| ------------- | --------------------------------------------------------- |
-| Build command | `npm run build`                                           |
-| Publish       | `dist`                                                    |
-| Node          | `22`                                                      |
-| SPA rewrite   | `/*` → `/index.html` with status `200`                    |
-| Security      | [`public/_headers`](public/_headers), copied into `dist/` |
+| Setting         | Value                                    |
+| --------------- | ---------------------------------------- |
+| Framework       | Vite                                     |
+| Install command | `npm ci`                                 |
+| Build command   | `npm run build`                          |
+| Output          | `dist`                                   |
+| Node            | `22.x`                                   |
+| SPA rewrite     | `/(.*)` → `/index.html`                  |
+| Security        | `vercel.json` headers applied to `/(.*)` |
 
-1. Create a Netlify site from this repository.
-2. Set `VITE_API_URL`, `VITE_APP_NAME` and `VITE_DEFAULT_THEME` in **Site configuration → Environment variables**. Set them for production and, if needed, for deploy previews.
-3. Deploy. The first production build bakes in the production API URL.
-4. Open a deep link such as `/chat` to confirm the rewrite returns the app instead of a 404.
+1. Import this repository into Vercel with the repository root as the project root.
+2. Select the Vite preset and keep the values above.
+3. Set `VITE_API_URL`, `VITE_APP_NAME` and `VITE_DEFAULT_THEME` in **Project Settings → Environment Variables** for Production and Preview.
+4. Add the Vercel origin to the backend's `CORS_ALLOWED_ORIGINS`.
+5. Deploy. Vite inlines the variables at build time, so changing them requires a redeploy.
+6. Open a deep link such as `/chat` to confirm the rewrite returns the app instead of a 404.
 
-The production API must use HTTPS: the static `_headers` policy allows `connect-src 'self' https:`. The Vite-generated meta policy uses the exact API origin for local and preview builds.
+The production API must use HTTPS: the Vercel header policy allows `connect-src 'self' https:`. The Vite-generated meta policy uses the exact API origin for local and preview builds. Do not proxy `/api/*` through a Vercel Function, because the SSE stream needs a long-lived response.
 
-Production URL: _pending the first Netlify deploy._
+Production URL: _pending the first Vercel deploy._
 
 ## Continuous integration
 
@@ -183,7 +187,7 @@ The screenshots and recording are generated from the local application with a mo
 
 - **Access in memory, refresh in `sessionStorage`.** The access token never touches persistent storage; the refresh token survives a reload and dies with the tab.
 - **Sanitized markdown.** Assistant answers pass through `rehype-sanitize` before highlighting, and unsafe link protocols are dropped.
-- **CSP in two places.** A meta tag covers static hosts that cannot set headers; `_headers` sets the real policy where Netlify serves the file.
+- **CSP in two places.** A meta tag covers static hosts that cannot set headers; `vercel.json` sets the real policy where Vercel serves the file.
 - **Server state in TanStack Query, streaming in one adapter.** The SSE reader appends into the query cache, so a re-render cannot lose a fragment.
 - **Free-tier UX is explicit.** The health indicator says when the backend is starting, rate limits say when to retry, and nothing offers a purchase.
 - **Startup cost is bounded.** Routes are lazy, the auth bootstrap is deferred until a session exists, and the background is a responsive WebP pair.
@@ -209,20 +213,20 @@ src/
 │   ├── hooks/       useOnClickOutside
 │   └── lib/         logger, parseRetryAfter
 └── test/            MSW server, generated handlers, render helpers
-public/              _headers, favicon, background images
+public/              favicon, background images
 e2e/                 Playwright journeys and the browser API mock
 docs/                architecture, contract, roadmap and showcase assets
 .github/workflows/   CI pipeline
-netlify.toml         build, publish and SPA rewrite
+vercel.json          build, output, SPA rewrite and security headers
 ```
 
 Unit tests sit next to their subject. Shared test support is in `src/test/`, and browser journeys are in `e2e/` with their API mock in `e2e/support/`. The full tree and the layer rules are in [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
 
 ## Known issues
 
-- The Netlify site is not connected yet, so the production URL is still pending.
+- The Vercel project is not connected yet, so the production URL is still pending.
 - `npm audit` reports 32 advisories (8 low, 12 moderate, 12 high) from the current dependency tree.
-- The static `_headers` CSP allows `connect-src 'self' https:`, so the production API must be served over HTTPS.
+- The Vercel CSP allows `connect-src 'self' https:`, so the production API must be served over HTTPS.
 
 ## Status & Roadmap
 
